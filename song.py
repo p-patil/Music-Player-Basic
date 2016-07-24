@@ -1,8 +1,10 @@
-from vlc import MusicPlayer
+from vlc import MediaPlayer
 from mutagen.mp3 import MP3
-from os import path, utime
+from mutagen.easyid3 import EasyID3
+from mutagen.id3 import ID3NoHeaderError
 from datetime import datetime
-import time
+from song_exception import SongException
+import os, time
 
 # TODO: Add support for non-MP3 music, perhaps by converting to MP3 on demand
 class Song:
@@ -25,11 +27,12 @@ class Song:
         override_id3: bool
         """
         self.file_path = file_path
-        self.mp = vlc.MediaPlayer(file_path)
+        self.mp = None
+        self.is_playing = False
         
         # Fill in column values, first by parsing ID3 tags and then manually
         self.columns = {}
-        for tag_name, tag in zip(ID3_COLUMNS, Song.get_ID3_tags(file_path)):
+        for tag_name, tag in zip(Song.ID3_COLUMNS, Song.get_ID3_tags(file_path)):
             self.columns[tag_name] = tag
         self.columns["length"] = int(MP3(file_path).info.length + 0.5) # Read length and round to nearest integer
         self.columns["date modified"] = Song.get_date_modified(file_path)
@@ -46,42 +49,71 @@ class Song:
         if not self.columns["title"]:
             self.columns["title"] = file_path.split("/")[-1][: -4] # Parse file name from absolute file path and delete file extension
 
+    def init(self):
+        if not self.mp:
+            self.mp = MediaPlayer(self.file_path)
+
     def play(self):
         """ Plays this song.
         """
+        # Create the MediaPlayer on demand to save system resources (and prevent VLC from freaking out).
+        if not self.mp:
+            raise SongException("Song not initialized")
+
         self.mp.play()
+        self.is_playing = True
 
     def pause(self):
         """ Pauses this song, if it's playing.
         """
-        self.mp.pause()
+        if not self.mp:
+            raise SongException("Song not initialized")
 
-    def is_playing(self):
+        if self.is_playing:
+            self.mp.pause()
+            self.is_playing = False
+
+    def playing(self):
         """ Returns if this song is playing or not (ie currently paused).
 
         return: bool
         """
-        return self.mp.is_playing()
+        return self.is_playing 
 
     def reset(self):
         """ Resets the song to the beginning.
         """
+        if not self.mp:
+            raise SongException("Song not initialized")
+
         self.mp.stop()
+
+    def stop(self):
+        """ Terminates this song, freeing system resources and cleaning up.
+        """
+        if self.mp:
+            self.is_playing = False
+            self.mp.stop()
+            self.mp = None
 
     @staticmethod
     def get_ID3_tags(file_path):
-        """ Given a file path to an mp3 song, returns the ID3 tags for title, artist, album, genre, and year (in that order).
+        """ Given a file path to an mp3 song, returns the ID3 tags for title, artist, album, genre, and year (in that order), or empty tuple if no tags are found.
 
         filename: str
 
         return: tuple of ID3 tags
         """
-        tags, ret = EasyID3(file_path), []
-        for tag in ID3_COLUMNS:
-            if tag in tags:
-                ret.append(tags[tag][0])
-            else:
-                ret.append(None)
+        ret = [None for _ in range(len(Song.ID3_COLUMNS))]
+        try:
+            tags = EasyID3(file_path)
+            for tag in Song.ID3_COLUMNS:
+                if tag in tags:
+                    ret.append(tags[tag][0])
+                else:
+                    ret.append(None)
+        except ID3NoHeaderError:
+            pass
 
         return tuple(ret)
 
@@ -107,10 +139,10 @@ class Song:
         os.utime(file_path, (0, time.mktime(date.timetuple())))
 
     def __str__(self):
-        ret = self.title
+        ret = self["title"]
 
-        if len(self.artist) > 0:
-            ret += " - " + self.artist
+        if self["artist"]:
+            ret += " - " + self["artist"]
 
         return ret
 
@@ -119,48 +151,49 @@ class Song:
             return False
 
         for col in self.columns:
-            if col != "date modified" self[col] != other[col]: # Don't check if 'date modified' columns match
+            if col != "date modified" and self[col] != other[col]: # Don't check if 'date modified' columns match
                 return False
 
         return True
 
     # Getters, setters below
 
-    def __getattr__(self, key):
+    def __getitem__(self, key):
         return self.columns[key]
 
-    def get_name(self):
-        return self.name
+    #def get_name(self):
+    #    return self.name
 
-    def set_name(self, name):
-        self.name = name
+    #def set_name(self, name):
+    #    self.name = name
 
-    def get_artist(self):
-        return self.artist
+    #def get_artist(self):
+    #    return self.artist
 
-    def set_artist(self, artist):
-        self.artist = artist
+    #def set_artist(self, artist):
+    #    self.artist = artist
 
-    def get_album(self):
-        return self.album
+    #def get_album(self):
+    #    return self.album
 
-    def set_album(self, album):
-        self.album = album
+    #def set_album(self, album):
+    #    self.album = album
 
-    def get_genre(self):
-        return self.genre
+    #def get_genre(self):
+    #    return self.genre
 
-    def set_genre(self, genre):
-        self.genre = genre
+    #def set_genre(self, genre):
+    #    self.genre = genre
 
-    def get_year(self):
-        return self.year
+    #def get_year(self):
+    #    return self.year
 
-    def set_year(self, year):
-        self.year = year
+    #def set_year(self, year):
+    #    self.year = year
 
-    def get_length(self):
-        return self.length
+    #def get_length(self):
+    #    return self.length
 
-    def get_date_modified(self):
-        return self.date_modified
+    #def get_date_modified(self):
+    #    return self.date_modified
+
