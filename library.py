@@ -13,221 +13,102 @@ class Library:
         *directories: Tuple of str
         """
         self.lib = [] # List of song objects tracked
-        self.queue = [] # List to hold queued songs
         self.running = False # Whether or not the library is currently in 'running' mode, used when music is playing
-        self.current_index, self.current_song = -1, None
-        self.current_queue_index, self.current_queue_song = -1, None
+        self.current_index = self.queue_index = -1
+
         for directory in directories:
             self.load_music(directory)
 
-    def play_current_song(self):
-        """ Plays the current song.
-        """
-        if not self.running:
-            raise LibraryException("Library must be running to play song")
-        
-        self.current_song.play()
+        self.history = list(self.lib) # List tracking currently playing song and entire song history
 
-    def play_current_queue_song(self):
-        """ Plays the first song in queue.
-        """
-        if not self.running:
-            raise LibraryException("Library must be running to play song")
-        elif self.is_queue_empty():
-            raise LibraryException("Not in queue")
-
-        self.current_queue_song.play()
-
-    def pause_current_song(self):
-        """ Pauses the current song.
-        """
-        if not self.running:
-            raise LibraryException("Library must be running to pause song")
-
-        self.current_song.pause()
-
-    def pause_current_queue_song(self):
-        """ Pauses the currently playing queue song.
-        """
-        if not self.running:
-            raise LibraryException("Library must be running to pause song")
-        elif self.is_queue_empty():
-            raise LibraryException("Not in queue")
-
-        self.current_queue_song.pause()
-
-
-    def is_current_song_playing(self):
-        """ Returns if the current song is playing or paused.
-        NOTE: doesn't play the next song, just skips the current one.
+    def is_running(self):
+        """ Returns if the library is still running.
 
         return: bool
         """
-        if not self.running:
-            raise LibraryException("Library not running")
-        elif not self.current_song:
-            return False
+        return self.current_index < len(self.history) - 1
 
-        return self.current_song.playing()
+    def first_song(self):
+        """ Initializes the library by returning the first song to play and initializing pointers.
 
-    def is_current_queue_song_playing(self):
-        """ Returns if the current queue song is playing or paused.
+        return: Song
         """
-
-        if not self.running:
-            raise LibraryException("Library not running")
-        elif self.is_queue_empty() or not self.current_queue_song:
-            return False
-
-        return self.current_queue_song.playing()
+        self.current_index = 0
+        self.queue_index = 1
+        return self.history[0]
 
     def next_song(self):
-        """ Plays the next song.
+        """ Returns the next song to play, and advances internal pointers. Assumes that library
+        is still running.
+
+        return: Song
         """
-        if not self.running:
-            raise LibraryException("Library must be running to go to next song")
+        # Advance pointers
+        if self.is_queue_empty():
+            self.queue_index += 1
+        self.current_index += 1
 
-        self.clean_up_current_song()
-        self.clean_up_current_queue_song()
+        return self.history[self.current_index]
 
-        if self.current_index == len(self.lib) - 1: # Reached end of library
-            self.stop_running()
-        elif self.running:
-            self.current_index += 1
-            self.current_song = self.lib[self.current_index]
-
-    def next_queue_song(self):
-        """ Plays the next song in the queue.
+    def last_song(self):
+        """ Returns the last song played, and moves internal pointers back.
+        
+        return: Song
         """
-        self.clean_up_current_song()
-        self.clean_up_current_queue_song()
+        if self.current_index == 0:
+            return None
 
-        if self.current_queue_index < 0: # Just entered queue, so advance previously playing non-queue song as well
-            self.current_index += 1
-            self.current_song = self.lib[self.current_index]
-        self.current_queue_index += 1
+        # Retreat pointers
+        if self.is_queue_empty():
+            self.queue_index -= 1
+        self.current_index -= 1
 
-        if self.current_queue_index >= len(self.queue):
-            self.current_queue_song = None
-        else:
-            self.current_queue_song = self.queue[self.current_queue_index]
+        return self.history[self.current_index]
 
+    def add_to_queue(self, song):
+        """ Adds the given song to the back of the queue.
 
-    def previous_song(self):
-        """ Goes to previous song.
+        song: Song
         """
-        if not self.running:
-            raise LibraryException("Library must be running to go to last song")
+        self.history.insert(self.queue_index, song)
+        self.queue_index += 1
 
-        self.clean_up_current_song()
-        self.clean_up_current_queue_song()
+    def add_to_front_of_queue(self, song):
+        self.history.insert(self.current_index + 1, song)
+        self.queue_index += 1
 
-        if self.current_index == 0: # Reached beginning
-            self.stop_running()
-        elif self.running:
-            self.current_index -= 1
-            self.current_song = self.lib[self.current_index]
-
-    def previous_queue_song(self):
-        """ Goes to previous song in queue.
+    def remove_from_queue(self, song, remove_all = False):
+        """ Removes the first occurrence of the given song from the queue, or all occurrences if the remove_all flag is set.
         """
-        if not self.running:
-            raise LibraryException("Library must be running to go to last song")
-        elif self.current_queue_index < 0:
-            raise LibraryException("Not in queue")
+        for i in range(self.current_index + 1, self.queue_index):
+            if self.history[i] == song:
+                del self.history[i]
+                self.queue_index -= 1
 
-        self.clean_up_current_song()
-        self.clean_up_current_queue_song()
-
-        if self.current_queue_index == 0:
-            self.current_queue_index, self.current_queue_song = -1, None
-        else:
-            self.current_queue_index -= 1
-            self.current_queue_song = self.queue[self.current_queue_index]
-
-    def init_current_song(self):
-        """ Initializes the current song.
-        """
-        if self.running:
-            self.current_song.init()
- 
-    def clean_up_current_song(self):
-        """ Stops playing the current song.
-        """
-        if self.running:
-            self.current_song.stop()
-
-    def init_current_queue_song(self):
-        if self.running and self.current_queue_song:
-            self.current_queue_song.init()
-
-    def clean_up_current_queue_song(self):
-        if self.running and self.current_queue_song:
-            self.current_queue_song.stop()
+                if not remove_all or self.is_queue_empty():
+                    break
 
     def is_queue_empty(self):
-        """ Returns if the queue is empty or not.
+        """ Returns if the queue is empty.
         """
-        if self.current_queue_index < 0: # Have never entered queue yet, so check if songs are queued
-            return len(self.queue) == 0
-        else: # Have entered queue, so check if song are queued after the current point
-            return self.current_queue_index >= len(self.queue)
+        return self.current_index == self.queue_index - 1
 
-    def num_queued(self):
-        """ Returns the number of queued songs.
+    def get_queued_songs(self):
+        """ Gets the queued songs.
+
+        return: list
         """
-        return len(self.queue[self.current_queue_index :])
+        return self.history[self.current_index : self.queue_index]
 
-    def is_running(self):
-        """ Returns if the library is playing music or not.
-        """
-        return self.running
-
-    def start_running(self):
-        """ Get ready to play music by switching to 'running' mode. Automatically resets song pointer to beginning.
-        """
-        if len(self.lib) == 0:
-            raise LibraryException("No songs loaded; library is empty")
-
-        self.running = True
-        self.current_index, self.current_song = 0, self.lib[0]
-
-    def stop_running(self):
-        """ Stop running.
-        """
-        self.running = False
-        self.current_index, self.current_song = -1, None
-
-    # Helper functionality below
-
-    def load_music(self, directory, recurse = False):
-        """ Given (absolute path to) a directory containing music, wraps each music file in a song object and appends to this library. Loading mechanism is optionally shallow or recursive.
-
-        directory: str
-        recurse: bool
-        """
-        # Error checking
-        if not os.path.isdir(directory):
-            raise ValueError("File '%s' does not exist or is not a directory" % directory)
-
-        for file_name in os.listdir(directory):
-            # Parse name and artist based on my personal convention, throwing away the file extension
-            name, artist = Library.parse_song(file_name)
-
-            if not os.path.isdir(file_name):
-                if not file_name.lower().endswith(".mp3"):
-                    print("Can't load non-MP3 file \"%s\"" % file_name)
-                else:
-                    self.lib.append(Song(os.path.join(directory, file_name), name, artist))
-            elif recurse:
-                self.load_music(file_name, recurse)
+    def get_library(self):
+        return list(self.lib)
 
     def shuffle(self):
         """ Shuffles the library.
         """
         random.shuffle(self.lib)
 
-    def sort(self, column, reverse = True):
+    def sort(self, column, reverse = False):
         """ Sorts the library in alphabetical order by the given column, a song constant variable. Sorts in descending 
         order by default.
         """
@@ -255,35 +136,33 @@ class Library:
         if reverse:
             self.lib.reverse()
 
-    def add_to_queue(self, song):
-        """ Adds the given song to the back of the queue.
+        # Reset song order, preserving the queue
+        self.history = self.get_queued_songs() + list(self.lib)
 
-        song: Song
+    # Helper functions below
+
+    def load_music(self, directory, recurse = False):
+        """ Given (absolute path to) a directory containing music, wraps each music file in a song object and appends to this library. Loading mechanism is optionally shallow or recursive.
+
+        directory: str
+        recurse: bool
         """
-        self.queue.append(song)
+        # Error checking
+        if not os.path.isdir(directory):
+            raise ValueError("File '%s' does not exist or is not a directory" % directory)
 
-    def remove_from_queue(self, song, remove_all = False):
-        """ Removes the first occurrence of the given song from the queue, or all occurrences if the remove_all flag is set.
-        """
-        if song in self.queue:
-            self.queue.remove(song)
+        for file_name in os.listdir(directory):
+            # Parse name and artist based on my personal convention, throwing away the file extension
+            name, artist = Library.parse_song(file_name)
 
-            if remove_all:
-                while song in self.queue:
-                    self.queue.remove(song)
-
-        if self.is_queue_empty():
-            self.current_queue_song = None
-
-    def get_songs(self):
-        return self.lib
-
-    def get_queued_songs(self):
-        return self.queue
-
-    def get_current_song(self):
-        return self.current_song
-
+            if not os.path.isdir(file_name):
+                if not file_name.lower().endswith(".mp3"):
+                    print("Can't load non-MP3 file \"%s\"" % file_name)
+                else:
+                    self.lib.append(Song(os.path.join(directory, file_name), name, artist))
+            elif recurse:
+                self.load_music(file_name, recurse)
+   
     @staticmethod
     def parse_song(file_name):
         """

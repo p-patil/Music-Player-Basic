@@ -28,7 +28,7 @@ class Song:
         """
         self.file_path = file_path
         self.mp = None
-        self.is_playing = False
+        self.is_playing = False # Flag to keep track of this song is playing
         
         # Fill in column values, first by parsing ID3 tags and then manually
         self.columns = {}
@@ -60,8 +60,8 @@ class Song:
         if not self.mp:
             raise SongException("Song not initialized")
 
-        self.mp.play()
         self.is_playing = True
+        self.mp.play()
 
     def pause(self):
         """ Pauses this song, if it's playing.
@@ -69,16 +69,19 @@ class Song:
         if not self.mp:
             raise SongException("Song not initialized")
 
-        if self.is_playing:
-            self.mp.pause()
-            self.is_playing = False
+        self.is_playing = False
+        self.mp.pause()
 
     def playing(self):
         """ Returns if this song is playing or not (ie currently paused).
 
         return: bool
         """
-        return self.is_playing 
+        if not self.mp.is_playing():
+            # self.mp might not have registered that it's playing due to time delays, so confirm with internal flag
+            return self.is_playing
+        else:
+            return True
 
     def reset(self):
         """ Resets the song to the beginning.
@@ -86,6 +89,7 @@ class Song:
         if not self.mp:
             raise SongException("Song not initialized")
 
+        self.is_playing = False
         self.mp.stop()
 
     def stop(self):
@@ -98,7 +102,8 @@ class Song:
 
     @staticmethod
     def get_ID3_tags(file_path):
-        """ Given a file path to an mp3 song, returns the ID3 tags for title, artist, album, genre, and year (in that order), or empty tuple if no tags are found.
+        """ Given a file path to an mp3 song, returns the ID3 tags for title, artist, album, genre, and year (in that order), or 
+        empty tuple if no tags are found.
 
         filename: str
 
