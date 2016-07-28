@@ -65,6 +65,22 @@ class Library:
 
         return self.history[self.current_index]
 
+    def jump_to_song(self, song):
+        """ Jumps to the given song, preserving the queue.
+
+        song: Song
+        """
+        if song in self.lib:
+            song_index = self.lib.index(song)
+            self.history = self.history[: self.current_index + 1] \
+                         + self.history[self.queue_index : song_index] \
+                         + self.get_queued_songs() \
+                         + self.history[song_index :]
+            self.queue_index += song_index - self.current_index
+            self.current_index += song_index - self.current_index
+        else:
+            raise LibraryException("Song \"%s\" not in library" % str(song))
+
     def add_to_queue(self, song):
         """ Adds the given song to the back of the queue.
 
@@ -78,15 +94,22 @@ class Library:
         self.queue_index += 1
 
     def remove_from_queue(self, song, remove_all = False):
-        """ Removes the first occurrence of the given song from the queue, or all occurrences if the remove_all flag is set.
+        """ Removes the first occurrence of the given song from the queue, or all occurrences if the remove_all flag is set. Returns
+        if the song to remove was found in the queue or not.
+
+        return: bool
         """
+        found = False
         for i in range(self.current_index + 1, self.queue_index):
             if self.history[i] == song:
+                found = True
                 del self.history[i]
                 self.queue_index -= 1
 
                 if not remove_all or self.is_queue_empty():
                     break
+
+        return found
 
     def is_queue_empty(self):
         """ Returns if the queue is empty.

@@ -1,4 +1,4 @@
-import select, sys
+import select, sys, os, signal
 from song import Song
 
 def read_stdin(timeout):
@@ -15,6 +15,16 @@ def read_stdin(timeout):
     else:
         return sys.stdin.readline()
 
+def print_matches(matched_songs, guessed_songs, func):
+    if len(matched_songs) == 0:
+        print("No matching songs found")
+    elif len(matched_songs) == 1:
+        func(matched_songs[0])
+    else:
+        print("Multiple matches found:")
+        for match in matched_songs:
+            print("\t" + str(match))
+
 def parse_user_input(lib, curr_song, inp):
     """ Given (lowercase) input from the user, parses the input and executes the appropriate command in the 
     library. If a new song is to be played immediately, returns it; otherwise, doesn't return.
@@ -22,6 +32,8 @@ def parse_user_input(lib, curr_song, inp):
     lib: Library
     curr_song: Song
     inp: str
+
+    return: Song or None
     """
     inp = inp.lower().strip()
     if inp == "stop":
@@ -33,31 +45,50 @@ def parse_user_input(lib, curr_song, inp):
         return lib.next_song()
     elif inp == "back":
         return lib.last_song()
-    elif inp == "next":
+    elif inp == "next" or inp == "jump": # TODO debug all of the code blocks using print_matches, and refactor into multiple elif's if it works
         tokens = inp.split()
 
-        if len(tokens) < 2:
-            print("Enter a song to play next")
+        if len(tokens) == 1:
+            print("No song to play next given")
             return None
 
-        matched_songs = autocomplete_song(lib.get_library(), " ".join(tokens[1 :]))
+        # matched_songs = autocomplete_song(lib.get_library(), " ".join(tokens[1 :]))
 
-        if len(matched_songs) == 0:
-            print("No matching songs found")
-        elif len(matched_songs) == 1:
-            print("Playing \"%s\" next" % (matched_songs[0]))
-            lib.add_to_front_of_queue(matched_songs[0])
-        else:
-            print("More than one match found, be more specific:")
-            for match in matched_songs:
-                print("\t" + str(match))
+        # if len(matched_songs) == 0:
+        #     print("No matching songs found")
+        # elif len(matched_songs) == 1:
+        #     if inp == "next":
+        #         print("Playing \"%s\" next" % str(matched_songs[0]))
+        #         lib.add_to_front_of_queue(matched_songs[0])
+        #     else: # inp == jump
+        #         print("Jumped to \"%s\"" % str(matched_songs[0]))
+        #         lib.jump_to_song(matched_songs[0])
+        # else:
+        #     print("Multiple matches found, be more specific")
+        #     for match in matched_songs:
+        #         print("\t" + str(match))
+
+        matched_songs, guessed_songs = search_songs(lib.get_songs(), query)
+
+        if inp == "next":
+            def func(song):
+                print("Playing \"%s\" next" % str(song))
+                lib.add_to_front_of_queue(song)
+        else: # inp == "jump"
+            def func(song):
+                print("Jumped to \"%s\"" % str(matched_songs[0]))
+                lib.jump_to_song(matched_songs[0])
+
+        print_matches(matched_songs, guessed_songs, func)
     elif inp == "repeat":
         lib.add_to_front_of_queue(curr_song)
+        print("Playing \"%s\" again" % str(curr_song))
     elif inp == "restart":
         lib.add_to_front_of_queue(curr_song)
         return curr_song
     elif inp == "pause":
         curr_song.pause()
+        display_main("Playing \"%s\" [paused]" % str(curr_song), inp)
 
         # Keep polling until user sends signal to unpause. Disable all other functionality.
         poll_interval = 0.5
@@ -71,6 +102,7 @@ def parse_user_input(lib, curr_song, inp):
                     print_pause_help_message()
 
         curr_song.play()
+        display_main("Playing \"%s\"" % str(curr_song), inp)
     elif inp == "info":
         for col in Song.ID3_COLUMNS + Song.NON_ID3_COLUMNS:
             if curr_song[col]:
@@ -82,52 +114,109 @@ def parse_user_input(lib, curr_song, inp):
                 if tokens[0] == "queue":
                     if lib.is_queue_empty(): # No arguments given, so display queue's contents
                         print("Queue is empty")
-                    else:
+                    else: # tokens[0] == "dequeue"
                         for song in lib.get_queued_songs():
                             print("\t" + str(song))
                 else:
-                    print("Enter songs to dequeue")
+                    print("No songs to dequeue given")
             else: # Look up the song that best matches the given argument; if multiple matches, display them
-                matched_songs = autocomplete_song(lib.get_library(), " ".join(tokens[1 :]))
+                # matched_songs = autocomplete_song(lib.get_library(), " ".join(tokens[1 :]))
 
-                if len(matched_songs) == 0:
-                    print("No matching songs found")
-                elif len(matched_songs) == 1:
-                    if tokens[0] == "queue":
-                        print("Added \"%s\" to queue" % str(matched_songs[0]))
-                        lib.add_to_queue(matched_songs[0])
-                    else:
-                        print("Removed first occurrence of \"%s\" from queue" % str(matched_songs[0]))
-                        lib.remove_from_queue(matched_songs[0])
-                else:
-                    print("More than one match found, be more specific:")
-                    for match in matched_songs:
-                        print("\t" + str(match))
+                # if len(matched_songs) == 0:
+                #     print("No matching songs found")
+                # elif len(matched_songs) == 1:
+                #     if tokens[0] == "queue":
+                #         print("Added \"%s\" to queue" % str(matched_songs[0]))
+                #         lib.add_to_queue(matched_songs[0])
+                #     else: # tokens[0] == "dequeue"
+                #         found = lib.remove_from_queue(matched_songs[0])
+
+                #         if found:
+                #             print("Removed first occurrence of \"%s\" from queue" % str(matched_songs[0]))
+                #         else:
+                #             print("Song \"%s\" not in queue" % str(matched_songs[0]))
+                # else:
+                #     print("Multiple matches found, be more specific:")
+                #     for match in matched_songs:
+                #         print("\t" + str(match))
+
+                matched_songs, guessed_songs = searched_songs(lib.get_songs(), query)
+
+                if inp == "queue":
+                    def func(song):
+                        print("Added \"%s\" to queue" % str(song))
+                        lib.add_to_queue(song)
+                else: # inp == "dequeue":
+                    def func(song):
+                        found = lib.remove_from_queue(song)
+
+                        if found:
+                            print("Removed first occurrence of \"%s\" from queue" % str(song))
+                        else:
+                            print("Song \"%s\" not in queue" % str(matched_songs[0]))
+
+                print_matches(matched_songs, guessed_songs, func)
     elif inp.startswith("search"):
         tokens = inp.split()
 
-        if len(tokens) < 2:
-            print("Enter query to search")
+        if len(tokens) == 1:
+            print("No search query given")
         else:
             if tokens[1][0] == "-": # User provided an option
                 option, query = tokens[1][1 :], " ".join(tokens[2 :])
             else:
                 option, query = "title", " ".join(tokens[1 :]) # Default option is title
 
-            matched_songs, guessed_songs = search_song(lib.get_library(), query, option)
+            matched_songs, guessed_songs = search_songs(lib.get_library(), query, option)
 
-            if len(matched_songs) == 0:
-                print("No matching songs found")
-                if len(guessed_songs) != 0:
-                    print("Did you mean:")
-                    for song in guessed_songs:
-                        print("\t" + str(song))
-            else:
-                print("Matches:")
-                for song in searched_songs:
-                    print("\t" + str(song))
+            # if len(matched_songs) == 0:
+            #     print("No matching songs found")
+            #     if len(guessed_songs) != 0:
+            #         print("Did you mean:")
+            #         for song in guessed_songs:
+            #             print("\t" + str(song))
+            # else:
+            #     print("Matches:")
+            #     for song in searched_songs:
+            #         print("\t" + str(song))
+
+            def func(song):
+                print("\tFound \"%s\"" % song)
+
+            print_matches(matched_songs, guessed_songs, func)
     else:
         print("Unrecognized command")
+
+def display_main(s, inp = None):
+    """ Displays the given string by printing it in the middle of the console and overwriting the last displayed
+    string. If input was given, it would have been printed below the previously displayed line, and so is moved
+    above the displayed line. Assumes that display line is always one line above current line.
+
+    s: str
+    inp: str
+    """
+    stty = os.popen("stty size")
+    console_width = int(stty.read().split()[1]) # Width of console in characters
+    stty.close()
+    centered_s = s.center(console_width)
+
+    if supports_ansi():
+        # Useful ANSI escape sequences
+        move_up_line = "\033[1A"
+        move_down_line = "\033[1B"
+        clear_line = "\033[K"
+
+        if inp:
+            # Get rid of newline if input isn't already stripped
+            if inp[-1] == "\n":
+                inp = inp[: -1]
+
+            print(move_up_line + move_up_line + inp + clear_line)
+            print(clear_line + centered_s)
+        else:
+            print(move_up_line + centered_s + clear_line)
+    else:
+        print(centered_s)
 
 # Helper functions below
 
@@ -155,7 +244,8 @@ def autocomplete_song(songs, query):
 
     return matched_songs
 
-def search_song(songs, query, option, levenshtein_dist_threshold = 2):
+# TODO make this the universal search function for everything, instead of autocomplete_song
+def search_songs(songs, query, option = None, levenshtein_dist_threshold = 2):
     """ Searches the given list of songs by the given query and search option (title by default). Search
     mechanism is basic autocomplete with spell check based on Levenshtein distance, bounded by the given
     threshold.
@@ -169,6 +259,7 @@ def search_song(songs, query, option, levenshtein_dist_threshold = 2):
     """
     matched_songs, guessed_songs = [], []
     for song in songs:
+        if option:
         tag = song[option].lower().strip()
         if tag == query or tag.startswith(query):
             matched_songs.append(song)
@@ -199,3 +290,16 @@ def levenshtein_dist(s, t):
         memoize[(0, j)] = j
 
     return helper(len(s) - 1, len(t) - 1)
+
+def supports_ansi():
+    """ Returns if the console running this script supports ANSI escape sequences or not. Taken from Django's
+    supports_color().
+
+    return: bool
+    """
+    supported_platform = sys.platform != "Pocket PC" and (sys.platform != "win32" or "ANSICON" in os.environ)
+
+    is_a_tty = hasattr(sys.stdout, 'isatty') and sys.stdout.isatty()
+    if not supported_platform or not is_a_tty:
+        return False
+    return True

@@ -1,7 +1,7 @@
 import time
 from library import Library
 from song import Song
-from util import read_stdin, parse_user_input
+from util import read_stdin, parse_user_input, display_main
 
 def print_help_message():
     """ Returns a help string.
@@ -21,13 +21,14 @@ def print_help_message():
     print("\t\"restart\" to play current song from beginning, \"repeat\" to play the song again after it's over.")
     print("\t\"search [-option] <query>\" to search for a song that completes the query by searching by \"option\".")
     print("\t\toptions: \"artist\", \" \"album\", \"genre\", \"year\"")
-    print()
 
 # TODO add functionality to jump to timestamp in song, go forward / backwards by a given number of seconds
 # TODO add functionality to jump to song in history and play from there
 if __name__ == "__main__":
     print_help_message()
-    lib = Library("/home/piyush/Music")
+    # lib = Library("/home/piyush/Music/")
+    lib = Library("../music/")
+    print("\n\n", end = "") # Print a buffer line so display_main doesn't erase any of the help message
 
     # Play in descending chronological order by default.
     lib.sort("date modified", reverse = True)
@@ -37,8 +38,10 @@ if __name__ == "__main__":
     while lib.is_running():
         curr_song.init()
         curr_song.play()
+        display_main("Playing \"%s\"" % str(curr_song))
 
         # Parse user input
+        print("> ", end = "")
         while curr_song.playing():
             inp = read_stdin(poll_interval)
 
