@@ -26,82 +26,111 @@ class Song:
         year: int
         override_id3: bool
         """
-        self.file_path = file_path
-        self.mp = None
-        self.is_playing = False # Flag to keep track of this song is playing
+        self._file_path = file_path
+        self._mp = None
+        self._is_playing = False # Flag to keep track of this song is playing
+        self._time = None # What time, in seconds, of the song playback to play at
         
         # Fill in column values, first by parsing ID3 tags and then manually
-        self.columns = {}
-        for tag_name, tag in zip(Song.ID3_COLUMNS, Song.get_ID3_tags(file_path)):
-            self.columns[tag_name] = tag
-        self.columns["length"] = int(MP3(file_path).info.length + 0.5) # Read length and round to nearest integer
-        self.columns["date modified"] = Song.get_date_modified(file_path)
+        self._columns = {}
+        for tag_name, tag in zip(Song.ID3_COLUMNS, Song._get_ID3_tags(file_path)):
+            self._columns[tag_name] = tag
+        self._columns["length"] = int(MP3(file_path).info.length + 0.5) # Read length and round to nearest integer
+        self._columns["date modified"] = Song.get_date_modified(file_path)
 
         # If overriding, only do so for passed parameters
         if override_id3:
-            self.columns["title"] = title if title else self.columns["title"]
-            self.columns["artist"] = artist if artist else self.columns["artist"]
-            self.columns["album"] = album if album else self.columns["album"]
-            self.columns["genre"] = genre if genre else self.columns["genre"]
-            self.columns["year"] = year if year else self.columns["year"]
+            self._columns["title"] = title if title else self._columns["title"]
+            self._columns["artist"] = artist if artist else self._columns["artist"]
+            self._columns["album"] = album if album else self._columns["album"]
+            self._columns["genre"] = genre if genre else self._columns["genre"]
+            self._columns["year"] = year if year else self._columns["year"]
 
         # Songs should always have a title, which is the name of the file by default
-        if not self.columns["title"]:
-            self.columns["title"] = file_path.split("/")[-1][: -4] # Parse file name from absolute file path and delete file extension
+        if not self._columns["title"]:
+            self._columns["title"] = file_path.split("/")[-1][: -4] # Parse file name from absolute file path and delete file extension
 
     def init(self):
-        if not self.mp:
-            self.mp = MediaPlayer(self.file_path)
+        if not self._mp:
+            self._mp = MediaPlayer(self._file_path)
 
     def play(self):
         """ Plays this song.
         """
         # Create the MediaPlayer on demand to save system resources (and prevent VLC from freaking out).
-        if not self.mp:
+        if not self._mp:
             raise SongException("Song not initialized")
 
-        self.is_playing = True
-        self.mp.play()
+        self._is_playing = True
+        self._mp.play()
+
+        if self._time:
+            self._mp.set_time(self._time * 1000) # Seconds to milliseconds
+            self._time = None
 
     def pause(self):
         """ Pauses this song, if it's playing.
         """
-        if not self.mp:
+        if not self._mp:
             raise SongException("Song not initialized")
 
-        self.is_playing = False
-        self.mp.pause()
+        self._is_playing = False
+        self._mp.pause()
+
+    def set_time(self, time):
+        """ Sets the current play time of this song, so when the song is played (or if it's currently played)
+        it will play from that time, or start playing from that time now if the song is currently playing. Given 
+        time should be in seconds.
+
+        @param time: int or float
+        """
+        if time < 0:
+            raise SongException("Can't jump to negative timestamp")
+
+        if time < self.columns["length"]:
+            self._time = time
+            if self.playing():
+                self.stop()
+                self.play()
+
+    def get_current_time(self):
+        """ Returns the current play time, in seconds, of this song, if it's playing.
+
+        @reutnr bool
+        """
+        if self.playing():
+            return self._mp.get_time()
 
     def playing(self):
         """ Returns if this song is playing or not (ie currently paused).
 
         return: bool
         """
-        if not self.mp.is_playing():
-            # self.mp might not have registered that it's playing due to time delays, so confirm with internal flag
-            return self.is_playing
+        if not self._mp.is_playing():
+            # self._mp might not have registered that it's playing due to time delays, so confirm with internal flag
+            return self._is_playing
         else:
             return True
 
     def reset(self):
         """ Resets the song to the beginning.
         """
-        if not self.mp:
+        if not self._mp:
             raise SongException("Song not initialized")
 
-        self.is_playing = False
-        self.mp.stop()
+        self._is_playing = False
+        self._mp.stop()
 
     def stop(self):
         """ Terminates this song, freeing system resources and cleaning up.
         """
-        if self.mp:
-            self.is_playing = False
-            self.mp.stop()
-            self.mp = None
+        if self._mp:
+            self._is_playing = False
+            self._mp.stop()
+            self._mp = None
 
     @staticmethod
-    def get_ID3_tags(file_path):
+    def _get_ID3_tags(file_path):
         """ Given a file path to an mp3 song, returns the ID3 tags for title, artist, album, genre, and year (in that order), or 
         empty tuple if no tags are found.
 
@@ -155,7 +184,7 @@ class Song:
         if not isinstance(other, self.__class__):
             return False
 
-        for col in self.columns:
+        for col in self._columns:
             if col != "date modified" and self[col] != other[col]: # Don't check if 'date modified' columns match
                 return False
 
@@ -164,41 +193,4 @@ class Song:
     # Getters, setters below
 
     def __getitem__(self, key):
-        return self.columns[key]
-
-    #def get_name(self):
-    #    return self.name
-
-    #def set_name(self, name):
-    #    self.name = name
-
-    #def get_artist(self):
-    #    return self.artist
-
-    #def set_artist(self, artist):
-    #    self.artist = artist
-
-    #def get_album(self):
-    #    return self.album
-
-    #def set_album(self, album):
-    #    self.album = album
-
-    #def get_genre(self):
-    #    return self.genre
-
-    #def set_genre(self, genre):
-    #    self.genre = genre
-
-    #def get_year(self):
-    #    return self.year
-
-    #def set_year(self, year):
-    #    self.year = year
-
-    #def get_length(self):
-    #    return self.length
-
-    #def get_date_modified(self):
-    #    return self.date_modified
-
+        return self._columns[key]

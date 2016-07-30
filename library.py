@@ -1,4 +1,5 @@
 from song import Song
+from util import levenshtein_dist
 from library_exception import LibraryException
 import os, random, time
 
@@ -17,7 +18,7 @@ class Library:
         self.current_index = self.queue_index = -1
 
         for directory in directories:
-            self.load_music(directory)
+            self._load_music(directory)
 
         self.history = list(self.lib) # List tracking currently playing song and entire song history
 
@@ -71,6 +72,8 @@ class Library:
         song: Song
         """
         if song in self.lib:
+            self.history[self.current_index].stop()
+
             song_index = self.lib.index(song)
             self.history = self.history[: self.current_index + 1] \
                          + self.history[self.queue_index : song_index] \
@@ -78,8 +81,53 @@ class Library:
                          + self.history[song_index :]
             self.queue_index += song_index - self.current_index
             self.current_index += song_index - self.current_index
+
+            self.history[self.current_index].play()
         else:
             raise LibraryException("Song \"%s\" not in library" % str(song))
+
+    def jump_to_time(self, time, song = None):
+        """ Jumps to the given time, in seconds, of the given song, which is the current song by default.
+
+        @param time: int or float
+        @param song: Song
+        """
+        if not song:
+            song = self.history[self.current_index]
+
+        song.set_time(time)
+
+    def get_current_time(self):
+        return self.history[self.current_index].get_current_time()
+
+    def search(self, query, k = 5, levenshtein_dist_threshold = 2):
+        """ Given a query, formatted as a dictionary mapping columns in Song.ID3_COLUMNS + Song.NON_ID3_COLUMN
+        to arguments, returns the top k matches, which are songs whose corresponding columns start with the
+        given arguments; if no exact matches are found, returns a list of guesses.
+        Note: Always returns a list of both exact matches and guesses, but guess is non-empty if and only if
+        exact matches is empty.
+
+        @param query: dict
+        @param k: int
+
+        @return: tuple(list(Song), list(Song))
+        """
+        matched_songs, guessed_songs = [], []
+
+        for song in self.lib:
+            match_flag = True
+            for option in query:
+                if not song[option].startswith(query[option]):
+                    match_flag = False
+
+            if match_flag:
+                matched_songs.append(song)
+
+        if len(matched_songs) == 0:
+            for song in self.lib:
+                pass # TODO
+
+        return (matched_songs, guessed_songs)
 
     def add_to_queue(self, song):
         """ Adds the given song to the back of the queue.
@@ -164,7 +212,7 @@ class Library:
 
     # Helper functions below
 
-    def load_music(self, directory, recurse = False):
+    def _load_music(self, directory, recurse = False):
         """ Given (absolute path to) a directory containing music, wraps each music file in a song object and appends to this library. Loading mechanism is optionally shallow or recursive.
 
         directory: str
@@ -176,7 +224,7 @@ class Library:
 
         for file_name in os.listdir(directory):
             # Parse name and artist based on my personal convention, throwing away the file extension
-            name, artist = Library.parse_song(file_name)
+            name, artist = Library._parse_song(file_name)
 
             if not os.path.isdir(file_name):
                 if not file_name.lower().endswith(".mp3"):
@@ -184,10 +232,10 @@ class Library:
                 else:
                     self.lib.append(Song(os.path.join(directory, file_name), name, artist))
             elif recurse:
-                self.load_music(file_name, recurse)
+                self._load_music(file_name, recurse)
    
     @staticmethod
-    def parse_song(file_name):
+    def _parse_song(file_name):
         """
         Parses name and artist from the song at the filename, according to my personal convention.
 

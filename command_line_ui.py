@@ -1,44 +1,52 @@
-import time
 from library import Library
 from song import Song
-from util import read_stdin, parse_user_input, display_main
+from parser import Parser
+from util import read_stdin, print_help_message, print_main, supports_ansi
+import sys
 
-def print_help_message():
-    """ Returns a help string.
+def supports_ansi():
+    """ Returns if the console running this script supports ANSI escape sequences or not. Taken from Django's
+    supports_color().
 
-    return: str
+    @return bool
     """
-    print("Command line arguments:")
-    print("\tEnter any of (" + ", ".join(["\"" + col + "\"" for col in Song.ID3_COLUMNS + Song.NON_ID3_COLUMNS]) + ") to sort songs by that column.")
-    print("Available playing during playback:")
-    print("\t\"skip\" to skip the current song, \"back\" to go back a song.")
-    print("\t\"stop\" to kill this script.")
-    print("\t\"next\" <song> to play the given song next.")
-    print("\t\"pause\" to pause the current song, \"unpause\" to unpause a paused song.")
-    print("\t\"info\" to see stored column information about the currently playing song.")
-    print("\t\"queue <song>\" to add <song> to queue or \"queue\" to display queue,\"dequeue <song>\" to remove from queue.")
-    print("\t\tLookup format for <song>: \"<title>\" or \"<title> - <artist>\"")
-    print("\t\"restart\" to play current song from beginning, \"repeat\" to play the song again after it's over.")
-    print("\t\"search [-option] <query>\" to search for a song that completes the query by searching by \"option\".")
-    print("\t\toptions: \"artist\", \" \"album\", \"genre\", \"year\"")
+    supported_platform = sys.platform != "Pocket PC" and (sys.platform != "win32" or "ANSICON" in os.environ)
 
-# TODO add functionality to jump to timestamp in song, go forward / backwards by a given number of seconds
-# TODO add functionality to jump to song in history and play from there
+    is_a_tty = hasattr(sys.stdout, 'isatty') and sys.stdout.isatty()
+    if not supported_platform or not is_a_tty:
+        return False
+    return True
+
+def vlc_installed():
+    """ Returns if this computer has VLC installed.
+
+    @return bool
+    """
+    pass
+
+SUPPORTS_ANSI = supports_ansi()
+
 if __name__ == "__main__":
+    if not vlc_installed():
+        print("VLC must be installed")
+        sys.exit(0)
+
     print_help_message()
     # lib = Library("/home/piyush/Music/")
     lib = Library("../music/")
-    print("\n\n", end = "") # Print a buffer line so display_main doesn't erase any of the help message
+    parser = Parser(lib)
+    print("\n\n", end = "") # Print a buffer line so print_main doesn't erase any of the help message
 
     # Play in descending chronological order by default.
     lib.sort("date modified", reverse = True)
 
     poll_interval = 0.5
     curr_song = lib.first_song()
+
     while lib.is_running():
         curr_song.init()
         curr_song.play()
-        display_main("Playing \"%s\"" % str(curr_song))
+        print_main("Playing \"%s\"" % str(curr_song), SUPPORTS_ANSI)
 
         # Parse user input
         print("> ", end = "")
@@ -46,14 +54,13 @@ if __name__ == "__main__":
             inp = read_stdin(poll_interval)
 
             if inp != None:
-                got = parse_user_input(lib, curr_song, inp)
-
-                if got:
+                next_song = parser.parse_user_input(lib, curr_song, inp)
+                if next_song:
                     break   
 
         curr_song.stop()
 
-        if got:
-            curr_song = got
+        if next_song:
+            curr_song = next_song
         else:
             curr_song = lib.next_song()
