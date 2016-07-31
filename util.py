@@ -15,7 +15,7 @@ def read_stdin(timeout):
     else:
         return sys.stdin.readline() 
 
-def print_main(s, inp = None, supports_ansi = True):
+def print_main(s, inp = None, output_message = None, supports_ansi = True):
     """ Displays the given string by printing it in the middle of the console and overwriting the last displayed
     string. If input was given, it would have been printed below the previously displayed line, and so is moved
     above the displayed line. Assumes that display line is always one line above current line.
@@ -30,61 +30,69 @@ def print_main(s, inp = None, supports_ansi = True):
 
     if supports_ansi:
         # Useful ANSI escape sequences
-        move_up_line = "\033[1A"
-        move_down_line = "\033[1B"
-        clear_line = "\033[K"
+        mul = "\033[1A" # Move up line
+        mdl = "\n"      # Move down line
+        rts = "\033[1G" # Return to start
+        cl = "\033[K"   # Clear line
 
         if inp:
             # Get rid of newline if input isn't already stripped
             if inp[-1] == "\n":
                 inp = inp[: -1]
 
-            # Move inp up a line by clearing two lines above and re-printing
-            print(move_up_line + move_up_line + clear_line, end = "")
-            print(inp, end = "")
+            # Move inp up two lines
+            print(mul * 3 + rts + cl, end = "")
+            print(inp + mdl, end = "")
 
-            # Move back down two lines and print the main string
-            print(move_down_line + move_down_line, end = "")
-            print(clear_line + centered_s)
+            # Print output message below inp
+            if output_message:
+                print(rts + cl, end = "")
+                for token in output_message.split("\n"):
+                    print(token + mdl, end = "")
+
+            # Print the new main line underneath where the last main line was
+            print(rts + cl + mdl, end = "")
+            print(centered_s + mdl, end = "")
         else:
-            print(move_up_line + centered_s + clear_line)
+            # Erase last main line and print the new one
+            print(mul * 2 + rts + cl + centered_s + mdl, end = "")
     else:
         print(centered_s)
 
 # Helper functions below
 
-def print_help_message():
+def help_message():
     """ Returns a help string.
 
     return: str
     """
-    print("Command line arguments:")
-    print("\tEnter any of (" + ", ".join(["\"" + col + "\"" for col in Song.ID3_COLUMNS + Song.NON_ID3_COLUMNS]) + ") to sort songs by that column.")
-    print("Available playing during playback:")
-    print("\t\"skip\" to skip the current song, \"back\" to go back a song.")
-    print("\t\"stop\" to kill this script.")
-    print("\t\"pause\" to pause the current song, \"unpause\" to unpause a paused song.")
-    print("\t\"next <song>\" to play the given song next.")
-    print("\t\"jump <song>\" to jump to the given song.")
-    print("\t\"repeat\" to play the song again after it's over, \"restart\" to play current song from beginning.")
-    print("\t\"time <t>\" to jump to time t (in seconds) of the current song.")
-    print("\t\"forward\" to go forward 5 seconds, \"forward <n>\" to go forward <n> seconds.")
-    print("\'\"backward\" to go backward 5 seconds, \"backward <n>\" to go backward <n> seconds.")
-    print("\t\"info\" to see stored column information about the currently playing song.")
-    print("\t\"queue <song>\" to add <song> to queue or \"queue\" to display queue,\"dequeue <song>\" to remove from queue.")
-    print("\t\"search <query>\" to search for a song that completes the query by searching by \"option\".")
-    print("Search format:")
-    print("\tWhen searching, use the format")
-    print("\t\t-[option1] \"arg1\" -[option2] \"arg2\"")
-    print("\tand so on. Available options: \"artist\", \" \"album\", \"genre\", \"year\"")
-    print("\tOtherwise, provide no options and search for the song in raw format \"<title> - <artist>\" or simply \"<title>\"")
+    help_str = ""
 
-def print_pause_help_message():
-    """ Returns a help string for pause mode.
+    help_str += "Command line arguments:\n"
+    help_str += "\tEnter any of (" + ", ".join(["\"" + col + "\"" for col in Song.ID3_COLUMNS + Song.NON_ID3_COLUMNS]) + \
+                ") to sort songs by that column.\n"
+    help_str += "Available playing during playback:\n"
+    help_str += "\t\"skip\" to skip the current song, \"back\" to go back a song.\n"
+    help_str += "\t\"stop\" to kill this script.\n"
+    help_str += "\t\"pause\" to pause the current song, \"unpause\" to unpause a paused song.\n"
+    help_str += "\t\"next <song>\" to play the given song next.\n"
+    help_str += "\t\"jump <song>\" to jump to the given song.\n"
+    help_str += "\t\"repeat\" to play the song again after it's over, \"restart\" to play current song from beginning.\n"
+    help_str += "\t\"time <t>\" to jump to time t (in seconds) of the current song.\n"
+    help_str += "\t\"forward\" to go forward 5 seconds, \"forward <n>\" to go forward <n> seconds.\n"
+    help_str += "\'\"backward\" to go backward 5 seconds, \"backward <n>\" to go backward <n> seconds.\n"
+    help_str += "\t\"info\" to see stored column information about the currently playing song.\n"
+    help_str += "\t\"queue <song>\" to add <song> to queue or \"queue\" to display queue,\"dequeue <song>\" to remove " + \
+                "from queue.\n"
+    help_str += "\t\"search <query>\" to search for a song that completes the query by searching by \"option\".\n"
+    help_str += "Search format:\n"
+    help_str += "\tWhen searching, use the format\n"
+    help_str += "\t\t-[option1] \"arg1\" -[option2] \"arg2\"\n"
+    help_str += "\tand so on. Available options: \"artist\", \" \"album\", \"genre\", \"year\".\n"
+    help_str += "\tOtherwise, provide no options and search for the song in raw format \"<title> - <artist>\" or simply " + \
+                "\"<title>\"\n"
 
-    @return str
-    """
-    print("Unrecognized command in paused mode - type \"unpause\" to replay the song.") 
+    return help_str
 
 def levenshtein_dist(s, t):
     """ Returns the levenshtein distance between the given strings. Implements Wagner-Fischer algorithm.

@@ -1,7 +1,7 @@
 from library import Library
 from song import Song
 from parser import Parser
-from util import read_stdin, print_help_message, print_main, supports_ansi
+from util import read_stdin, help_message, print_main
 import sys
 
 def supports_ansi():
@@ -22,41 +22,50 @@ def vlc_installed():
 
     @return bool
     """
-    pass
+    return True
 
 SUPPORTS_ANSI = supports_ansi()
+POLL_INTERVAL = 0.5
+MAIN_STR = "Playing \"%s\""
 
 if __name__ == "__main__":
     if not vlc_installed():
         print("VLC must be installed")
         sys.exit(0)
 
-    print_help_message()
-    # lib = Library("/home/piyush/Music/")
-    lib = Library("../music/")
-    parser = Parser(lib)
+    lib = Library("/home/piyush/Music/")
+    parser = Parser(lib, SUPPORTS_ANSI)
+    print(help_message())
     print("\n\n", end = "") # Print a buffer line so print_main doesn't erase any of the help message
 
     # Play in descending chronological order by default.
     lib.sort("date modified", reverse = True)
 
-    poll_interval = 0.5
-    curr_song = lib.first_song()
+    curr_song, inp = lib.first_song(), None
 
     while lib.is_running():
         curr_song.init()
         curr_song.play()
-        print_main("Playing \"%s\"" % str(curr_song), SUPPORTS_ANSI)
+        
+        if inp:
+            print_main(MAIN_STR % str(curr_song), "> " + inp, None, SUPPORTS_ANSI)
+        else:
+            print_main(MAIN_STR % str(curr_song), None, None, SUPPORTS_ANSI)
+        print("> ", end = "", flush = True)
 
         # Parse user input
-        print("> ", end = "")
         while curr_song.playing():
-            inp = read_stdin(poll_interval)
+            inp = read_stdin(POLL_INTERVAL)
 
-            if inp != None:
-                next_song = parser.parse_user_input(lib, curr_song, inp)
+            if inp:
+                next_song, output_message = parser.parse_user_input(curr_song, inp)
+
+                if output_message:
+                    print_main(MAIN_STR % str(curr_song), "> " + inp, output_message, SUPPORTS_ANSI)
+                    print("> ", end = "", flush = True)
+
                 if next_song:
-                    break   
+                    break
 
         curr_song.stop()
 
