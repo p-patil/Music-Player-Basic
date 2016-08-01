@@ -23,10 +23,7 @@ def print_main(s, inp = None, output_message = None, supports_ansi = True):
     @param s: str
     @param inp: str
     """
-    stty = os.popen("stty size")
-    console_width = int(stty.read().split()[1]) # Width of console in characters
-    stty.close()
-    centered_s = s.center(console_width)
+    centered_s = s.center(console_width())
 
     if supports_ansi:
         # Useful ANSI escape sequences
@@ -66,33 +63,40 @@ def help_message():
 
     return: str
     """
-    help_str = ""
+    help_str = "\n"
+    help_str += "HELP SEQUENCE".center(console_width())
 
-    help_str += "Command line arguments:\n"
-    help_str += "\tEnter any of (" + ", ".join(["\"" + col + "\"" for col in Song.ID3_COLUMNS + Song.NON_ID3_COLUMNS]) + \
-                ") to sort songs by that column.\n"
-    help_str += "Available playing during playback:\n"
+    help_str += "\nCommands available playing during playback:\n"
     help_str += "\t\"skip\" to skip the current song, \"back\" to go back a song.\n"
     help_str += "\t\"stop\" to kill this script.\n"
     help_str += "\t\"pause\" to pause the current song, \"unpause\" to unpause a paused song.\n"
     help_str += "\t\"next <song>\" to play the given song next.\n"
     help_str += "\t\"jump <song>\" to jump to the given song.\n"
-    help_str += "\t\"repeat\" to play the song again after it's over, \"restart\" to play current song from beginning.\n"
+    help_str += "\t\"repeat\" to play the song again after it's over.\n"
+    help_str += "\t\"restart\" to play current song from beginning.\n"
     help_str += "\t\"time <t>\" to jump to time t (in seconds) of the current song.\n"
-    help_str += "\t\"forward\" to go forward 5 seconds, \"forward <n>\" to go forward <n> seconds.\n"
-    help_str += "\'\"backward\" to go backward 5 seconds, \"backward <n>\" to go backward <n> seconds.\n"
-    help_str += "\t\"info\" to see stored column information about the currently playing song.\n"
-    help_str += "\t\"queue <song>\" to add <song> to queue or \"queue\" to display queue,\"dequeue <song>\" to remove " + \
-                "from queue.\n"
-    help_str += "\t\"search <query>\" to search for a song that completes the query by searching by \"option\".\n"
-    help_str += "Search format:\n"
-    help_str += "\tWhen searching, use the format\n"
-    help_str += "\t\t-[option1] \"arg1\" -[option2] \"arg2\"\n"
-    help_str += "\tand so on. Available options: \"artist\", \" \"album\", \"genre\", \"year\".\n"
-    help_str += "\tOtherwise, provide no options and search for the song in raw format \"<title> - <artist>\" or simply " + \
-                "\"<title>\"\n"
+    help_str += "\t\"forward <n>\" to go forward <n> seconds (5 by default).\n"
+    help_str += "\t\"backward <n>\" to go backward <n> seconds (5 by default).\n"
+    help_str += "\t\"info\" to see stored column information about current song.\n"
+    help_str += "\t\"queue <song>\" to add <song> to queue or \"queue\" to display queue.\n"
+    help_str += "\t\"dequeue <song>\" to remove from queue.\n"
+    help_str += "\t\"sort <column>\" to sort songs by column.\n"
+    help_str += "\t\"search <query>\" to search for a song in the library. Search format:\n"
+    help_str += "\t\t-[option1] \"arg1\" -[option2] \"arg2\" <...> -[optionN] \"argN\"\n"
+    help_str += "\tAvailable options: " \
+             +  ", ".join(["<" + str(col) + ">" for col in Song.ID3_COLUMNS + Song.NON_ID3_COLUMNS]) \
+             +  ".\n"
+    help_str += "\tOtherwise, search in raw format \"<title> - <artist>\" or \"<title>\".\n"
+    help_str += "\n"
 
     return help_str
+
+def console_width():
+    stty = os.popen("stty size")
+    width = int(stty.read().split()[1]) # Width of console in characters
+    stty.close()
+
+    return width
 
 def levenshtein_dist(s, t):
     """ Returns the levenshtein distance between the given strings. Implements Wagner-Fischer algorithm.

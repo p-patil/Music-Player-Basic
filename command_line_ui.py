@@ -1,7 +1,5 @@
-from library import Library
-from song import Song
-from parser import Parser
-from util import read_stdin, help_message, print_main
+import library, parser
+from util import help_message, print_main, read_stdin
 import sys
 
 def supports_ansi():
@@ -17,29 +15,19 @@ def supports_ansi():
         return False
     return True
 
-def vlc_installed():
-    """ Returns if this computer has VLC installed.
-
-    @return bool
-    """
-    return True
-
 SUPPORTS_ANSI = supports_ansi()
 POLL_INTERVAL = 0.5
 MAIN_STR = "Playing \"%s\""
+USER_INPUT_MARKER = "> "
 
 if __name__ == "__main__":
-    if not vlc_installed():
-        print("VLC must be installed")
-        sys.exit(0)
-
-    lib = Library("/home/piyush/Music/")
-    parser = Parser(lib, SUPPORTS_ANSI)
+    lib = library.Library("/home/piyush/Music/")
+    parser = parser.Parser(lib)
     print(help_message())
     print("\n\n", end = "") # Print a buffer line so print_main doesn't erase any of the help message
 
     # Play in descending chronological order by default.
-    lib.sort("date modified", reverse = True)
+    lib.sort("date_modified", reverse = True)
 
     curr_song, inp = lib.first_song(), None
 
@@ -48,10 +36,10 @@ if __name__ == "__main__":
         curr_song.play()
         
         if inp:
-            print_main(MAIN_STR % str(curr_song), "> " + inp, None, SUPPORTS_ANSI)
+            print_main(MAIN_STR % str(curr_song), USER_INPUT_MARKER + inp, None, SUPPORTS_ANSI)
         else:
             print_main(MAIN_STR % str(curr_song), None, None, SUPPORTS_ANSI)
-        print("> ", end = "", flush = True)
+        print(USER_INPUT_MARKER, end = "", flush = True)
 
         # Parse user input
         while curr_song.playing():
@@ -61,8 +49,8 @@ if __name__ == "__main__":
                 next_song, output_message = parser.parse_user_input(curr_song, inp)
 
                 if output_message:
-                    print_main(MAIN_STR % str(curr_song), "> " + inp, output_message, SUPPORTS_ANSI)
-                    print("> ", end = "", flush = True)
+                    print_main(MAIN_STR % str(curr_song), USER_INPUT_MARKER + inp, output_message, SUPPORTS_ANSI)
+                    print(USER_INPUT_MARKER, end = "", flush = True)
 
                 if next_song:
                     break

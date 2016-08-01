@@ -12,7 +12,7 @@ class Song:
     """
 
     ID3_COLUMNS = ("title", "artist", "album", "genre", "year")
-    NON_ID3_COLUMNS = ("length", "date modified")
+    NON_ID3_COLUMNS = ("length", "date_modified")
 
     def __init__(self, file_path, title = None, artist = None, album = None, genre = None, year = None, override_id3 = True):
         """ Given an absolute file path, and data about the song a initialize a Song object. Parses ID3 tags for additional metadata if it exists. If
@@ -36,7 +36,7 @@ class Song:
         for tag_name, tag in zip(Song.ID3_COLUMNS, Song._get_ID3_tags(file_path)):
             self._columns[tag_name] = tag
         self._columns["length"] = int(MP3(file_path).info.length + 0.5) # Read length and round to nearest integer
-        self._columns["date modified"] = Song.get_date_modified(file_path)
+        self._columns["date_modified"] = Song.get_date_modified(file_path)
 
         # If overriding, only do so for passed parameters
         if override_id3:
@@ -185,7 +185,7 @@ class Song:
             return False
 
         for col in self._columns:
-            if col != "date modified" and self[col] != other[col]: # Don't check if 'date modified' columns match
+            if col != "date_modified" and self[col] != other[col]: # Don't check if 'date modified' columns match
                 return False
 
         return True

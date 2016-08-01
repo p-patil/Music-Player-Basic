@@ -1,15 +1,18 @@
-from util import help_message, print_main
+import command_line_ui
+from util import help_message, print_main, read_stdin
 from song import Song
 import sys
+
+SUPPORTS_ANSI, USER_INPUT_MARKER = command_line_ui.SUPPORTS_ANSI, command_line_ui.USER_INPUT_MARKER
 
 class Parser:
     """ Class used to parse user input and perform the appropriate library manipulation or provide 
     the appropriate information.
     """
 
-    def __init__(self, lib, supports_ansi = True):
+
+    def __init__(self, lib):
         self.library = lib
-        self.supports_ansi = supports_ansi
 
     def parse_user_input(self, curr_song, inp):
         """ Given user input, parses the input and executes the appropriate command in the 
@@ -26,12 +29,14 @@ class Parser:
         inp = inp.lower().strip()
         tokens = inp.split()
 
-        if inp == "stop":
+        if len(inp) == 0:
+            return (None, None)
+        elif inp == "stop":
             return self._stop(curr_song)
         elif inp == "help":
             return self._help()
         elif inp == "pause":
-            return self._pause(curr_song, inp, self.supports_ansi)
+            return self._pause(curr_song, inp, SUPPORTS_ANSI)
         elif inp == "skip":
             return self._skip()
         elif inp == "back":
@@ -56,6 +61,8 @@ class Parser:
             return self._queue(tokens)
         elif tokens[0] == "dequeue":
             return self._dequeue(tokens)
+        elif tokens[0] == "sort":
+            return self._sort(tokens)
         elif tokens[0] == "search":
             return self._search(tokens)
         else:
@@ -72,7 +79,8 @@ class Parser:
     # TODO: allow for commands to be executed during pause, refactor to avoid printing anything and returning instead
     def _pause(self, curr_song, inp, supports_ansi = True):
         curr_song.pause()
-        print_main("Playing \"%s\" [paused]" % str(curr_song), inp, None, supports_ansi)
+        print_main("Playing \"%s\" [paused]" % str(curr_song), USER_INPUT_MARKER + inp, None, supports_ansi)
+        print(USER_INPUT_MARKER, end = "", flush = True)
 
         # Keep polling until user sends signal to unpause. Disable all other functionality.
         poll_interval = 0.5
@@ -86,7 +94,8 @@ class Parser:
                     print("Unrecognized command in paused mode - type \"unpause\" to replay the song.")
 
         curr_song.play()
-        print_main("Playing \"%s\"" % str(curr_song), inp, None, supports_ansi)
+        print_main("Playing \"%s\"" % str(curr_song), USER_INPUT_MARKER + pause_inp, None, supports_ansi)
+        print(USER_INPUT_MARKER, end = "", flush = True)
         return (None, None)
 
     def _skip(self):
@@ -144,6 +153,7 @@ class Parser:
             except ValueError:
                 return (None, "Couldn't parse timestamp")
 
+# TODO: debug this
     def _forward(self, curr_song, time):
         curr_time = self.library.get_current_time()
         if curr_time + time < curr_song["length"]:
@@ -196,6 +206,15 @@ class Parser:
             matched_songs, guessed_songs = self.library.search(query, Parser._parse_args(tokens[1 :]))
             matches_str = Parser._matches_str(matched_songs, guessed_songs, on_success)
             return (None, matches_str)
+
+    def _sort(self, tokens):
+        if len(tokens) == 1:
+            return (None, "Enter a column to parse")
+        elif len(tokens) != 2:
+            return (None, "Couldn't parse column name")
+        else:
+            self.lib.sort(tokens[1])
+            return (None, None)
 
     def _search(self, tokens):
         if len(tokens) == 1:
