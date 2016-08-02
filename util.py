@@ -43,8 +43,8 @@ def print_main(s, inp = None, output_message = None, supports_ansi = True):
 
             # Print output message below inp
             if output_message:
-                print(rts + cl, end = "")
                 for token in output_message.split("\n"):
+                    print(rts + cl, end = "")
                     print(token + mdl, end = "")
 
             # Print the new main line underneath where the last main line was

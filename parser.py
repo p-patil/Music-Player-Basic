@@ -216,7 +216,7 @@ class Parser:
             self.lib.sort(tokens[1])
             return (None, None)
 
-    def _search(self, tokens):
+    def _search(self, tokens, k = 5):
         if len(tokens) == 1:
             return (None, "No search query given")
         else:
@@ -228,7 +228,7 @@ class Parser:
                 return (None, "Could not pass argument \"%s\"" % " ".join(tokens[1 :]))
 
             matched_songs, guessed_songs = self.library.search(query)
-            matches_str = Parser._matches_str(matched_songs, guessed_songs, on_success)
+            matches_str = Parser._matches_str(matched_songs[: k], guessed_songs[: k], on_success)
             return (None, matches_str)
 
     # Helper functions below
@@ -286,7 +286,7 @@ class Parser:
         matches_str = ""
 
         if len(matched_songs) == 0:
-            matches_str += "No matching songs found; did you mean:\n"
+            matches_str += "No matching songs found; you might mean:\n"
             for song in guessed_songs:
                 matches_str += "\t" + str(song) + "\n"
         elif len(matched_songs) == 1:

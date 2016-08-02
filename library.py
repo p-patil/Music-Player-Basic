@@ -1,7 +1,7 @@
 from song import Song
 from util import levenshtein_dist
 from library_exception import LibraryException
-import os, random, time
+import os, random, time, difflib
 
 class Library:
     """ Class representing a music library.
@@ -100,32 +100,48 @@ class Library:
     def get_current_time(self):
         return self.history[self.current_index].get_current_time()
 
-    def search(self, query, k = 5, levenshtein_dist_threshold = 2):
+    def search(self, query, threshold = 0.8):
         """ Given a query, formatted as a dictionary mapping columns in Song.ID3_COLUMNS + Song.NON_ID3_COLUMN
-        to arguments, returns the top k matches, which are songs whose corresponding columns start with the
-        given arguments; if no exact matches are found, returns a list of guesses.
+        to arguments, returns matches, which are songs whose corresponding columns start with the
+        given arguments; if no exact matches are found, returns a list of guesses, ranked by lowest edit distance 
+        between given columns, if and only if each SequenceMatcher ratio is within the threshold.
         Note: Always returns a list of both exact matches and guesses, but guess is non-empty if and only if
         exact matches is empty.
 
-        @param query: dict
-        @param k: int
+        @param query: dict(str -> str)
+        @param threshold: int
+        @param weights: dict(str -> double)
 
         @return: tuple(list(Song), list(Song))
         """
         matched_songs, guessed_songs = [], []
 
         for song in self.lib:
-            match_flag = True
+            match = True
             for option in query:
-                if not song[option].startswith(query[option]):
-                    match_flag = False
+                if not song[option].lower().startswith(query[option].lower()):
+                    match = False
+                    break
 
-            if match_flag:
+            if match:
                 matched_songs.append(song)
 
         if len(matched_songs) == 0:
+            guesses = {}
             for song in self.lib:
-                pass # TODO
+                diff, match = 0, True
+                for col in query:
+                    dist = difflib.SequenceMatcher(None, query[col], song[col]).ratio()
+                    if dist > threshold:
+                        match = False
+                        break
+                    else:
+                        diff += 1.0 - dist
+
+                if match:
+                    guesses[diff] = song
+
+            guessed_songs = [guesses[diff] for diff in sorted(guesses.keys())]
 
         return (matched_songs, guessed_songs)
 
