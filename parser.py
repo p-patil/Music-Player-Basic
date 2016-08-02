@@ -174,10 +174,14 @@ class Parser:
 
         return (None, info_str)
 
-    def _queue(self, tokens):
+    def _queue(self, tokens, k = 5):
         if len(tokens) == 1:
             if self.library.is_queue_empty():
-                return (None, "Queue is empty")
+                queue_empty_str = "Queue is empty; next songs are:\n"
+                for song in self.library.get_next_songs(k):
+                    queue_empty_str += "\t" + str(song) + "\n"
+
+                return (None, queue_empty_str)
             else:
                 queue_str = ""
                 for song in self.library.get_queued_songs():

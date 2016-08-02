@@ -61,7 +61,7 @@ def print_main(s, inp = None, output_message = None, supports_ansi = True):
 def help_message():
     """ Returns a help string.
 
-    return: str
+    @return: str
     """
     help_str = "\n"
     help_str += "HELP SEQUENCE".center(console_width())

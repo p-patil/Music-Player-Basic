@@ -18,13 +18,13 @@ class Song:
         """ Given an absolute file path, and data about the song a initialize a Song object. Parses ID3 tags for additional metadata if it exists. If
         the override_id3 is true, the given name and artist will override the name and artist contained in the ID3 tag.
 
-        file_path: str
-        title: str
-        artist: str
-        album: str
-        genre: str
-        year: int
-        override_id3: bool
+        @param file_path: str
+        @param title: str
+        @param artist: str
+        @param album: str
+        @param genre: str
+        @param year: int
+        @param override_id3: bool
         """
         self._file_path = file_path
         self._mp = None
@@ -96,7 +96,7 @@ class Song:
     def get_current_time(self):
         """ Returns the current play time, in seconds, of this song, if it's playing.
 
-        @reutnr bool
+        @return bool
         """
         if self.playing():
             return self._mp.get_time()
@@ -104,7 +104,7 @@ class Song:
     def playing(self):
         """ Returns if this song is playing or not (ie currently paused).
 
-        return: bool
+        @return: bool
         """
         if not self._mp.is_playing():
             # self._mp might not have registered that it's playing due to time delays, so confirm with internal flag
@@ -134,9 +134,9 @@ class Song:
         """ Given a file path to an mp3 song, returns the ID3 tags for title, artist, album, genre, and year (in that order), or 
         empty tuple if no tags are found.
 
-        filename: str
+        @param filename: str
 
-        return: tuple of ID3 tags
+        @return: tuple of ID3 tags
         """
         ret = [None for _ in range(len(Song.ID3_COLUMNS))]
         try:
@@ -155,9 +155,9 @@ class Song:
     def get_date_modified(file_path):
         """ Gets the date modified of the file indicated by the given file path.
 
-        file_path: str
+        @param file_path: str
 
-        return: datetime.datetime
+        @return: datetime.datetime
         """
         return datetime.fromtimestamp(os.path.getmtime(file_path))
 
@@ -167,8 +167,8 @@ class Song:
         """
         Sets the "date modified" of a file.
 
-        file_path: str
-        date: datetime.datetime
+        @param file_path: str
+        @param date: datetime.datetime
         """
         os.utime(file_path, (0, time.mktime(date.timetuple())))
 

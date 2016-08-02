@@ -11,7 +11,7 @@ class Library:
     def __init__(self, *directories):
         """ Initializes a library by loading in music from the given directories.
 
-        *directories: Tuple of str
+        @param *directories: Tuple of str
         """
         self.lib = [] # List of song objects tracked
         self.running = False # Whether or not the library is currently in 'running' mode, used when music is playing
@@ -25,14 +25,14 @@ class Library:
     def is_running(self):
         """ Returns if the library is still running.
 
-        return: bool
+        @return: bool
         """
         return self.current_index < len(self.history) - 1
 
     def first_song(self):
         """ Initializes the library by returning the first song to play and initializing pointers.
 
-        return: Song
+        @return: Song
         """
         self.current_index = 0
         self.queue_index = 1
@@ -42,7 +42,7 @@ class Library:
         """ Returns the next song to play, and advances internal pointers. Assumes that library
         is still running.
 
-        return: Song
+        @return: Song
         """
         # Advance pointers
         if self.is_queue_empty():
@@ -54,7 +54,7 @@ class Library:
     def last_song(self):
         """ Returns the last song played, and moves internal pointers back.
         
-        return: Song
+        @return: Song
         """
         if self.current_index == 0:
             return None
@@ -69,7 +69,7 @@ class Library:
     def jump_to_song(self, song):
         """ Jumps to the given song, preserving the queue.
 
-        song: Song
+        @param song: Song
         """
         if song in self.lib:
             self.history[self.current_index].stop()
@@ -148,7 +148,7 @@ class Library:
     def add_to_queue(self, song):
         """ Adds the given song to the back of the queue.
 
-        song: Song
+        @param song: Song
         """
         self.history.insert(self.queue_index, song)
         self.queue_index += 1
@@ -161,7 +161,7 @@ class Library:
         """ Removes the first occurrence of the given song from the queue, or all occurrences if the remove_all flag is set. Returns
         if the song to remove was found in the queue or not.
 
-        return: bool
+        @return: bool
         """
         found = False
         for i in range(self.current_index + 1, self.queue_index):
@@ -183,9 +183,18 @@ class Library:
     def get_queued_songs(self):
         """ Gets the queued songs.
 
-        return: list
+        @return: list
         """
         return self.history[self.current_index : self.queue_index]
+
+    def get_next_songs(self, k):
+        """ Returns the next k songs after the current song, with or without the queue.
+
+        @param k: int
+
+        @return list(Song)
+        """
+        return self.history[self.current_index + 1 : self.current_index + 1 + k]
 
     def get_library(self):
         return list(self.lib)
@@ -231,8 +240,8 @@ class Library:
     def _load_music(self, directory, recurse = False):
         """ Given (absolute path to) a directory containing music, wraps each music file in a song object and appends to this library. Loading mechanism is optionally shallow or recursive.
 
-        directory: str
-        recurse: bool
+        @param directory: str
+        @param recurse: bool
         """
         # Error checking
         if not os.path.isdir(directory):
@@ -255,9 +264,9 @@ class Library:
         """
         Parses name and artist from the song at the filename, according to my personal convention.
 
-        filename: str
+        @param filename: str
 
-        return: tuple(str, str)
+        @return: tuple(str, str)
         """
         if " - " in file_name:
             name, artist = file_name.split(" - ")
