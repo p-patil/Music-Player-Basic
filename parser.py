@@ -149,7 +149,9 @@ class Parser:
 
     def _time(self, curr_song, tokens):
         if len(tokens) == 1:
-            return (None, "%s out of %s seconds passed" % (curr_song.get_current_time(), curr_song["length"]))
+            curr_time, length = curr_song.get_current_time(), curr_song["length"]
+            percentage, time_left = curr_time / length * 100, length - curr_time
+            return (None, "%s out of %s seconds passed (%s%%), %s seconds remaining" % (curr_time, length, percentage, time_left))
         elif len(tokens) > 2:
             return (None, "Couldn't parse timestamp")
         else:
@@ -336,7 +338,7 @@ class Parser:
         elif len(matched_songs) == 1:
             matches_str += on_success(matched_songs[0])
         else:
-            matches_str += "Multiple matches found:"
+            matches_str += "Multiple matches found:\n"
             for song in matched_songs:
                 matches_str += "\t" + str(song) + "\n"
 
