@@ -73,16 +73,19 @@ class Library:
         """
         if song in self.lib:
             self.history[self.current_index].stop()
+            song_index = (self.history[: self.current_index + 1] + self.history[self.queue_index :]).index(song)
+            queue_size = self.queue_index - self.current_index + 1
 
-            song_index = self.lib.index(song)
-            self.history = self.history[: self.current_index + 1] \
-                         + self.history[self.queue_index : song_index] \
-                         + self.get_queued_songs() \
-                         + self.history[song_index :]
-            self.queue_index += song_index - self.current_index
-            self.current_index += song_index - self.current_index
+            played_songs = self.history[: self.current_index + 1]
+            queue = self.history[self.current_index + 1 : self.queue_index]
+            new_played_songs = self.history[self.queue_index : song_index]
+            future_songs = self.history[song_index :]
 
-            self.history[self.current_index].play()
+            self.history = played_songs + new_played_songs + queue + future_songs
+            self.current_index = song_index
+            self.queue_index = song_index + queue_size 
+
+            return self.history[self.current_index]
         else:
             raise LibraryException("Song \"%s\" not in library" % str(song))
 
@@ -119,7 +122,9 @@ class Library:
         for song in self.lib:
             match = True
             for option in query:
-                if not song[option].lower().startswith(query[option].lower()):
+                if song[option] is None:
+                    continue
+                elif not song[option].lower().startswith(query[option].lower()):
                     match = False
                     break
 
@@ -131,6 +136,9 @@ class Library:
             for song in self.lib:
                 diff, match = 0, True
                 for col in query:
+                    if song[col] is None:
+                        continue
+
                     dist = difflib.SequenceMatcher(None, query[col], song[col]).ratio()
                     if dist > threshold:
                         match = False
@@ -178,14 +186,14 @@ class Library:
     def is_queue_empty(self):
         """ Returns if the queue is empty.
         """
-        return self.current_index == self.queue_index - 1
+        return self.current_index + 1 == self.queue_index
 
     def get_queued_songs(self):
         """ Gets the queued songs.
 
         @return: list
         """
-        return self.history[self.current_index : self.queue_index]
+        return self.history[self.current_index + 1 : self.queue_index]
 
     def get_next_songs(self, k):
         """ Returns the next k songs after the current song, with or without the queue.
@@ -226,13 +234,13 @@ class Library:
         # Re-insert songs in order
         self.lib = []
         for col in sorted_keys:
-            for song in col_to_song[col]:
-                self.lib.append(song)
+            self.lib += col_to_song[col]
 
         if reverse:
             self.lib.reverse()
 
-        # Reset song order, preserving the queue
+        # Reset song order, preserving the queue and starting playback over
+        self.first_song() # Reset song pointers
         self.history = self.get_queued_songs() + list(self.lib)
 
     # Helper functions below

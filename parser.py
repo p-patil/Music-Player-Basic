@@ -1,15 +1,36 @@
-import command_line_ui
+import main
 from util import help_message, print_main, read_stdin
 from song import Song
 import sys
 
-SUPPORTS_ANSI, USER_INPUT_MARKER = command_line_ui.SUPPORTS_ANSI, command_line_ui.USER_INPUT_MARKER
+SUPPORTS_ANSI, USER_INPUT_MARKER, POLL_INTERVAL = main.SUPPORTS_ANSI, main.USER_INPUT_MARKER, main.POLL_INTERVAL
+
+def _volume(inp, curr_song, volume):
+    new_volume = volume
+    tokens = inp.lower().split()
+    if len(tokens) == 1:
+        print_main(MAIN_STR % str(curr_song), USER_INPUT_MARKER + inp, "Volume at %s%%" % volume, SUPPORTS_ANSI)
+    elif len(tokens) == 2:
+        try:
+            vol = int(tokens[1])
+            if vol < 0 or vol > 100:
+                print_main(MAIN_STR % str(curr_song), USER_INPUT_MARKER + inp, "Argument out of range (0 to 100)", SUPPORTS_ANSI)
+            else:
+                curr_song.set_volume(vol)
+                print_main(MAIN_STR % str(curr_song), USER_INPUT_MARKER + inp, "Volume set to %s%%" % volume, SUPPORTS_ANSI)
+                new_volume = vol
+        except ValueError:
+            print_main(MAIN_STR % str(curr_song), USER_INPUT_MARKER + inp, "Argument is not an integer", SUPPORTS_ANSI)
+    else:
+        print_main(MAIN_STR % str(curr_song), USER_INPUT_MARKER + inp, "Couldn't parse argument to \"volume\" command", SUPPORTS_ANSI)
+
+    print(USER_INPUT_MARKER, end = "", flush = True)
+    return new_volume
 
 class Parser:
     """ Class used to parse user input and perform the appropriate library manipulation or provide 
     the appropriate information.
     """
-
 
     def __init__(self, lib):
         self.library = lib
@@ -35,10 +56,12 @@ class Parser:
             return self._stop(curr_song)
         elif inp == "help":
             return self._help()
-        elif inp == "pause":
-            return self._pause(curr_song, inp, SUPPORTS_ANSI)
+        elif inp == "columns":
+            return self._columns()
         elif inp == "skip":
             return self._skip()
+        elif inp == "help":
+            return self._help()
         elif inp == "back":
             return self._back()
         elif tokens[0] == "next":
@@ -50,11 +73,7 @@ class Parser:
         elif inp == "restart":
             return self._restart(curr_song)
         elif tokens[0] == "time":
-            return self._time(tokens)
-        elif tokens[0] == "forward":
-            return self._forward(curr_song, 5)
-        elif tokens[0] == "backward":
-            return self._backward(curr_song, 5)
+            return self._time(curr_song, tokens)
         elif inp == "info":
             return self._info(curr_song)
         elif tokens[0] == "queue":
@@ -74,29 +93,13 @@ class Parser:
         return (None, None) # Unreachable line
 
     def _help(self):
-        print(help_message())
+        return (None, help_message())
 
-    # TODO: allow for commands to be executed during pause, refactor to avoid printing anything and returning instead
-    def _pause(self, curr_song, inp, supports_ansi = True):
-        curr_song.pause()
-        print_main("Playing \"%s\" [paused]" % str(curr_song), USER_INPUT_MARKER + inp, None, supports_ansi)
-        print(USER_INPUT_MARKER, end = "", flush = True)
-
-        # Keep polling until user sends signal to unpause. Disable all other functionality.
-        poll_interval = 0.5
-        while True:
-            pause_inp = read_stdin(poll_interval)
-
-            if pause_inp:
-                if pause_inp.lower().strip() == "unpause":
-                    break
-                else:
-                    print("Unrecognized command in paused mode - type \"unpause\" to replay the song.")
-
-        curr_song.play()
-        print_main("Playing \"%s\"" % str(curr_song), USER_INPUT_MARKER + pause_inp, None, supports_ansi)
-        print(USER_INPUT_MARKER, end = "", flush = True)
-        return (None, None)
+    def _columns(self):
+        columns_str = "Available columns:\n"
+        for col in Song.ID3_COLUMNS + Song.NON_ID3_COLUMNS:
+            columns_str += "\t<" + str(col) + ">\n"
+        return (None, columns_str)
 
     def _skip(self):
         return (self.library.next_song(), None)
@@ -112,7 +115,8 @@ class Parser:
             self.library.add_to_front_of_queue(song)
             return "Playing \"%s\" next" % str(song)
 
-        matched_songs, guessed_songs = self.library.search(query, Parser._parse_args(tokens[1 :]))
+        query = Parser._parse_args(tokens[1 :])
+        matched_songs, guessed_songs = self.library.search(query)
         matches_str = Parser._matches_str(matched_songs, guessed_songs, on_success)
         return (None, matches_str)
 
@@ -121,12 +125,20 @@ class Parser:
             return (None, "No song to jump to given")
 
         def on_success(song):
-            self.library.jump_to_song(song)
-            return (None, "Jumped to \"%s\"" % str(song))
+            return "Jumped to \"%s\"" % str(song)
         
-        matched_songs, guessed_songs = self.library.search(query, Parser._parse_args(tokens[1 :]))
+        query = Parser._parse_args(tokens[1 :])
+        if not query:
+            return (None, "Couldn't parse argument")
+
+        matched_songs, guessed_songs = self.library.search(query)
+        if len(matched_songs) == 1:
+            next_song = self.library.jump_to_song(matched_songs[0])
+        else:
+            next_song = None
+
         matches_str = Parser._matches_str(matched_songs, guessed_songs, on_success)
-        return (None, matches_str)
+        return (next_song, matches_str)
 
     def _repeat(self, curr_song):
             self.library.add_to_front_of_queue(curr_song)
@@ -135,9 +147,9 @@ class Parser:
     def _restart(self, curr_song):
         return (curr_song, None)
 
-    def _time(self, tokens):
+    def _time(self, curr_song, tokens):
         if len(tokens) == 1:
-            return (None, "Enter a time (in seconds) to jump to")
+            return (None, "%s out of %s seconds passed" % (curr_song.get_current_time(), curr_song["length"]))
         elif len(tokens) > 2:
             return (None, "Couldn't parse timestamp")
         else:
@@ -145,26 +157,13 @@ class Parser:
                 time = float(tokens[1])
                 if time < 0:
                     return (None, "Can't jump to negative timestamp")
-                elif time > song["length"]:
+                elif time > curr_song["length"]:
                     return (None, "Can't jump to length %i in song \"%s\" - out of bounds" % (time, song))
                 else:
                     self.library.jump_to_time(time)
                     return (None, None)
             except ValueError:
                 return (None, "Couldn't parse timestamp")
-
-# TODO: debug this
-    def _forward(self, curr_song, time):
-        curr_time = self.library.get_current_time()
-        if curr_time + time < curr_song["length"]:
-            self.library.jump_to_time(self.library.get_current_time() + time)
-        return (None, None)
-
-    def _backward(self, curr_song, time):
-        curr_time = self.library.get_current_time()
-        if curr_time - time >= 0:
-            self.library.jump_to_time(self.library.get_current_time() - time)
-        return (None, None)
 
     def _info(self, curr_song):
         info_str = ""
@@ -193,13 +192,14 @@ class Parser:
                 self.library.add_to_queue(song)
                 return "Added \"%s\" to queue" % str(song)
 
-            matched_songs, guessed_songs = self.library.search(query, Parser._parse_args(tokens[1 :]))
+            query = Parser._parse_args(tokens[1 :])
+            matched_songs, guessed_songs = self.library.search(query)
             matches_str = Parser._matches_str(matched_songs, guessed_songs, on_success)
             return (None, matches_str)
 
     def _dequeue(self, tokens):
         if len(tokens) == 1:
-            print("No songs to dequeue given")
+            return (None, "No songs to dequeue given")
         else:
             def on_success(song):
                 if self.library.remove_from_queue(song):
@@ -213,12 +213,23 @@ class Parser:
 
     def _sort(self, tokens):
         if len(tokens) == 1:
-            return (None, "Enter a column to parse")
-        elif len(tokens) != 2:
-            return (None, "Couldn't parse column name")
+            return (None, "Enter a column to sort by")
+        elif len(tokens) == 2:
+            if tokens[1] not in Song.ID3_COLUMNS + Song.NON_ID3_COLUMNS:
+                return (None, "Argument is not a valid column")
+            else:            
+                self.library.sort(tokens[1])
+                return (None, "Sorted library by column \"%s\"" % tokens[1])
+        elif len(tokens) == 3:
+            if tokens[1] != "-reverse":
+                return (None, "Couldn't parse argument")
+            elif tokens[2] not in Song.ID3_COLUMNS + Song.NON_ID3_COLUMNS:
+                return (None, "Argument is not a valid column")
+            else:
+                self.library.sort(tokens[2], True)
+                return (None, "Sorted library by column \"%s\"" % tokens[2])
         else:
-            self.lib.sort(tokens[1])
-            return (None, None)
+            return (None, "Couldn't parse argument")
 
     def _search(self, tokens, k = 5):
         if len(tokens) == 1:
@@ -234,6 +245,32 @@ class Parser:
             matched_songs, guessed_songs = self.library.search(query)
             matches_str = Parser._matches_str(matched_songs[: k], guessed_songs[: k], on_success)
             return (None, matches_str)
+
+    def _pause(self, curr_song, inp):
+        curr_song.pause()
+        print_main("Playing \"%s\" [paused]" % str(curr_song["title"]), USER_INPUT_MARKER + inp, None, SUPPORTS_ANSI)
+        print(USER_INPUT_MARKER, end = "", flush = True)
+        
+        while True:
+            inp = read_stdin(POLL_INTERVAL)
+
+            if inp:
+                if inp.lower().strip() == "unpause":
+                    curr_song.play()
+
+                    print_main("Playing \"%s\"" % str(curr_song["title"]), USER_INPUT_MARKER + inp, None, SUPPORTS_ANSI)
+                    print(USER_INPUT_MARKER, end = "", flush = True)
+
+                    return (None, inp, None)
+                elif inp.lower().strip() != "pause":
+                    next_song, output_message = self.parse_user_input(curr_song, inp)
+                    if next_song:
+                        return (next_song, inp, output_message)
+                else:
+                    next_song, output_message = None, None
+
+                print_main("Playing \"%s\" [paused]" % str(curr_song["title"]), USER_INPUT_MARKER + inp, output_message, SUPPORTS_ANSI)
+                print(USER_INPUT_MARKER, end = "", flush = True)
 
     # Helper functions below
 
@@ -267,15 +304,15 @@ class Parser:
         else: # Parse according to personal convention
             if "-" in tokens:
                 separator = tokens.index("-")
-                parsed_args["title"] = tokens[: separator]
-                parsed_args["artist"] = tokens[separator + 1 :]
+                parsed_args["title"] = " ".join(tokens[: separator])
+                parsed_args["artist"] = " ".join(tokens[separator + 1 :])
             else:
                 parsed_args["title"] = " ".join(tokens)
 
         return parsed_args
 
     @staticmethod
-    def _matches_str(matched_songs, guessed_songs, on_success):
+    def _matches_str(matched_songs, guessed_songs, on_success, k = 5):
         """ Given a the result of a song search, which consists of a list of exact matches and a list
         of fuzzy approximate matches, returns the appropriate output message to print. Upon success (ie
         finding a single exact match), performs the appropriate library manipulation as specified in the
@@ -284,6 +321,7 @@ class Parser:
         @param matched_songs: list(str)
         @param guessed_songs: list(str)
         @param on_success: func(void -> str)
+        @param k: int
 
         @return str
         """
@@ -291,8 +329,10 @@ class Parser:
 
         if len(matched_songs) == 0:
             matches_str += "No matching songs found; you might mean:\n"
-            for song in guessed_songs:
-                matches_str += "\t" + str(song) + "\n"
+            for i in range(k):
+                if i >= len(guessed_songs):
+                    break
+                matches_str += "\t" + str(guessed_songs[i]) + "\n"
         elif len(matched_songs) == 1:
             matches_str += on_success(matched_songs[0])
         else:

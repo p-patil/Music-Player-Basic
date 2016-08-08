@@ -43,9 +43,9 @@ def print_main(s, inp = None, output_message = None, supports_ansi = True):
 
             # Print output message below inp
             if output_message:
-                for token in output_message.split("\n"):
+                for line  in output_message.split("\n"):
                     print(rts + cl, end = "")
-                    print(token + mdl, end = "")
+                    print(line + mdl, end = "")
 
             # Print the new main line underneath where the last main line was
             print(rts + cl + mdl, end = "")
@@ -67,26 +67,25 @@ def help_message():
     help_str += "HELP SEQUENCE".center(console_width())
 
     help_str += "\nCommands available playing during playback:\n"
-    help_str += "\t\"skip\" to skip the current song, \"back\" to go back a song.\n"
-    help_str += "\t\"stop\" to kill this script.\n"
-    help_str += "\t\"pause\" to pause the current song, \"unpause\" to unpause a paused song.\n"
-    help_str += "\t\"next <song>\" to play the given song next.\n"
-    help_str += "\t\"jump <song>\" to jump to the given song.\n"
-    help_str += "\t\"repeat\" to play the song again after it's over.\n"
-    help_str += "\t\"restart\" to play current song from beginning.\n"
-    help_str += "\t\"time <t>\" to jump to time t (in seconds) of the current song.\n"
-    help_str += "\t\"forward <n>\" to go forward <n> seconds (5 by default).\n"
-    help_str += "\t\"backward <n>\" to go backward <n> seconds (5 by default).\n"
-    help_str += "\t\"info\" to see stored column information about current song.\n"
-    help_str += "\t\"queue <song>\" to add <song> to queue or \"queue\" to display queue.\n"
-    help_str += "\t\"dequeue <song>\" to remove from queue.\n"
-    help_str += "\t\"sort <column>\" to sort songs by column.\n"
-    help_str += "\t\"search <query>\" to search for a song in the library. Search format:\n"
-    help_str += "\t\t-[option1] \"arg1\" -[option2] \"arg2\" <...> -[optionN] \"argN\"\n"
-    help_str += "\tAvailable options: " \
-             +  ", ".join(["<" + str(col) + ">" for col in Song.ID3_COLUMNS + Song.NON_ID3_COLUMNS]) \
-             +  ".\n"
-    help_str += "\tOtherwise, search in raw format \"<title> - <artist>\" or \"<title>\".\n"
+    help_str += "  \"stop\" to kill this script.\n"
+    help_str += "  \"help\" to display this message.\n"
+    help_str += "  \"columns\" to see columns tracked by the library\n"
+    help_str += "  \"skip\" to skip the current song\n"
+    help_str += "  \"back\" to go back a song.\n"
+    help_str += "  \"pause\" to pause the current song, \"unpause\" to unpause a paused song.\n"
+    help_str += "  \"volume <percentage>\" to set volume, or \"volume\" to display the volume.\n"
+    help_str += "  \"next <song>\" to play the given song next.\n"
+    help_str += "  \"jump <song>\" to jump to the given song.\n"
+    help_str += "  \"repeat\" to play the song again after it's over.\n"
+    help_str += "  \"restart\" to play current song from beginning.\n"
+    help_str += "  \"time <t>\" to jump to time t (in seconds) of the current song.\n"
+    help_str += "  \"info\" to see stored column information about current song.\n"
+    help_str += "  \"queue <song>\" to add <song> to queue or \"queue\" to display queue.\n"
+    help_str += "  \"dequeue <song>\" to remove from queue.\n"
+    help_str += "  \"sort [-reverse] <column>\" to sort library, optionally in descending order.\n"
+    help_str += "  \"search <query>\" to search for a song in the library.\n"
+    help_str += "  \tSearch format: -[column1] \"arg1\" <...> -[columnN] \"argN\"\n"
+    help_str += "  \tOtherwise, search in raw format \"<title> - <artist>\" or \"<title>\".\n"
     help_str += "\n"
 
     return help_str

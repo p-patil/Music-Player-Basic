@@ -65,8 +65,11 @@ class Song:
         self._mp.play()
 
         if self._time:
-            self._mp.set_time(self._time * 1000) # Seconds to milliseconds
+            self._mp.set_time(int(self._time * 1000)) # Seconds to milliseconds
             self._time = None
+
+        # Sleep a bit to allow VLC to play the song, so self.playing() returns properly
+        time.sleep(0.01)
 
     def pause(self):
         """ Pauses this song, if it's playing.
@@ -87,30 +90,72 @@ class Song:
         if time < 0:
             raise SongException("Can't jump to negative timestamp")
 
-        if time < self.columns["length"]:
+        if time < self._columns["length"]:
             self._time = time
             if self.playing():
                 self.stop()
+                self.init()
                 self.play()
 
     def get_current_time(self):
         """ Returns the current play time, in seconds, of this song, if it's playing.
 
-        @return bool
+        @return float
         """
         if self.playing():
-            return self._mp.get_time()
+            return self._mp.get_time() / 1000
+
+    def set_volume(self, percentage):
+        """ Sets the volume to the given percentage (between 0 and 100).
+
+        @param percentage: int
+        """
+        if not self._mp:
+            raise SongException("Song not initialized")
+        elif percentage < 0 or percentage > 100:
+            raise SongException("Percentage out of range")
+
+        if self.playing():
+            self._mp.audio_set_volume(percentage)
+
+    def get_volume(self):
+        """ Returns the current volume of the song, if it's playing.
+
+        @return int
+        """
+        if not self._mp:
+            raise SongException("Song not initialized")
+
+        if self.playing():
+            return self._mp.audio_get_volume()
+
+    def mute(self):
+        """ Mutes the song, if it's playing.
+        """
+        if not self._mp:
+            raise SongException("Song not initialized")
+
+        if self.playing():
+            self._mp.audio_set_mute(True)
+
+    def unmute(self):
+        """ Unmutes the song, if it's playing and is muted.
+        """
+        if not self._mp:
+            raise SongException("Song not initialized")
+
+        if self.playing():
+            self._mp.audio_set_mute(False)
 
     def playing(self):
         """ Returns if this song is playing or not (ie currently paused).
 
         @return: bool
         """
-        if not self._mp.is_playing():
-            # self._mp might not have registered that it's playing due to time delays, so confirm with internal flag
-            return self._is_playing
-        else:
-            return True
+        if not self._mp:
+            raise SongException("Song not initialized")
+        
+        return self._mp.is_playing()
 
     def reset(self):
         """ Resets the song to the beginning.
@@ -194,3 +239,6 @@ class Song:
 
     def __getitem__(self, key):
         return self._columns[key]
+
+    def __contains__(self, item):
+        return item in self._columns
