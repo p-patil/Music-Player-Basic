@@ -85,6 +85,8 @@ class Parser:
             return self._queue(tokens)
         elif tokens[0] == "dequeue":
             return self._dequeue(tokens)
+        elif tokens[0] == "context":
+            return self._context(tokens)
         elif tokens[0] == "sort":
             return self._sort(tokens)
         elif tokens[0] == "search":
@@ -221,6 +223,58 @@ class Parser:
             matched_songs, guessed_songs = self.library.search(query)
             matches_str = Parser._matches_str(matched_songs, guessed_songs, on_success)
             return (None, matches_str)
+
+    def _context(self, tokens):
+        if len(tokens) == 1:
+            prev = next = True
+            n = 5
+        elif len(tokens) == 2:
+            if tokens[1] == "-prev":
+                prev = True
+            elif tokens[1] == "next":
+                next = True
+            else:
+                try:
+                    prev = next = True
+                    n = int(tokens[1])
+                except ValueError:
+                    return (None, "Couldn't parse argument")
+        elif len(tokens) == 3:
+            if tokens[1] == "-prev":
+                prev = True
+            elif tokens[1] == "-next":
+                next = True
+            else:
+                return (None, "Couldn't parse argument")
+
+            try:
+                n = int(tokens[2])
+            except ValueError:
+                return (None, "Couldn't parse argument")
+        else:
+            return (None, "Couldn't parse argument")
+
+        songs_str = ""
+        if prev:
+            songs = self.library.get_prev_library_songs(n)
+            if len(songs) == 0:
+                songs_str += "No previous songs\n"
+            else:
+                songs_str += "Previous songs:\n"
+
+            for song in songs: 
+                songs_str += "\t" + str(song) + "\n"
+        if next:
+            songs = self.library.get_next_library_songs(n)
+            if len(songs) == 0:
+                songs_str += "No next songs\n"
+            else:
+                songs_str += "Next songs:\n"
+
+            for song in songs:
+                songs_str += "\t" + str(song) + "\n"
+
+        return (None, songs_str)
 
     def _sort(self, tokens):
         if len(tokens) == 1:

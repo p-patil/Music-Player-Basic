@@ -107,6 +107,7 @@ def help_message():
     help_str += "  \"info\" to see stored column information about current song.\n"
     help_str += "  \"queue <song>\" to add <song> to queue or \"queue\" to display queue.\n"
     help_str += "  \"dequeue <song>\" to remove from queue.\n"
+    help_str += "  \"context [-prev | -next] <n>\" to see n (5 by default) prev/next songs.\n"
     help_str += "  \"sort [-reverse] <column>\" to sort library, optionally in descending order.\n"
     help_str += "  \"search <query>\" to search for a song in the library.\n"
     help_str += "  \tSearch format: -[column1] \"arg1\" <...> -[columnN] \"argN\"\n"

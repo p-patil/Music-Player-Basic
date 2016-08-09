@@ -70,19 +70,23 @@ class Library:
 
         @param song: Song
         """
+        def find_last(lst, elm):
+            gen = (len(lst) - 1 - i for i, v in enumerate(reversed(lst)) if v == elm)
+            return next(gen, None)
+
         if song in self.lib:
             self.history[self.current_index].stop()
-            song_index = (self.history[: self.current_index + 1] + self.history[self.queue_index :]).index(song)
-            queue_size = self.queue_index - self.current_index + 1
-
+            song_index = find_last(self.history[: self.current_index + 1] + self.history[self.queue_index :], song)
+            queue_size = self.queue_index - self.current_index - 1
+            
             played_songs = self.history[: self.current_index + 1]
             queue = self.history[self.current_index + 1 : self.queue_index]
-            new_played_songs = self.history[self.queue_index : song_index]
-            future_songs = self.history[song_index :]
+            new_played_songs = self.history[self.queue_index : song_index + 1]
+            future_songs = self.history[song_index + 1 :]
 
             self.history = played_songs + new_played_songs + queue + future_songs
-            self.current_index = song_index
-            self.queue_index = song_index + queue_size 
+            self.current_index = song_index - queue_size + 1
+            self.queue_index = self.current_index + queue_size + 1 
 
             return self.history[self.current_index]
         else:
@@ -202,6 +206,50 @@ class Library:
         @return list(Song)
         """
         return self.history[self.current_index + 1 : self.current_index + 1 + k]
+
+    def get_next_library_songs(self, n, song = None):
+        """ Returns the next n songs ahead of the given song in the library (ignoring
+        the queue).
+
+        @param n: int
+        @param song: Song
+
+        @return list(Song)
+        """
+        if not song:
+            song = self.history[self.current_index]
+
+        song_index = self.lib.index(song)
+
+        if song_index + 1 < len(self.lib):
+            if song_index + 1 + n < len(self.lib):
+                return self.lib[song_index + 1 : song_index + 1 + n]
+            else:
+                return self.lib[song_index + 1 :]
+        else:
+            return []
+
+    def get_prev_library_songs(self, n, song = None):
+        """ Returns the previous n songs behind the given songs in the library (ignoring
+        the queue).
+
+        @param n: int
+        @param song: Song
+
+        @return list(Song)
+        """
+        if not song:
+            song = self.history[self.current_index]
+
+        song_index = self.lib.index(song)
+
+        if song_index > 0:
+            if song_index - n >= 0:
+                return self.lib[song_index - n : song_index]
+            else:
+                return self.lib[: song_index]
+        else:
+            return []
 
     def get_library(self):
         return list(self.lib)

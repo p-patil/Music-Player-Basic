@@ -4,6 +4,7 @@ POLL_INTERVAL     = 0.5
 MAIN_STR          = "Playing \"%s\""
 USER_INPUT_MARKER = "> "
 
+# TODO Debug jump command
 # TODO Figure out how to suppress VLC errors 
 # TODO implement a smarter search algorithm that takes separate column matches into account
 if __name__ == "__main__":
