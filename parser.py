@@ -1,30 +1,35 @@
-import main
-from util import help_message, print_main, read_stdin
+import main, util
 from song import Song
 import sys
 
-SUPPORTS_ANSI, USER_INPUT_MARKER, POLL_INTERVAL = main.SUPPORTS_ANSI, main.USER_INPUT_MARKER, main.POLL_INTERVAL
+# Can't do from main import _ due to circular import problems
+USER_INPUT_MARKER = main.USER_INPUT_MARKER
+POLL_INTERVAL     = main.POLL_INTERVAL
+MAIN_STR          = main.MAIN_STR
+help_message      = util.help_message
+print_main        = util.print_main
+read_stdin        = util.read_stdin
 
 def _volume(inp, curr_song, volume):
     new_volume = volume
     tokens = inp.lower().split()
+
     if len(tokens) == 1:
-        print_main(MAIN_STR % str(curr_song), USER_INPUT_MARKER + inp, "Volume at %s%%" % volume, SUPPORTS_ANSI)
+        print_main(MAIN_STR % str(curr_song), USER_INPUT_MARKER + inp, "Volume at %s%%" % volume)
     elif len(tokens) == 2:
         try:
-            vol = int(tokens[1])
-            if vol < 0 or vol > 100:
-                print_main(MAIN_STR % str(curr_song), USER_INPUT_MARKER + inp, "Argument out of range (0 to 100)", SUPPORTS_ANSI)
+            new_volume = int(tokens[1])
+            if new_volume < 0 or new_volume > 100:
+                print_main(MAIN_STR % str(curr_song), USER_INPUT_MARKER + inp, "Argument out of range (0 to 100)")
             else:
-                curr_song.set_volume(vol)
-                print_main(MAIN_STR % str(curr_song), USER_INPUT_MARKER + inp, "Volume set to %s%%" % volume, SUPPORTS_ANSI)
-                new_volume = vol
+                curr_song.set_volume(new_volume)
+                print_main(MAIN_STR % str(curr_song), USER_INPUT_MARKER + inp, "Volume set to %s%%" % new_volume)
         except ValueError:
-            print_main(MAIN_STR % str(curr_song), USER_INPUT_MARKER + inp, "Argument is not an integer", SUPPORTS_ANSI)
+            print_main(MAIN_STR % str(curr_song), USER_INPUT_MARKER + inp, "Argument is not an integer")
+            new_volume = volume
     else:
-        print_main(MAIN_STR % str(curr_song), USER_INPUT_MARKER + inp, "Couldn't parse argument to \"volume\" command", SUPPORTS_ANSI)
+        print_main(MAIN_STR % str(curr_song), USER_INPUT_MARKER + inp, "Couldn't parse argument to \"volume\" command")
 
-    print(USER_INPUT_MARKER, end = "", flush = True)
     return new_volume
 
 class Parser:
@@ -50,7 +55,7 @@ class Parser:
         inp = inp.lower().strip()
         tokens = inp.split()
 
-        if len(inp) == 0:
+        if len(inp) == 0 or len(tokens) == 0:
             return (None, None)
         elif inp == "stop":
             return self._stop(curr_song)
@@ -99,6 +104,8 @@ class Parser:
         columns_str = "Available columns:\n"
         for col in Song.ID3_COLUMNS + Song.NON_ID3_COLUMNS:
             columns_str += "\t<" + str(col) + ">\n"
+
+        columns_str = columns_str[: -1] # Trim last newline
         return (None, columns_str)
 
     def _skip(self):
@@ -173,22 +180,23 @@ class Parser:
             if curr_song[col]:
                 info_str += col.upper() + ": " + str(curr_song[col]) + "\n"
 
+        info_str = info_str[: -1] # Trim last newline
         return (None, info_str)
 
     def _queue(self, tokens, k = 5):
         if len(tokens) == 1:
             if self.library.is_queue_empty():
-                queue_empty_str = "Queue is empty; next songs are:\n"
-                for song in self.library.get_next_songs(k):
-                    queue_empty_str += "\t" + str(song) + "\n"
-
-                return (None, queue_empty_str)
+                queue_str = "Queue is empty; next songs are:\n"
+                songs = self.library.get_next_songs(k)
             else:
                 queue_str = ""
-                for song in self.library.get_queued_songs():
-                    queue_str += "\t" + str(song) + "\n"
+                songs = self.library.get_queued_songs()
 
-                return (None, queue_str)
+            for song in songs:
+                queue_str += "\t" + str(song) + "\n"
+            
+            queue_str = queue_str[: -1] # Trim last newline
+            return (None, queue_str)
         else:
             def on_success(song):
                 self.library.add_to_queue(song)
@@ -209,7 +217,8 @@ class Parser:
                 else:
                     return "Song \"%s\" not in queue" % str(matched_songs[0])
 
-            matched_songs, guessed_songs = self.library.search(query, Parser._parse_args(tokens[1 :]))
+            query = Parser._parse_args(tokens[1 :])
+            matched_songs, guessed_songs = self.library.search(query)
             matches_str = Parser._matches_str(matched_songs, guessed_songs, on_success)
             return (None, matches_str)
 
@@ -250,8 +259,7 @@ class Parser:
 
     def _pause(self, curr_song, inp):
         curr_song.pause()
-        print_main("Playing \"%s\" [paused]" % str(curr_song["title"]), USER_INPUT_MARKER + inp, None, SUPPORTS_ANSI)
-        print(USER_INPUT_MARKER, end = "", flush = True)
+        print_main("Playing \"%s\" [paused]" % str(curr_song["title"]), USER_INPUT_MARKER + inp, None)
         
         while True:
             inp = read_stdin(POLL_INTERVAL)
@@ -260,8 +268,7 @@ class Parser:
                 if inp.lower().strip() == "unpause":
                     curr_song.play()
 
-                    print_main("Playing \"%s\"" % str(curr_song["title"]), USER_INPUT_MARKER + inp, None, SUPPORTS_ANSI)
-                    print(USER_INPUT_MARKER, end = "", flush = True)
+                    print_main("Playing \"%s\"" % str(curr_song["title"]), USER_INPUT_MARKER + inp, None)
 
                     return (None, inp, None)
                 elif inp.lower().strip() != "pause":
@@ -271,8 +278,7 @@ class Parser:
                 else:
                     next_song, output_message = None, None
 
-                print_main("Playing \"%s\" [paused]" % str(curr_song["title"]), USER_INPUT_MARKER + inp, output_message, SUPPORTS_ANSI)
-                print(USER_INPUT_MARKER, end = "", flush = True)
+                print_main("Playing \"%s\" [paused]" % str(curr_song["title"]), USER_INPUT_MARKER + inp, output_message)
 
     # Helper functions below
 
@@ -341,5 +347,6 @@ class Parser:
             matches_str += "Multiple matches found:\n"
             for song in matched_songs:
                 matches_str += "\t" + str(song) + "\n"
+            matches_str = matches_str[: -1] # Trim last newline
 
         return matches_str

@@ -1,5 +1,28 @@
-import select, sys, os, signal
+import main
 from song import Song
+import select, sys, os, signal
+
+USER_INPUT_MARKER = main.USER_INPUT_MARKER
+
+def supports_ansi():
+    """ Returns if the console running this script supports ANSI escape sequences or not. Taken from Django's
+    supports_color().
+
+    @return bool
+    """
+    supported_platform = sys.platform != "Pocket PC" and (sys.platform != "win32" or "ANSICON" in os.environ)
+
+    is_a_tty = hasattr(sys.stdout, 'isatty') and sys.stdout.isatty()
+    if not supported_platform or not is_a_tty:
+        return False
+    return True
+
+SUPPORTS_ANSI = supports_ansi()
+
+def vlc_installed():
+    """ Returns if this platform (assumed Linux) has VLC installed (with apt-get).
+    """
+    return os.path.exists("/usr/bin/vlc")
 
 def read_stdin(timeout):
     """ Puts the current thread to sleep for TIMEOUT seconds, reading input to stdin simultaneously. If user input is detected, returns it.
@@ -15,7 +38,7 @@ def read_stdin(timeout):
     else:
         return sys.stdin.readline() 
 
-def print_main(s, inp = None, output_message = None, supports_ansi = True):
+def print_main(s, inp = None, output_message = None):
     """ Displays the given string by printing it in the middle of the console and overwriting the last displayed
     string. If input was given, it would have been printed below the previously displayed line, and so is moved
     above the displayed line. Assumes that display line is always one line above current line.
@@ -25,7 +48,7 @@ def print_main(s, inp = None, output_message = None, supports_ansi = True):
     """
     centered_s = s.center(console_width())
 
-    if supports_ansi:
+    if SUPPORTS_ANSI:
         # Useful ANSI escape sequences
         mul = "\033[1A" # Move up line
         mdl = "\n"      # Move down line
@@ -38,23 +61,25 @@ def print_main(s, inp = None, output_message = None, supports_ansi = True):
                 inp = inp[: -1]
 
             # Move inp up two lines
-            print(mul * 3 + rts + cl, end = "")
-            print(inp + mdl, end = "")
+            print(rts + mul * 3 + rts + cl, end = "")
+            print(rts + inp + mdl, end = "")
 
             # Print output message below inp
             if output_message:
-                for line  in output_message.split("\n"):
+                for line in output_message.split("\n"):
                     print(rts + cl, end = "")
-                    print(line + mdl, end = "")
+                    print(rts + line + mdl, end = "")
 
             # Print the new main line underneath where the last main line was
             print(rts + cl + mdl, end = "")
-            print(centered_s + mdl, end = "")
+            print(rts + centered_s + mdl, end = "")
         else:
             # Erase last main line and print the new one
-            print(mul * 2 + rts + cl + centered_s + mdl, end = "")
+            print(rts + mul + rts + cl + centered_s + mdl, end = "")
     else:
         print(centered_s)
+
+    print(USER_INPUT_MARKER, end = "", flush = True)
 
 # Helper functions below
 
@@ -86,7 +111,7 @@ def help_message():
     help_str += "  \"search <query>\" to search for a song in the library.\n"
     help_str += "  \tSearch format: -[column1] \"arg1\" <...> -[columnN] \"argN\"\n"
     help_str += "  \tOtherwise, search in raw format \"<title> - <artist>\" or \"<title>\".\n"
-    help_str += "\n"
+    help_str += "\n\n"
 
     return help_str
 

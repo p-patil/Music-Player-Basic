@@ -51,7 +51,7 @@ class Song:
             self._columns["title"] = file_path.split("/")[-1][: -4] # Parse file name from absolute file path and delete file extension
 
     def init(self):
-        if not self._mp:
+        if not self._mp: # Only initialize if not already initialized
             self._mp = MediaPlayer(self._file_path)
 
     def play(self):
