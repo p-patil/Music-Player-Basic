@@ -1,6 +1,6 @@
 from song import Song
 from library_exception import LibraryException
-import os, random, time, difflib
+import os, random, time, difflib, heapq
 
 class Library:
     """ Class representing a music library.
@@ -111,17 +111,15 @@ class Library:
     def get_current_time(self):
         return self.history[self.current_index].get_current_time()
 
-    def search(self, query, threshold = 0.8):
+    def search(self, query, k):
         """ Given a query, formatted as a dictionary mapping columns in Song.ID3_COLUMNS + Song.NON_ID3_COLUMN
-        to arguments, returns matches, which are songs whose corresponding columns start with the
-        given arguments; if no exact matches are found, returns a list of guesses, ranked by lowest edit distance 
-        between given columns, if and only if each SequenceMatcher ratio is within the threshold.
+        to arguments, returns k matches, which are songs whose corresponding columns start with the
+        given arguments; if no exact matches are found, returns a list of k guesses.
         Note: Always returns a list of both exact matches and guesses, but guess is non-empty if and only if
         exact matches is empty.
 
         @param query: dict(str -> str)
-        @param threshold: int
-        @param weights: dict(str -> double)
+        @param k: int
 
         @return: tuple(list(Song), list(Song))
         """
@@ -142,22 +140,21 @@ class Library:
         if len(matched_songs) == 0:
             guesses = {}
             for song in self.lib:
-                diff, match = 0, True
+                distance_vector_magnitude = 0.0
+
                 for col in query:
-                    if song[col] is None:
-                        continue
+                    if song[col]:
+                        dist = difflib.SequenceMatcher(None, query[col], song[col]).ratio()
+                        distance_vector_magnitude += dist * dist
 
-                    dist = difflib.SequenceMatcher(None, query[col], song[col]).ratio()
-                    if dist > threshold:
-                        match = False
-                        break
-                    else:
-                        diff += 1.0 - dist
+                if distance_vector_magnitude not in guesses:
+                    guesses[distance_vector_magnitude] = []
+                guesses[distance_vector_magnitude].append(song)
 
-                if match:
-                    guesses[diff] = song
-
-            guessed_songs = [guesses[diff] for diff in sorted(guesses.keys())]
+            guessed_songs = []
+            for key in heapq.nlargest(k, guesses.keys()):
+                guessed_songs += guesses[key]
+            guessed_songs = guessed_songs[: k]
 
         return (matched_songs, guessed_songs)
 

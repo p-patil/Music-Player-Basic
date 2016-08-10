@@ -307,8 +307,8 @@ class Parser:
             if not query:
                 return (None, "Could not pass argument \"%s\"" % " ".join(tokens[1 :]))
 
-            matched_songs, guessed_songs = self.library.search(query)
-            matches_str = Parser._matches_str(matched_songs[: k], guessed_songs[: k], on_success)
+            matched_songs, guessed_songs = self.library.search(query, k)
+            matches_str = Parser._matches_str(matched_songs, guessed_songs, on_success)
             return (None, matches_str)
 
     def _pause(self, curr_song, inp):
