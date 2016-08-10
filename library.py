@@ -70,23 +70,28 @@ class Library:
 
         @param song: Song
         """
-        def find_last(lst, elm):
-            gen = (len(lst) - 1 - i for i, v in enumerate(reversed(lst)) if v == elm)
-            return next(gen, None)
+        def last_occurrence_out_of_queue(lst, elem, queue_start, queue_end):
+            for i in range(len(lst) - 1, -1, -1):
+                if i >= queue_start and i < queue_end:
+                    continue
+                elif lst[i] == elem:
+                    return i
+
+            return -1
 
         if song in self.lib:
             self.history[self.current_index].stop()
-            song_index = find_last(self.history[: self.current_index + 1] + self.history[self.queue_index :], song)
+            song_index = last_occurrence_out_of_queue(self.history, song, self.current_index + 1, self.queue_index)
             queue_size = self.queue_index - self.current_index - 1
             
-            played_songs = self.history[: self.current_index + 1]
-            queue = self.history[self.current_index + 1 : self.queue_index]
+            past_played_songs = self.history[: self.current_index + 1]
             new_played_songs = self.history[self.queue_index : song_index + 1]
+            queue = self.history[self.current_index + 1 : self.queue_index]
             future_songs = self.history[song_index + 1 :]
 
-            self.history = played_songs + new_played_songs + queue + future_songs
-            self.current_index = song_index - queue_size + 1
-            self.queue_index = self.current_index + queue_size + 1 
+            self.history = past_played_songs + new_played_songs + queue + future_songs
+            self.current_index = song_index - queue_size
+            self.queue_index = self.current_index + queue_size + 1
 
             return self.history[self.current_index]
         else:
@@ -122,18 +127,18 @@ class Library:
         """
         matched_songs, guessed_songs = [], []
 
+        # First find exact matches
         for song in self.lib:
             match = True
             for option in query:
-                if song[option] is None:
-                    continue
-                elif not song[option].lower().startswith(query[option].lower()):
+                if song[option] is not None and not song[option].lower().startswith(query[option].lower()):
                     match = False
                     break
 
             if match:
                 matched_songs.append(song)
 
+        # If no exact matches, try guessing
         if len(matched_songs) == 0:
             guesses = {}
             for song in self.lib:

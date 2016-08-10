@@ -4,13 +4,17 @@ POLL_INTERVAL     = 0.5
 MAIN_STR          = "Playing \"%s\""
 USER_INPUT_MARKER = "> "
 
-# TODO Debug jump command
 # TODO Figure out how to suppress VLC errors 
 # TODO implement a smarter search algorithm that takes separate column matches into account
 if __name__ == "__main__":
     import library, parser, util
 
-    if not util.vlc_installed():
+    # if not sys.platform.startswith("linux")
+    if False:
+        print("This application is designed for the Linux operating system - you're running \"%s\"" % sys.platform)
+        sys.exit()
+    # if not util.vlc_installed():
+    elif False:
         print("VLC must be installed - install with \"sudo apt-get install vlc\"")
         sys.exit()
 
@@ -20,11 +24,13 @@ if __name__ == "__main__":
     read_stdin    = util.read_stdin
 
     os.system("clear")
-    lib = library.Library("/home/piyush/Music/")
+    # lib = library.Library("/home/piyush/Music/")
+    lib = library.Library("../music")
     p = parser.Parser(lib)
     print(help_message())
 
-    lib.sort("date_modified", reverse = True)
+    # lib.sort("date_modified", reverse = True)
+    lib.sort("title")
     volume, curr_song = 100, lib.first_song()
     while lib.is_running():
         curr_song.init()

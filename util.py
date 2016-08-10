@@ -123,6 +123,9 @@ def console_width():
 
     return width
 
+def cosine_distance(query1, query2, product_func = levenshtein_dist):
+
+
 def levenshtein_dist(s, t):
     """ Returns the levenshtein distance between the given strings. Implements Wagner-Fischer algorithm.
 
