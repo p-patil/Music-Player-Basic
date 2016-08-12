@@ -97,6 +97,14 @@ class Library:
         else:
             raise LibraryException("Song \"%s\" not in library" % str(song))
 
+    def delete(self, song):
+        """ Deletes the all occurrences of the given song from the library and history.
+        @param song: Song
+        """
+        if song in self.history:
+            self.history = [s for s in self.history if s != song]
+            self.lib = [s for s in self.lib if s != song]
+
     def jump_to_time(self, time, song = None):
         """ Jumps to the given time, in seconds, of the given song, which is the current song by default.
 

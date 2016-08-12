@@ -4,6 +4,8 @@ POLL_INTERVAL     = 0.5
 MAIN_STR          = "Playing \"%s\""
 USER_INPUT_MARKER = "> "
 
+# TODO Add functionality to automatically download songs (in the background) from the Internet
+# TODO Add functionality to sync songs with another device (in the background) through SSH
 # TODO Figure out how to suppress VLC errors 
 if __name__ == "__main__":
     import library, parser, util
