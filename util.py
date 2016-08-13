@@ -4,6 +4,9 @@ import select, sys, os, signal
 
 USER_INPUT_MARKER = main.USER_INPUT_MARKER
 
+""" This class contains various external functions that are used throughout the program but don't belong in any particular class.
+"""
+
 def supports_ansi():
     """ Returns if the console running this script supports ANSI escape sequences or not. Taken from Django's
     supports_color().
@@ -98,6 +101,7 @@ def help_message():
     help_str += "  \"skip\" to skip the current song\n"
     help_str += "  \"back\" to go back a song.\n"
     help_str += "  \"pause\" to pause the current song, \"unpause\" to unpause a paused song.\n"
+    help_str += "  \"delete [-perm] <song>\" to remove song from library and optionally from disk.\n"
     help_str += "  \"volume <percentage>\" to set volume, or \"volume\" to display the volume.\n"
     help_str += "  \"next <song>\" to play the given song next.\n"
     help_str += "  \"jump <song>\" to jump to the given song.\n"

@@ -69,6 +69,8 @@ class Parser:
             return self._help()
         elif inp == "back":
             return self._back()
+        elif tokens[0] == "delete":
+            return self._delete(tokens)
         elif tokens[0] == "next":
             return self._next(tokens)
         elif tokens[0] == "jump":
@@ -115,6 +117,28 @@ class Parser:
 
     def _back(self):
         return (self.library.last_song(), None)
+
+    def _delete(self, tokens):
+        if len(tokens) == 1:
+            return (None, "No song to delete given")
+
+        if tokens[1] == "-perm":
+            def on_success(song):
+                self.library.delete(song)
+                song.delete_from_disk()
+                return "Deleted %s from library and from disc" % str(song)
+
+            query = Parser._parse_args(tokens[2 :])
+        else:
+            def on_success(song):
+                self.library.delete(song)
+                return "Deleted %s from library" % str(song)
+
+            query = Parser._parse_args(tokens[1 :])
+
+        matched_songs, guessed_songs = self.library.search(query)
+        matches_str = Parser._matches_str(matched_songs, guessed_songs, on_success)
+        return (None, matches_str)
 
     def _next(self, tokens):
         if len(tokens) == 1:

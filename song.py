@@ -174,6 +174,13 @@ class Song:
             self._mp.stop()
             self._mp = None
 
+    def delete_from_disk(self):
+        """ Deletes this song from the hard drive, returning if the deletion was successful.
+
+        @return bool
+        """
+        pass
+
     @staticmethod
     def _get_ID3_tags(file_path):
         """ Given a file path to an mp3 song, returns the ID3 tags for title, artist, album, genre, and year (in that order), or 
