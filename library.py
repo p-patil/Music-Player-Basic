@@ -17,7 +17,7 @@ class Library:
         self.current_index = self.queue_index = -1
 
         for directory in directories:
-            self._load_music(directory)
+            self._load_music(directory, recurse = True)
 
         self.history = list(self.lib) # List tracking currently playing song and entire song history
 
@@ -119,7 +119,7 @@ class Library:
     def get_current_time(self):
         return self.history[self.current_index].get_current_time()
 
-    def search(self, query, k):
+    def search(self, query, k = 5):
         """ Given a query, formatted as a dictionary mapping columns in Song.ID3_COLUMNS + Song.NON_ID3_COLUMN
         to arguments, returns k matches, which are songs whose corresponding columns start with the
         given arguments; if no exact matches are found, returns a list of k guesses.
@@ -279,8 +279,12 @@ class Library:
 
         # Map column to list of songs with that column
         col_to_song = {}
+        null_songs = [] # Songs with empty column
         for song in self.lib:
-            if song[column] not in col_to_song:
+            if not song[column]:
+                null_songs.append(song)
+                continue
+            elif song[column] not in col_to_song:
                 col_to_song[song[column]] = []
 
             col_to_song[song[column]].append(song)
@@ -297,6 +301,7 @@ class Library:
             self.lib.reverse()
 
         # Reset song order, preserving the queue and starting playback over
+        self.lib = null_songs + self.lib
         self.first_song() # Reset song pointers
         self.history = self.get_queued_songs() + list(self.lib)
 
@@ -313,16 +318,17 @@ class Library:
             raise ValueError("File '%s' does not exist or is not a directory" % directory)
 
         for file_name in os.listdir(directory):
+            abs_path = os.path.join(directory, file_name)
             # Parse name and artist based on my personal convention, throwing away the file extension
             name, artist = Library._parse_song(file_name)
 
-            if not os.path.isdir(file_name):
+            if not os.path.isdir(abs_path):
                 if not file_name.lower().endswith(".mp3"):
                     print("Can't load non-MP3 file \"%s\"" % file_name)
                 else:
-                    self.lib.append(Song(os.path.join(directory, file_name), name, artist))
+                    self.lib.append(Song(abs_path, name, artist))
             elif recurse:
-                self._load_music(file_name, recurse)
+                self._load_music(abs_path, recurse)
    
     @staticmethod
     def _parse_song(file_name):

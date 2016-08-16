@@ -95,30 +95,57 @@ def help_message():
     help_str += "HELP SEQUENCE".center(console_width())
 
     help_str += "\nCommands available playing during playback:\n"
-    help_str += "  \"stop\" to kill this script.\n"
-    help_str += "  \"help\" to display this message.\n"
-    help_str += "  \"columns\" to see columns tracked by the library\n"
-    help_str += "  \"skip\" to skip the current song\n"
-    help_str += "  \"back\" to go back a song.\n"
-    help_str += "  \"pause\" to pause the current song, \"unpause\" to unpause a paused song.\n"
-    help_str += "  \"delete [-perm] <song>\" to remove song from library and optionally from disk.\n"
-    help_str += "  \"volume <percentage>\" to set volume, or \"volume\" to display the volume.\n"
-    help_str += "  \"next <song>\" to play the given song next.\n"
-    help_str += "  \"jump <song>\" to jump to the given song.\n"
-    help_str += "  \"repeat\" to play the song again after it's over.\n"
-    help_str += "  \"restart\" to play current song from beginning.\n"
-    help_str += "  \"time <t>\" to jump to time t (in seconds) of the current song.\n"
-    help_str += "  \"info\" to see stored column information about current song.\n"
-    help_str += "  \"queue <song>\" to add <song> to queue or \"queue\" to display queue.\n"
-    help_str += "  \"dequeue <song>\" to remove from queue.\n"
-    help_str += "  \"context [-prev | -next] <n>\" to see n (5 by default) prev/next songs.\n"
-    help_str += "  \"sort [-reverse] <column>\" to sort library, optionally in descending order.\n"
-    help_str += "  \"search <query>\" to search for a song in the library.\n"
-    help_str += "  \tSearch format: -[column1] \"arg1\" <...> -[columnN] \"argN\"\n"
-    help_str += "  \tOtherwise, search in raw format \"<title> - <artist>\" or \"<title>\".\n"
+    help_str += "\tstop\n"
+    help_str += "\thelp\n"
+    help_str += "\tcolumns\n"
+    help_str += "\tskip\n"
+    help_str += "\tback\n"
+    help_str += "\tpause\n"
+    help_str += "\tunpause\n"
+    help_str += "\tdelete\n"
+    help_str += "\tvolume\n"
+    help_str += "\tnext\n"
+    help_str += "\tjump\n"
+    help_str += "\trepeat\n"
+    help_str += "\trestart\n"
+    help_str += "\ttime\n"
+    help_str += "\tinfo\n"
+    help_str += "\tqueue\n"
+    help_str += "\tdequeue\n"
+    help_str += "\tcontext\n"
+    help_str += "\tsort\n"
+    help_str += "\tsearch\n"
+    help_str += "Type \"help <command>\" to get specific help information for a given command.\n"
     help_str += "\n\n"
 
     return help_str
+
+help_dict = {
+    "stop":    "\"stop\" command\n\tKills this script.",
+    "help":    "\"help\" command\n\tDisplays the main help sequence.",
+    "columns": "\"columns\" command\n\tShows all columns tracked by the library.",
+    "skip":    "\"skip\" command\n\tSkips the current song.",
+    "back":    "\"back\" command\n\tPlays the previously played song.",
+    "pause":   "\"pause\" command\n\tPauses the current song, \"unpause\" unpauses.",
+    "unpause": "\"unpause\" command\n\tResumes playing a paused song, \"pause\" to pause.",
+    "delete":  "\"delete [-perm] <song>\" command\n\tRemoves song from library and optionally from disk.",
+    "volume":  "\"volume [<percentage>]\" command\n\tSets the volume, or just \"volume\" to display the current volume.",
+    "next":    "\"next <song>\" command\n\tPlay the given song next, by adding it to the front of the queue.",
+    "jump":    "\"jump <song>\" command\n\tJumps to the given song, by moving the current position in the library to that song. " + \
+               "This will affect the previous history of played songs and therefore the \"back\" command.",
+    "repeat":  "\"repeat\" command\n\tPlays the song again after it's over.",
+    "restart": "\"restart\" command\n\tPlays current song from beginning.",
+    "time":    "\"time [<t>]\" command\n\tJump to time t (in seconds) of the current song, or just \"time\" to see the current time.",
+    "info":    "\"info\" command\n\tDisplays stored column information about current song.",
+    "queue":   "\"queue [<song>]\" command\n\tAdds <song> to queue, or just \"queue\" to display queue.",
+    "dequeue": "\"dequeue [-all] <song>\" command\n\tRemoves the first occurrence, and optionally all occurrences, of the given " + \
+               "song from the queue, if it exists.",
+    "context": "\"context [-prev | -next] <n>\" command\n\tDisplays the n (5 by default) previous or next (both by default) songs " + \
+               "in the library.",
+    "sort":    "\"sort [-reverse] <column>\" command\n\tSorts the library by the given column, optionally in descending order.",
+    "search":  "\"search <query>\" command\n\tSearches for a song in the library.\n\tSearch format: -[column1] \"arg1\" <...> " + \
+               "-[columnN] \"argN\"\n\tOtherwise, search in raw format \"<title> - <artist>\" or \"<title>\"."
+}
 
 def console_width():
     stty = os.popen("stty size")

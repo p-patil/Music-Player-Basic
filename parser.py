@@ -7,6 +7,7 @@ USER_INPUT_MARKER = main.USER_INPUT_MARKER
 POLL_INTERVAL     = main.POLL_INTERVAL
 MAIN_STR          = main.MAIN_STR
 help_message      = util.help_message
+help_dict         = util.help_dict
 print_main        = util.print_main
 read_stdin        = util.read_stdin
 
@@ -15,20 +16,20 @@ def _volume(inp, curr_song, volume):
     tokens = inp.lower().split()
 
     if len(tokens) == 1:
-        print_main(MAIN_STR % str(curr_song), USER_INPUT_MARKER + inp, "Volume at %s%%" % volume)
+        print_main(MAIN_STR % str(curr_song["title"]), USER_INPUT_MARKER + inp, "Volume at %s%%" % volume)
     elif len(tokens) == 2:
         try:
             new_volume = int(tokens[1])
             if new_volume < 0 or new_volume > 100:
-                print_main(MAIN_STR % str(curr_song), USER_INPUT_MARKER + inp, "Argument out of range (0 to 100)")
+                print_main(MAIN_STR % str(curr_song["title"]), USER_INPUT_MARKER + inp, "Argument out of range (0 to 100)")
             else:
                 curr_song.set_volume(new_volume)
-                print_main(MAIN_STR % str(curr_song), USER_INPUT_MARKER + inp, "Volume set to %s%%" % new_volume)
+                print_main(MAIN_STR % str(curr_song["title"]), USER_INPUT_MARKER + inp, "Volume set to %s%%" % new_volume)
         except ValueError:
-            print_main(MAIN_STR % str(curr_song), USER_INPUT_MARKER + inp, "Argument is not an integer")
+            print_main(MAIN_STR % str(curr_song["title"]), USER_INPUT_MARKER + inp, "Argument is not an integer")
             new_volume = volume
     else:
-        print_main(MAIN_STR % str(curr_song), USER_INPUT_MARKER + inp, "Couldn't parse argument to \"volume\" command")
+        print_main(MAIN_STR % str(curr_song["title"]), USER_INPUT_MARKER + inp, "Couldn't parse argument to \"volume\" command")
 
     return new_volume
 
@@ -59,14 +60,12 @@ class Parser:
             return (None, None)
         elif inp == "stop":
             return self._stop(curr_song)
-        elif inp == "help":
-            return self._help()
+        elif tokens[0] == "help":
+            return self._help(tokens)
         elif inp == "columns":
             return self._columns()
         elif inp == "skip":
             return self._skip()
-        elif inp == "help":
-            return self._help()
         elif inp == "back":
             return self._back()
         elif tokens[0] == "delete":
@@ -101,8 +100,13 @@ class Parser:
         sys.exit()
         return (None, None) # Unreachable line
 
-    def _help(self):
-        return (None, help_message())
+    def _help(self, tokens):
+        if len(tokens) == 1:
+            return (None, help_message())
+        elif len(tokens) == 2 and tokens[1] in help_dict:
+            return (None, help_dict[tokens[1]])
+        else:
+            return (None, "Couldn't parse argument")
 
     def _columns(self):
         columns_str = "Available columns:\n"
@@ -237,18 +241,29 @@ class Parser:
         if len(tokens) == 1:
             return (None, "No songs to dequeue given")
         else:
-            def on_success(song):
-                if self.library.remove_from_queue(song):
-                    return "Removed first occurrence of \"%s\" from queue" % str(song)
-                else:
-                    return "Song \"%s\" not in queue" % str(matched_songs[0])
+            if tokens[1] == "-all":
+                def on_success(song):
+                    if self.library.remove_from_queue(song, remove_all = True):
+                        return "Removed all occurrences of \"%s\" from queue" % str(song)
+                    else:
+                        return "Song \"%s\" not in queue" % str(matched_songs[0])
 
-            query = Parser._parse_args(tokens[1 :])
+                query = Parser._parse_args(tokens[2 :])
+            else:
+                def on_success(song):
+                    if self.library.remove_from_queue(song):
+                        return "Removed first occurrence of \"%s\" from queue" % str(song)
+                    else:
+                        return "Song \"%s\" not in queue" % str(matched_songs[0])
+
+                query = Parser._parse_args(tokens[1 :])
+
             matched_songs, guessed_songs = self.library.search(query)
             matches_str = Parser._matches_str(matched_songs, guessed_songs, on_success)
             return (None, matches_str)
 
     def _context(self, tokens):
+        prev = next = False
         if len(tokens) == 1:
             prev = next = True
             n = 5
@@ -284,7 +299,7 @@ class Parser:
             if len(songs) == 0:
                 songs_str += "No previous songs\n"
             else:
-                songs_str += "Previous songs:\n"
+                songs_str += "Previous:\n"
 
             for song in songs: 
                 songs_str += "\t" + str(song) + "\n"
@@ -293,7 +308,7 @@ class Parser:
             if len(songs) == 0:
                 songs_str += "No next songs\n"
             else:
-                songs_str += "Next songs:\n"
+                songs_str += "Next:\n"
 
             for song in songs:
                 songs_str += "\t" + str(song) + "\n"

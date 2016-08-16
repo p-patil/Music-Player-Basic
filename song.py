@@ -28,7 +28,6 @@ class Song:
         """
         self._file_path = file_path
         self._mp = None
-        self._is_playing = False # Flag to keep track of this song is playing
         self._time = None # What time, in seconds, of the song playback to play at
         
         # Fill in column values, first by parsing ID3 tags and then manually
@@ -46,10 +45,6 @@ class Song:
             self._columns["genre"] = genre if genre else self._columns["genre"]
             self._columns["year"] = year if year else self._columns["year"]
 
-        # Songs should always have a title, which is the name of the file by default
-        if not self._columns["title"]:
-            self._columns["title"] = file_path.split("/")[-1][: -4] # Parse file name from absolute file path and delete file extension
-
     def init(self):
         if not self._mp: # Only initialize if not already initialized
             self._mp = MediaPlayer(self._file_path)
@@ -61,7 +56,6 @@ class Song:
         if not self._mp:
             raise SongException("Song not initialized")
 
-        self._is_playing = True
         self._mp.play()
 
         if self._time:
@@ -69,7 +63,7 @@ class Song:
             self._time = None
 
         # Sleep a bit to allow VLC to play the song, so self.playing() returns properly
-        time.sleep(0.01)
+        time.sleep(0.05)
 
     def pause(self):
         """ Pauses this song, if it's playing.
@@ -77,7 +71,6 @@ class Song:
         if not self._mp:
             raise SongException("Song not initialized")
 
-        self._is_playing = False
         self._mp.pause()
 
     def set_time(self, time):
@@ -163,14 +156,12 @@ class Song:
         if not self._mp:
             raise SongException("Song not initialized")
 
-        self._is_playing = False
         self._mp.stop()
 
     def stop(self):
         """ Terminates this song, freeing system resources and cleaning up.
         """
         if self._mp:
-            self._is_playing = False
             self._mp.stop()
             self._mp = None
 
@@ -200,6 +191,9 @@ class Song:
                     ret.append(None)
         except ID3NoHeaderError:
             pass
+        
+        if not ret[Song.ID3_COLUMNS.index("title")]:
+            ret[Song.ID3_COLUMNS.index("title")] = file_path.split("/")[-1][: -4] # Parse file name from absolute file path and delete file extension
 
         return tuple(ret)
 
