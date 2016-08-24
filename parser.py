@@ -86,6 +86,8 @@ class Parser:
             return self._queue(tokens)
         elif tokens[0] == "dequeue":
             return self._dequeue(tokens)
+        elif tokens[0] == "delete":
+            return self._delete(tokens)
         elif tokens[0] == "context":
             return self._context(tokens)
         elif tokens[0] == "sort":
@@ -165,7 +167,7 @@ class Parser:
             return "Jumped to \"%s\"" % str(song)
         
         query = Parser._parse_args(tokens[1 :])
-        if not query:
+        if query is None:
             return (None, "Couldn't parse argument")
 
         matched_songs, guessed_songs = self.library.search(query)
@@ -207,7 +209,7 @@ class Parser:
     def _info(self, curr_song):
         info_str = ""
         for col in Song.ID3_COLUMNS + Song.NON_ID3_COLUMNS:
-            if curr_song[col]:
+            if curr_song[col] is not None:
                 info_str += col.upper() + ": " + str(curr_song[col]) + "\n"
 
         info_str = info_str[: -1] # Trim last newline
@@ -262,27 +264,50 @@ class Parser:
             matches_str = Parser._matches_str(matched_songs, guessed_songs, on_success)
             return (None, matches_str)
 
-    def _context(self, tokens):
-        prev = next = False
+    def _delete(self, tokens):
         if len(tokens) == 1:
-            prev = next = True
-            n = 5
+            return (None, "No song to delete given")
+        else:
+            if len(tokens) == 2:
+                def on_success(song):
+                    self.library.delete(song)
+                    return "Song \"%s\" deleted from library" % str(song)
+
+                query = Parser._parse_args(tokens[1 :])
+            elif len(tokens) == 3 and tokens[1] == "-perm":
+                def on_success(song):
+                    self.library.delete(song, from_disk = True)
+                    return "Song \"%s\" deleted from library and from disk" % str(song)
+
+                query = Parser._parse_args(tokens[2 :])
+            else:
+                return (None, "Couldn't parse argument")
+
+            matched_songs, guessed_songs = self.library.search(query)
+            matches_str = Parser._matches_str(matched_songs, guessed_songs, on_success)
+            return (None, matches_str)
+
+    def _context(self, tokens):
+        prev_flag = next_flag = False
+        n = 5 # Default number of songs to show
+        if len(tokens) == 1:
+            prev_flag = next_flag = True
         elif len(tokens) == 2:
             if tokens[1] == "-prev":
-                prev = True
-            elif tokens[1] == "next":
-                next = True
+                prev_flag = True
+            elif tokens[1] == "-next":
+                next_flag = True
             else:
                 try:
-                    prev = next = True
+                    prev_flag = next_flag = True
                     n = int(tokens[1])
                 except ValueError:
                     return (None, "Couldn't parse argument")
         elif len(tokens) == 3:
             if tokens[1] == "-prev":
-                prev = True
+                prev_flag = True
             elif tokens[1] == "-next":
-                next = True
+                next_flag = True
             else:
                 return (None, "Couldn't parse argument")
 
@@ -294,7 +319,7 @@ class Parser:
             return (None, "Couldn't parse argument")
 
         songs_str = ""
-        if prev:
+        if prev_flag:
             songs = self.library.get_prev_library_songs(n)
             if len(songs) == 0:
                 songs_str += "No previous songs\n"
@@ -303,7 +328,7 @@ class Parser:
 
             for song in songs: 
                 songs_str += "\t" + str(song) + "\n"
-        if next:
+        if next_flag:
             songs = self.library.get_next_library_songs(n)
             if len(songs) == 0:
                 songs_str += "No next songs\n"
@@ -343,7 +368,7 @@ class Parser:
                 return "\tFound \"%s\"" % song
 
             query = Parser._parse_args(tokens[1 :])
-            if not query:
+            if query is None:
                 return (None, "Could not pass argument \"%s\"" % " ".join(tokens[1 :]))
 
             matched_songs, guessed_songs = self.library.search(query, k)
@@ -357,7 +382,7 @@ class Parser:
         while True:
             inp = read_stdin(POLL_INTERVAL)
 
-            if inp:
+            if inp is not None:
                 if inp.lower().strip() == "unpause":
                     curr_song.play()
 
@@ -366,7 +391,7 @@ class Parser:
                     return (None, inp, None)
                 elif inp.lower().strip() != "pause":
                     next_song, output_message = self.parse_user_input(curr_song, inp)
-                    if next_song:
+                    if next_song is not None:
                         return (next_song, inp, output_message)
                 else:
                     next_song, output_message = None, None

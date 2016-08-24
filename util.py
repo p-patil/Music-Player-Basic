@@ -58,7 +58,7 @@ def print_main(s, inp = None, output_message = None):
         rts = "\033[1G" # Return to start
         cl = "\033[K"   # Clear line
 
-        if inp:
+        if inp is not None:
             # Get rid of newline if input isn't already stripped
             if inp[-1] == "\n":
                 inp = inp[: -1]
@@ -68,7 +68,7 @@ def print_main(s, inp = None, output_message = None):
             print(rts + inp + mdl, end = "")
 
             # Print output message below inp
-            if output_message:
+            if output_message is not None:
                 for line in output_message.split("\n"):
                     print(rts + cl, end = "")
                     print(rts + line + mdl, end = "")
@@ -112,6 +112,7 @@ def help_message():
     help_str += "\tinfo\n"
     help_str += "\tqueue\n"
     help_str += "\tdequeue\n"
+    help_str += "\tdelete\n"
     help_str += "\tcontext\n"
     help_str += "\tsort\n"
     help_str += "\tsearch\n"
@@ -140,6 +141,7 @@ help_dict = {
     "queue":   "\"queue [<song>]\" command\n\tAdds <song> to queue, or just \"queue\" to display queue.",
     "dequeue": "\"dequeue [-all] <song>\" command\n\tRemoves the first occurrence, and optionally all occurrences, of the given " + \
                "song from the queue, if it exists.",
+    "delete":  "\"delete [-perm] <song>\" command\n\tDeletes all occurrences of <song> from the library, and optionally from disk.",
     "context": "\"context [-prev | -next] <n>\" command\n\tDisplays the n (5 by default) previous or next (both by default) songs " + \
                "in the library.",
     "sort":    "\"sort [-reverse] <column>\" command\n\tSorts the library by the given column, optionally in descending order.",

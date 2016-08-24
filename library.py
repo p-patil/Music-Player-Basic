@@ -97,7 +97,7 @@ class Library:
         else:
             raise LibraryException("Song \"%s\" not in library" % str(song))
 
-    def delete(self, song):
+    def delete(self, song, from_disk = False):
         """ Deletes the all occurrences of the given song from the library and history.
         @param song: Song
         """
@@ -105,13 +105,16 @@ class Library:
             self.history = [s for s in self.history if s != song]
             self.lib = [s for s in self.lib if s != song]
 
+            if from_disk:
+                song.delete_from_disk()
+
     def jump_to_time(self, time, song = None):
         """ Jumps to the given time, in seconds, of the given song, which is the current song by default.
 
         @param time: int or float
         @param song: Song
         """
-        if not song:
+        if song is None:
             song = self.history[self.current_index]
 
         song.set_time(time)
@@ -151,7 +154,7 @@ class Library:
                 distance_vector_magnitude = 0.0
 
                 for col in query:
-                    if song[col]:
+                    if song[col] is not None:
                         dist = difflib.SequenceMatcher(None, query[col], song[col]).ratio()
                         distance_vector_magnitude += dist * dist
 
@@ -226,7 +229,7 @@ class Library:
 
         @return list(Song)
         """
-        if not song:
+        if song is None:
             song = self.history[self.current_index]
 
         song_index = self.lib.index(song)
@@ -248,7 +251,7 @@ class Library:
 
         @return list(Song)
         """
-        if not song:
+        if song is None:
             song = self.history[self.current_index]
 
         song_index = self.lib.index(song)
@@ -326,7 +329,10 @@ class Library:
                 if not file_name.lower().endswith(".mp3"):
                     print("Can't load non-MP3 file \"%s\"" % file_name)
                 else:
-                    self.lib.append(Song(abs_path, name, artist))
+                    try:
+                        self.lib.append(Song(abs_path, name, artist))
+                    except Exception as e:
+                        print("Can't load file \"%s\" due to raised the following raised exception:\n\t\"%s\"" % (abs_path, str(e)))
             elif recurse:
                 self._load_music(abs_path, recurse)
    

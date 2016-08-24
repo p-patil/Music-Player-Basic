@@ -39,36 +39,36 @@ class Song:
 
         # If overriding, only do so for passed parameters
         if override_id3:
-            self._columns["title"] = title if title else self._columns["title"]
-            self._columns["artist"] = artist if artist else self._columns["artist"]
-            self._columns["album"] = album if album else self._columns["album"]
-            self._columns["genre"] = genre if genre else self._columns["genre"]
-            self._columns["year"] = year if year else self._columns["year"]
+            self._columns["title"] = title if title is not None else self._columns["title"]
+            self._columns["artist"] = artist if artist is not None else self._columns["artist"]
+            self._columns["album"] = album if album is not None else self._columns["album"]
+            self._columns["genre"] = genre if genre is not None else self._columns["genre"]
+            self._columns["year"] = year if year is not None else self._columns["year"]
 
     def init(self):
-        if not self._mp: # Only initialize if not already initialized
+        if self._mp is None: # Only initialize if not already initialized
             self._mp = MediaPlayer(self._file_path)
 
     def play(self):
         """ Plays this song.
         """
         # Create the MediaPlayer on demand to save system resources (and prevent VLC from freaking out).
-        if not self._mp:
+        if self._mp is None:
             raise SongException("Song not initialized")
 
         self._mp.play()
 
-        if self._time:
+        if self._time is not None:
             self._mp.set_time(int(self._time * 1000)) # Seconds to milliseconds
             self._time = None
 
         # Sleep a bit to allow VLC to play the song, so self.playing() returns properly
-        time.sleep(0.05)
+        time.sleep(0.1)
 
     def pause(self):
         """ Pauses this song, if it's playing.
         """
-        if not self._mp:
+        if self._mp is None:
             raise SongException("Song not initialized")
 
         self._mp.pause()
@@ -103,7 +103,7 @@ class Song:
 
         @param percentage: int
         """
-        if not self._mp:
+        if self._mp is None:
             raise SongException("Song not initialized")
         elif percentage < 0 or percentage > 100:
             raise SongException("Percentage out of range")
@@ -116,7 +116,7 @@ class Song:
 
         @return int
         """
-        if not self._mp:
+        if self._mp is None:
             raise SongException("Song not initialized")
 
         if self.playing():
@@ -125,7 +125,7 @@ class Song:
     def mute(self):
         """ Mutes the song, if it's playing.
         """
-        if not self._mp:
+        if self._mp is None:
             raise SongException("Song not initialized")
 
         if self.playing():
@@ -134,7 +134,7 @@ class Song:
     def unmute(self):
         """ Unmutes the song, if it's playing and is muted.
         """
-        if not self._mp:
+        if self._mp is None:
             raise SongException("Song not initialized")
 
         if self.playing():
@@ -145,7 +145,7 @@ class Song:
 
         @return: bool
         """
-        if not self._mp:
+        if self._mp is None:
             raise SongException("Song not initialized")
         
         return self._mp.is_playing()
@@ -153,7 +153,7 @@ class Song:
     def reset(self):
         """ Resets the song to the beginning.
         """
-        if not self._mp:
+        if self._mp is None:
             raise SongException("Song not initialized")
 
         self._mp.stop()
@@ -161,7 +161,7 @@ class Song:
     def stop(self):
         """ Terminates this song, freeing system resources and cleaning up.
         """
-        if self._mp:
+        if self._mp is not None:
             self._mp.stop()
             self._mp = None
 
@@ -170,7 +170,7 @@ class Song:
 
         @return bool
         """
-        pass
+        os.remove(self._file_path)
 
     @staticmethod
     def _get_ID3_tags(file_path):
@@ -221,7 +221,7 @@ class Song:
     def __str__(self):
         ret = self["title"]
 
-        if self["artist"]:
+        if self["artist"] is not None:
             ret += " - " + self["artist"]
 
         return ret

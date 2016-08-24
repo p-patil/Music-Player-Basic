@@ -41,18 +41,12 @@ if __name__ == "__main__":
 
         print_main(MAIN_STR % str(curr_song["title"])) 
 
-#        if not curr_song.playing():
-#            print("one")
-#            print(i)
-#            print(curr_song)
-#            sys.exit()
-
         # Parse user input
         next_song, output_message = None, None
         while curr_song.playing():
             inp = read_stdin(POLL_INTERVAL)
 
-            if inp:
+            if inp is not None:
                 if inp.lower().startswith("volume"):
                     volume = parser._volume(inp, curr_song, volume)
                     next_song, output_message = None, None
@@ -62,7 +56,7 @@ if __name__ == "__main__":
                     else: # Parser class is meant for user commands that don't alter global state (like volume and pause do)
                         next_song, output_message = p.parse_user_input(curr_song, inp)
 
-                    if next_song:
+                    if next_song is not None:
                         print_main(MAIN_STR % str(next_song["title"]), USER_INPUT_MARKER + inp, output_message)
                         break
                     else:
@@ -70,7 +64,7 @@ if __name__ == "__main__":
 
         curr_song.stop()
 
-        if next_song:
+        if next_song is not None:
             curr_song = next_song
         else:
             curr_song = lib.next_song()
