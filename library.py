@@ -15,6 +15,7 @@ class Library:
         self.lib = [] # List of song objects tracked
         self.running = False # Whether or not the library is currently in 'running' mode, used when music is playing
         self.current_index = self.queue_index = -1
+        self.directories = directories
 
         for directory in directories:
             self._load_music(directory, recurse = True)
@@ -266,6 +267,9 @@ class Library:
 
     def get_library(self):
         return list(self.lib)
+
+    def get_directories(self):
+        return self.directories
 
     def shuffle(self):
         """ Shuffles the library.

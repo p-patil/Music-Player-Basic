@@ -1,35 +1,36 @@
+import sys, threading, os
 import main, util
 from song import Song
-import sys
+from downloader import youtube_search, youtube_download_audio
 
 # Can't do from main import _ due to circular import problems
 USER_INPUT_MARKER = main.USER_INPUT_MARKER
 POLL_INTERVAL     = main.POLL_INTERVAL
-MAIN_STR          = main.MAIN_STR
+PLAY_STR          = main.PLAY_STR
 help_message      = util.help_message
 help_dict         = util.help_dict
 print_main        = util.print_main
 read_stdin        = util.read_stdin
 
-def _volume(inp, curr_song, volume):
+def _volume(inp, main_str, curr_song, volume):
     new_volume = volume
     tokens = inp.lower().split()
 
     if len(tokens) == 1:
-        print_main(MAIN_STR % str(curr_song["title"]), USER_INPUT_MARKER + inp, "Volume at %s%%" % volume)
+        print_main(main_str % str(curr_song["title"]), USER_INPUT_MARKER + inp, "Volume at %s%%" % volume)
     elif len(tokens) == 2:
         try:
             new_volume = int(tokens[1])
             if new_volume < 0 or new_volume > 100:
-                print_main(MAIN_STR % str(curr_song["title"]), USER_INPUT_MARKER + inp, "Argument out of range (0 to 100)")
+                print_main(main_str % str(curr_song["title"]), USER_INPUT_MARKER + inp, "Argument out of range (0 to 100)")
             else:
                 curr_song.set_volume(new_volume)
-                print_main(MAIN_STR % str(curr_song["title"]), USER_INPUT_MARKER + inp, "Volume set to %s%%" % new_volume)
+                print_main(main_str % str(curr_song["title"]), USER_INPUT_MARKER + inp, "Volume set to %s%%" % new_volume)
         except ValueError:
-            print_main(MAIN_STR % str(curr_song["title"]), USER_INPUT_MARKER + inp, "Argument is not an integer")
+            print_main(main_str % str(curr_song["title"]), USER_INPUT_MARKER + inp, "Argument is not an integer")
             new_volume = volume
     else:
-        print_main(MAIN_STR % str(curr_song["title"]), USER_INPUT_MARKER + inp, "Couldn't parse argument to \"volume\" command")
+        print_main(main_str % str(curr_song["title"]), USER_INPUT_MARKER + inp, "Couldn't parse argument to \"volume\" command")
 
     return new_volume
 
@@ -375,10 +376,106 @@ class Parser:
             matches_str = Parser._matches_str(matched_songs, guessed_songs, on_success)
             return (None, matches_str)
 
-    def _pause(self, curr_song, inp):
+    def _download(self, main_str, curr_song, inp, tokens):
+        if len(tokens) == 1:
+            return (None, "No Youtube search query given")
+        else:
+            # Build query
+            query, accepted_options = {}, set(["query", "filepath", "filename", "best"])
+            for key, val in Parser._parse_all_args(tokens[1 :], sanitize_quotes = True).items():
+                if key.lower() not in accepted_options:
+                    return (None, "Could not parse argument")
+                elif key.lower() == "filepath" or key.lower() == "filename":
+                    query[key] = val
+                else:
+                    query[key.lower()] = val.lower()
+
+            # Error checking and initialization
+            use_first_match = "best" in query
+
+            if query is None:
+                return (None, "Could not pass argument")
+            elif "query" not in query:
+                return (None, "No \"query\" option given")
+            
+            if "filepath" not in query:
+                file_path = self.lib.get_directories()[0]
+            else:
+                file_path = query["filepath"].strip()
+
+                if not os.path.exists(file_path):
+                    return (None, "Invalid or non-existent file_path")
+
+            if "filename" not in query:
+                file_name = None
+            else:
+                file_name = query["filename"].strip()
+
+            # Search Youtube and get search results
+            results = youtube_search(query["query"])
+            if len(results) == 0:
+                return (None, "No Youtube results found for query")
+
+            # Choose which video to download
+            if use_first_match:
+                # Find best match
+                video = results[0]
+            else:
+                # Prompt user for each search result, asking whether to download
+                for metadata_dict in results:
+                    output_message = "Download \"%s\" from Youtube (type \"download info\" for more information " + \
+                                     "or \"break\" to abort)? (y/n)" % metadata_dict["title"]
+                    print_main(main_str % curr_song["title"], USER_INPUT_MARKER + inp, output_message)
+
+                    found = False
+                    while True:
+                        inp = read_stdin(POLL_INTERVAL)
+
+                        if inp:
+                            inp = inp.lower().strip()
+                            if inp == "y":
+                                found = True
+                                break
+                            elif inp == "n":
+                                break
+                            elif inp == "break":
+                                return (None, None)
+                            elif inp == "download info": # Provide additional information about current video
+                                output_message = ""
+                                for key in metadata_dict:
+                                    output_message += key.upper() + ": " + str(metadata_dict[key]) + "\n"
+
+                                output_message = output_message[: -1] # Trim last newline
+                                print_main(main_str % current["title"], USER_INPUT_MARKER + inp, output_message)
+                            else:
+                                output_message = "Unrecognized input"
+                                print_main(main_str % curr["title"], USER_INPUT_MARKER + inp, output_message)
+
+                    if found:
+                        video = metadata_dict
+                        break
+
+                if not found:
+                    return (None, None)
+
+
+            # Download on another thread
+            if file_name is None:
+                file_name = video["title"]
+            file_name += ".mp3"
+            url = "https://www.youtube.com/watch?v=%s" % video["id"]
+
+            thread = threading.Thread(target = youtube_download_audio, args = (url, file_path, file_name))
+            thread.start()
+
+            return (thread, "Downloading on another thread")
+
+    def _pause(self, main_str, curr_song, inp):
         curr_song.pause()
-        print_main("Playing \"%s\" [paused]" % str(curr_song["title"]), USER_INPUT_MARKER + inp, None)
+        pause_main_str = main_str + "[paused]"
+        print_main(pause_main_str % str(curr_song["title"]), USER_INPUT_MARKER + inp, None)
         
+        thread = None
         while True:
             inp = read_stdin(POLL_INTERVAL)
 
@@ -386,17 +483,29 @@ class Parser:
                 if inp.lower().strip() == "unpause":
                     curr_song.play()
 
-                    print_main("Playing \"%s\"" % str(curr_song["title"]), USER_INPUT_MARKER + inp, None)
+                    print_main(main_str % str(curr_song["title"]), USER_INPUT_MARKER + inp, None)
 
                     return (None, inp, None)
                 elif inp.lower().strip() != "pause":
                     next_song, output_message = self.parse_user_input(curr_song, inp)
                     if next_song is not None:
                         return (next_song, inp, output_message)
+                elif inp.lower.startswith("download"):
+                    thread, output_message = self._download(main_str, curr_song, inp)
+                    next_song = None
                 else:
                     next_song, output_message = None, None
 
-                print_main("Playing \"%s\" [paused]" % str(curr_song["title"]), USER_INPUT_MARKER + inp, output_message)
+                if thread is not None:
+                    if thread.is_alive():
+                        download_main_str = pause_main_str + "[downloading]"
+                        print_main(download_main_str % str(curr_song["title"]), USER_INPUT_MARKER + inp, output_message)
+                    else:
+                        thread.join()
+                        thread = None
+                        print_main(pause_main_str % str(curr_song["title"]), USER_INPUT_MARKER + inp, output_message)
+                else:
+                    print_main(pause_main_str % str(curr_song["title"]), USER_INPUT_MARKER + inp, output_message)
 
     # Helper functions below
 
@@ -412,21 +521,14 @@ class Parser:
         parsed_args = {}
 
         if tokens[0][0] == "-": # Options are provided
-            i = 0
-            while i < len(tokens):
-                j = i + 1
-                while j < len(tokens) and tokens[j][0] != "-":
-                    j += 1
-                    
-                if j == i + 1: # Loop wasn't entered - no argument given
+            parsed_args = Parser._parse_all_args(tokens)
+            if parsed_args is None:
+                return None
+            
+            cols = Song.ID3_COLUMNS + Song.NON_ID3_COLUMNS
+            for option in parsed_args:
+                if option not in cols or len(parsed_args[option]) == 0: # Invalid option entered or no argument passed
                     return None
-
-                option, argument = tokens[i][1 :], " ".join(tokens[i + 1 : j])
-                if option not in Song.ID3_COLUMNS + Song.NON_ID3_COLUMNS: # Invalid option entered
-                    return None
-                
-                parsed_args[option] = argument
-                i = j
         else: # Parse according to personal convention
             if "-" in tokens:
                 separator = tokens.index("-")
@@ -436,6 +538,48 @@ class Parser:
                 parsed_args["title"] = " ".join(tokens)
 
         return parsed_args
+
+    @staticmethod
+    def _parse_all_args(tokens, sanitize_quotes = False):
+        """ Same as _parse_args, but accepts any options, not just song columns. If the sanitize_quotes
+        flag is set, removes (initial or terminal) quotes when found.
+
+        @param tokens: list(str)
+        @param sanitize_quotes: bool
+
+        @return: dict(str -> str)
+        """
+        parsed_args = {}
+
+        if tokens[0][0] == "-": # Options are provided
+            i = 0
+            while i < len(tokens):
+                in_quote = False
+                j = i + 1
+                while j < len(tokens) and (tokens[j][0] != "-" or in_quote):
+                    if not in_quote and tokens[j][0] == "\"":
+                        in_quote = True
+
+                        if sanitize_quotes:
+                            tokens[j] = tokens[j][1 :]
+                    elif in_quote and tokens[j][-1] == "\"":
+                        in_quote = False
+
+                        if sanitize_quotes:
+                            tokens[j] = tokens[j][: -1]
+
+                    j += 1
+
+                if in_quote: # Unclosed quote
+                    return None
+
+                option, argument = tokens[i][1 :], " ".join(tokens[i + 1 : j])
+                parsed_args[option] = argument
+                i = j
+
+            return parsed_args
+        else:
+            return None
 
     @staticmethod
     def _matches_str(matched_songs, guessed_songs, on_success, k = 5):

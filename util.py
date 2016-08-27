@@ -3,9 +3,31 @@ from song import Song
 import select, sys, os, signal
 
 USER_INPUT_MARKER = main.USER_INPUT_MARKER
+_SAVE_STDOUT, _SAVE_STDERR = None, None
 
-""" This class contains various external functions that are used throughout the program but don't belong in any particular class.
+""" Contains various external functions that are used throughout the program but don't belong in any particular class.
 """
+
+# TODO Fix this
+def suppress_output():
+    # Class to suppress all output
+    class NullOutput(object):
+        def write(self, x):
+            pass
+
+    global _SAVE_STDOUT, _SAVE_STDERR
+    _SAVE_STDOUT, _SAVE_STDERR = sys.stdout, sys.stderr
+    sys.stdout, sys.stderr = NullOutput(), NullOutput()
+
+def resume_output():
+    global _SAVE_STDOUT, _SAVE_STDERR
+    if _SAVE_STDOUT is not None:
+        sys.stdout = _SAVE_STDOUT
+        _SAVE_STDOUT = None
+
+    if _SAVE_STDERR is not None:
+        sys.stdout = _SAVE_STDERR
+        _SAVE_STDERR = None
 
 def supports_ansi():
     """ Returns if the console running this script supports ANSI escape sequences or not. Taken from Django's
@@ -116,37 +138,42 @@ def help_message():
     help_str += "\tcontext\n"
     help_str += "\tsort\n"
     help_str += "\tsearch\n"
+    help_str += "\tdownload\n"
     help_str += "Type \"help <command>\" to get specific help information for a given command.\n"
     help_str += "\n\n"
 
     return help_str
 
 help_dict = {
-    "stop":    "\"stop\" command\n\tKills this script.",
-    "help":    "\"help\" command\n\tDisplays the main help sequence.",
-    "columns": "\"columns\" command\n\tShows all columns tracked by the library.",
-    "skip":    "\"skip\" command\n\tSkips the current song.",
-    "back":    "\"back\" command\n\tPlays the previously played song.",
-    "pause":   "\"pause\" command\n\tPauses the current song, \"unpause\" unpauses.",
-    "unpause": "\"unpause\" command\n\tResumes playing a paused song, \"pause\" to pause.",
-    "delete":  "\"delete [-perm] <song>\" command\n\tRemoves song from library and optionally from disk.",
-    "volume":  "\"volume [<percentage>]\" command\n\tSets the volume, or just \"volume\" to display the current volume.",
-    "next":    "\"next <song>\" command\n\tPlay the given song next, by adding it to the front of the queue.",
-    "jump":    "\"jump <song>\" command\n\tJumps to the given song, by moving the current position in the library to that song. " + \
-               "This will affect the previous history of played songs and therefore the \"back\" command.",
-    "repeat":  "\"repeat\" command\n\tPlays the song again after it's over.",
-    "restart": "\"restart\" command\n\tPlays current song from beginning.",
-    "time":    "\"time [<t>]\" command\n\tJump to time t (in seconds) of the current song, or just \"time\" to see the current time.",
-    "info":    "\"info\" command\n\tDisplays stored column information about current song.",
-    "queue":   "\"queue [<song>]\" command\n\tAdds <song> to queue, or just \"queue\" to display queue.",
-    "dequeue": "\"dequeue [-all] <song>\" command\n\tRemoves the first occurrence, and optionally all occurrences, of the given " + \
-               "song from the queue, if it exists.",
-    "delete":  "\"delete [-perm] <song>\" command\n\tDeletes all occurrences of <song> from the library, and optionally from disk.",
-    "context": "\"context [-prev | -next] <n>\" command\n\tDisplays the n (5 by default) previous or next (both by default) songs " + \
-               "in the library.",
-    "sort":    "\"sort [-reverse] <column>\" command\n\tSorts the library by the given column, optionally in descending order.",
-    "search":  "\"search <query>\" command\n\tSearches for a song in the library.\n\tSearch format: -[column1] \"arg1\" <...> " + \
-               "-[columnN] \"argN\"\n\tOtherwise, search in raw format \"<title> - <artist>\" or \"<title>\"."
+    "stop":     "\"stop\" command\n\tKills this script.",
+    "help":     "\"help\" command\n\tDisplays the main help sequence.",
+    "columns":  "\"columns\" command\n\tShows all columns tracked by the library.",
+    "skip":     "\"skip\" command\n\tSkips the current song.",
+    "back":     "\"back\" command\n\tPlays the previously played song.",
+    "pause":    "\"pause\" command\n\tPauses the current song, \"unpause\" unpauses.",
+    "unpause":  "\"unpause\" command\n\tResumes playing a paused song, \"pause\" to pause.",
+    "delete":   "\"delete [-perm] <song>\" command\n\tRemoves song from library and optionally from disk.",
+    "volume":   "\"volume [<percentage>]\" command\n\tSets the volume, or just \"volume\" to display the current volume.",
+    "next":     "\"next <song>\" command\n\tPlay the given song next, by adding it to the front of the queue.",
+    "jump":     "\"jump <song>\" command\n\tJumps to the given song, by moving the current position in the library to that song. " + \
+                "This will affect the previous history of played songs and therefore the \"back\" command.",
+    "repeat":   "\"repeat\" command\n\tPlays the song again after it's over.",
+    "restart":  "\"restart\" command\n\tPlays current song from beginning.",
+    "time":     "\"time [<t>]\" command\n\tJump to time t (in seconds) of the current song, or just \"time\" to see the current time.",
+    "info":     "\"info\" command\n\tDisplays stored column information about current song.",
+    "queue":    "\"queue [<song>]\" command\n\tAdds <song> to queue, or just \"queue\" to display queue.",
+    "dequeue":  "\"dequeue [-all] <song>\" command\n\tRemoves the first occurrence, and optionally all occurrences, of the given " + \
+                "song from the queue, if it exists.",
+    "delete":   "\"delete [-perm] <song>\" command\n\tDeletes all occurrences of <song> from the library, and optionally from disk.",
+    "context":  "\"context [-prev | -next] <n>\" command\n\tDisplays the n (5 by default) previous or next (both by default) songs " + \
+                "in the library.",
+    "sort":     "\"sort [-reverse] <column>\" command\n\tSorts the library by the given column, optionally in descending order.",
+    "search":   "\"search <query>\" command\n\tSearches for a song in the library.\n\tSearch format: -[column1] \"arg1\" <...> " + \
+                "-[columnN] \"argN\"\n\tOtherwise, search in raw format \"<title> - <artist>\" or \"<title>\".",
+    "download": "\"download <query>\" command\n\tTries to download the song given by the query, from multiple sources " + \
+                "(e.g. YouTube, etc.)\n\tQuery format: -query \"<search query>\" [-filepath] \"<where to save song>\" [-best]\n\t" + \
+                "Options in brackets are optional; the \"best\" option specifies whether to automatically use the first returned " + \
+                "search match; otherwise, you will be prompted for each match."
 }
 
 def console_width():
