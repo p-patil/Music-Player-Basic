@@ -166,7 +166,8 @@ help_dict = {
                 "song from the queue, if it exists.",
     "delete":   "\"delete [-perm] <song>\" command\n\tDeletes all occurrences of <song> from the library, and optionally from disk.",
     "context":  "\"context [-prev | -next] <n>\" command\n\tDisplays the n (5 by default) previous or next (both by default) songs " + \
-                "in the library.",
+                "in the library.\n\"context -until <query>\" command\n\tDisplays all songs in the library up to the song matched by " + \
+                "the given search query.",
     "sort":     "\"sort [-reverse] <column>\" command\n\tSorts the library by the given column, optionally in descending order.",
     "search":   "\"search <query>\" command\n\tSearches for a song in the library.\n\tSearch format: -[column1] \"arg1\" <...> " + \
                 "-[columnN] \"argN\"\n\tOtherwise, search in raw format \"<title> - <artist>\" or \"<title>\".",
@@ -182,6 +183,14 @@ def console_width():
     stty.close()
 
     return width
+
+# TODO Make this function return more readable output
+def get_thread_str(play_str, thread):
+    if thread is not None:
+        return play_str + ", downloading song"
+    else:
+        return play_str
+
 
 def levenshtein_dist(s, t):
     """ Returns the levenshtein distance between the given strings. Implements Wagner-Fischer algorithm.

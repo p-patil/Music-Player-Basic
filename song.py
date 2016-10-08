@@ -49,7 +49,7 @@ class Song:
         if self._mp is None: # Only initialize if not already initialized
             self._mp = MediaPlayer(self._file_path)
 
-    def play(self):
+    def play(self, sleep_interval = 0.1):
         """ Plays this song.
         """
         # Create the MediaPlayer on demand to save system resources (and prevent VLC from freaking out).
@@ -63,7 +63,7 @@ class Song:
             self._time = None
 
         # Sleep a bit to allow VLC to play the song, so self.playing() returns properly
-        time.sleep(0.1)
+        time.sleep(sleep_interval)
 
     def pause(self):
         """ Pauses this song, if it's playing.
@@ -172,6 +172,22 @@ class Song:
         """
         os.remove(self._file_path)
 
+    def set_ID3_tag(tag, value):
+        """ Sets this song's ID3 tag to the given value, returning if the set operation succeeded.
+        
+        @param tag: str
+        @param value: str
+        
+        @return bool
+        """
+        if tag not in ID3_COLUMNS:
+            return False
+
+        tags = EasyID3(self.file_path)
+        tags[tag] = value
+        tags.save()
+        return True
+
     @staticmethod
     def _get_ID3_tags(file_path):
         """ Given a file path to an mp3 song, returns the ID3 tags for title, artist, album, genre, and year (in that order), or 
@@ -243,3 +259,4 @@ class Song:
 
     def __contains__(self, item):
         return item in self._columns
+

@@ -7,7 +7,7 @@ class Library:
     NOTE: This class and the Song class require the vlc module to be installed. On Unix systems, it can be installed with apt-get.
     """
 
-    def __init__(self, *directories):
+    def __init__(self, *directories, verbose = False):
         """ Initializes a library by loading in music from the given directories.
 
         @param *directories: Tuple of str
@@ -18,7 +18,7 @@ class Library:
         self.directories = directories
 
         for directory in directories:
-            self._load_music(directory, recurse = True)
+            self._load_music(directory, recurse = True, verbose = verbose)
 
         self.history = list(self.lib) # List tracking currently playing song and entire song history
 
@@ -312,19 +312,31 @@ class Library:
         self.first_song() # Reset song pointers
         self.history = self.get_queued_songs() + list(self.lib)
 
+    def get_current_index(self):
+        """ Returns the current index.
+        
+        @return int
+        """
+        return self.current_index
+
     # Helper functions below
 
-    def _load_music(self, directory, recurse = False):
-        """ Given (absolute path to) a directory containing music, wraps each music file in a song object and appends to this library. Loading mechanism is optionally shallow or recursive.
+    def _load_music(self, directory, recurse = False, verbose = False):
+        """ Given (absolute path to) a directory containing music, wraps each music file in a song object and appends to this library. 
+        Loading mechanism is optionally shallow or recursive. Optionally displays updates for which song is being loaded (this may
+        decrease performance).
 
         @param directory: str
         @param recurse: bool
+        @param verbose: bool
         """
         # Error checking
         if not os.path.isdir(directory):
             raise ValueError("File '%s' does not exist or is not a directory" % directory)
 
-        for file_name in os.listdir(directory):
+        recurse_paths = []
+        songs = os.listdir(directory)
+        for i, file_name in enumerate(songs):
             abs_path = os.path.join(directory, file_name)
             # Parse name and artist based on my personal convention, throwing away the file extension
             name, artist = Library._parse_song(file_name)
@@ -335,10 +347,19 @@ class Library:
                 else:
                     try:
                         self.lib.append(Song(abs_path, name, artist))
+
+                        if verbose:
+                            print("Loading from directory \"%s\": song %s of %s" % (directory, str(i), str(len(songs))), end = "\r")
                     except Exception as e:
                         print("Can't load file \"%s\" due to raised the following raised exception:\n\t\"%s\"" % (abs_path, str(e)))
             elif recurse:
-                self._load_music(abs_path, recurse)
+                recurse_paths.append(abs_path)
+        
+        if verbose and len(recurse_paths) == 0:
+            print()
+        elif len(recurse_paths) > 0:
+            for path in recurse_paths:
+                self._load_music(path, recurse, verbose)
    
     @staticmethod
     def _parse_song(file_name):

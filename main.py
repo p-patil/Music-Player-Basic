@@ -9,6 +9,7 @@ USER_INPUT_MARKER = "> "
 # TODO Implement a better search function
 # TODO Comment every function
 # TODO Finish testing downloader
+# TODO Add functionality to automatically look up ID3 tags (eg album, year, etc.) for songs
 if __name__ == "__main__":
     import library, parser, util
 
@@ -25,11 +26,11 @@ if __name__ == "__main__":
     read_stdin     = util.read_stdin
     get_thread_str = util.get_thread_str
 
-    os.system("clear")
     if len(sys.argv) > 1:
-        lib = library.Library(sys.argv[1])
+        lib = library.Library(sys.argv[1], verbose = True)
     else:
-        lib = library.Library("/home/piyush/Music/")
+        lib = library.Library("/home/piyush/Music/", verbose = True)
+    os.system("clear")
     p = parser.Parser(lib)
     print(help_message())
 
@@ -46,12 +47,18 @@ if __name__ == "__main__":
 
         print_main(main_str % str(curr_song["title"])) 
 
-        # parse user input
+        # TODO Fix this weird bug where songs randomly don't start playing despite calling the play function
+        sleep_interval = 0.1
+        while not curr_song.playing():
+            curr_song.play(sleep_interval)
+            sleep_interval += 0.01
+
+        # Parse user input
         inp, next_song, output_message = "", None, None
         while curr_song.playing():
             inp = read_stdin(POLL_INTERVAL)
 
-            if new_inp is not None:
+            if inp is not None:
                 if inp.lower().startswith("volume"):
                     volume = parser._volume(inp, main_str, curr_song, volume)
                     next_song, output_message = None, None

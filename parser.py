@@ -288,8 +288,9 @@ class Parser:
             matches_str = Parser._matches_str(matched_songs, guessed_songs, on_success)
             return (None, matches_str)
 
-    def _context(self, tokens):
-        prev_flag = next_flag = False
+    def _context(self, tokens, k = 5):
+        # First parse options
+        prev_flag = next_flag  = until_flag = False
         n = 5 # Default number of songs to show
         if len(tokens) == 1:
             prev_flag = next_flag = True
@@ -298,6 +299,8 @@ class Parser:
                 prev_flag = True
             elif tokens[1] == "-next":
                 next_flag = True
+            elif tokens[1] == "-until":
+                until_flag = True
             else:
                 try:
                     prev_flag = next_flag = True
@@ -309,35 +312,80 @@ class Parser:
                 prev_flag = True
             elif tokens[1] == "-next":
                 next_flag = True
+            elif tokens[1] == "-until":
+                until_flag = True
             else:
                 return (None, "Couldn't parse argument")
-
-            try:
-                n = int(tokens[2])
-            except ValueError:
-                return (None, "Couldn't parse argument")
+            
+            if not until_flag:
+                try:
+                    n = int(tokens[2])
+                except ValueError:
+                    return (None, "Couldn't parse argument")
         else:
-            return (None, "Couldn't parse argument")
+            if tokens[1] == "-until":
+                until_flag = True
+            else:
+                return (None, "Couldn't parse argument")
 
         songs_str = ""
-        if prev_flag:
-            songs = self.library.get_prev_library_songs(n)
-            if len(songs) == 0:
-                songs_str += "No previous songs\n"
+        if until_flag:
+            # Construct search query
+            if " - " in tokens[2 :]:
+                split_index = tokens.index(" - ")
+                title, artist = " ".join(tokens[: split_index]), " ".join(tokens[split_index + 1 :])
+                query = {"title": title, "artist": artist}
             else:
-                songs_str += "Previous:\n"
+                title = " ".join(tokens[2 :])
+                query = {"title": title}
 
-            for song in songs: 
-                songs_str += "\t" + str(song) + "\n"
-        if next_flag:
-            songs = self.library.get_next_library_songs(n)
-            if len(songs) == 0:
-                songs_str += "No next songs\n"
+            # Get song matches
+            matched_songs, guessed_songs = self.library.search(query, k)
+            
+            if len(matched_songs) != 1:
+                # No conclusive match
+                matches_str = Parser._matches_str(matched_songs, guessed_songs, on_success = (lambda song: None))
+                return (None, mathces_str)
             else:
-                songs_str += "Next:\n"
+                # Return songs between index of the searched song and the current index, starting at whichever comes first
+                lib = self.library.get_library() # Get library without queued songs
+                index = lib.index(matched_songs[0]) 
+                curr_index = self.library.get_current_index()
+                
+                if index < curr_index:
+                    if index > 0:
+                        index -= 1 # Subtract one so searched song is included
 
-            for song in songs:
-                songs_str += "\t" + str(song) + "\n"
+                    songs_str += "Previous:\n"
+                    for song in lib[index : curr_index]:
+                        songs_str += "\t" + str(song) + "\n"
+                elif index > curr_index:
+                    if index < len(lib):
+                        index += 1 # Add one so searched song is included 
+
+                    songs_str += "Next:\n"
+                    for song in lib[curr_index : index]:
+                        songs_str += "\t" + str(song) + "\n"               
+        else:
+            if prev_flag:
+                songs = self.library.get_prev_library_songs(n)
+                if len(songs) == 0:
+                    songs_str += "No previous songs\n"
+                else:
+                    songs_str += "Previous:\n"
+
+                for song in songs: 
+                    songs_str += "\t" + str(song) + "\n"
+            if next_flag:
+                songs = self.library.get_next_library_songs(n)
+                if len(songs) == 0:
+                    songs_str += "No next songs\n"
+                else:
+                    songs_str += "Next:\n"
+
+                for song in songs:
+                    songs_str += "\t" + str(song) + "\n"
+
 
         return (None, songs_str)
 
@@ -472,7 +520,7 @@ class Parser:
 
     def _pause(self, main_str, curr_song, inp):
         curr_song.pause()
-        pause_main_str = main_str + "[paused]"
+        pause_main_str = main_str + " [paused]"
         print_main(pause_main_str % str(curr_song["title"]), USER_INPUT_MARKER + inp, None)
         
         thread = None
@@ -498,7 +546,7 @@ class Parser:
 
                 if thread is not None:
                     if thread.is_alive():
-                        download_main_str = pause_main_str + "[downloading]"
+                        download_main_str = pause_main_str + " [downloading]"
                         print_main(download_main_str % str(curr_song["title"]), USER_INPUT_MARKER + inp, output_message)
                     else:
                         thread.join()
