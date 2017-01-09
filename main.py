@@ -1,15 +1,19 @@
+#!/usr/bin/python
+
 import sys, os
 
 POLL_INTERVAL = 0.5
 PLAY_STR = "Playing \"%s\""
 USER_INPUT_MARKER = "> "
 
+# TODO Add functionality to allow for shuffling the library
 # TODO Add functionality to sync songs with another device (in background) through SSH
 # TODO Figure out how to suppress VLC errors 
 # TODO Implement a better search function
 # TODO Comment every function
 # TODO Finish testing downloader
 # TODO Add functionality to automatically look up ID3 tags (eg album, year, etc.) for songs
+# TODO Add functionality to convert files to mp3, then for non-mp3 files during loading ask if this should be done
 if __name__ == "__main__":
     import library, parser, util
 
@@ -17,7 +21,7 @@ if __name__ == "__main__":
         print("This application is designed for the Linux operating system - you're running \"%s\"" % sys.platform)
         sys.exit()
     if not util.vlc_installed():
-        print("VLC must be installed - install with \"sudo apt-get install vlc\"")
+        print("VLC must be installed - install with \"sudo pacman -S vlc\"")
         sys.exit()
 
     SUPPORTS_ANSI  = util.supports_ansi()
@@ -27,14 +31,14 @@ if __name__ == "__main__":
     get_thread_str = util.get_thread_str
 
     if len(sys.argv) > 1:
-        lib = library.Library(sys.argv[1], verbose = True)
+        lib = library.Library(sys.argv[1], verbose = True, shuffle = True)
     else:
-        lib = library.Library("/home/piyush/Music/", verbose = True)
+        lib = library.Library("/home/piyush/music/", verbose = True, shuffle = True)
     os.system("clear")
     p = parser.Parser(lib)
     print(help_message())
 
-    lib.sort("date_modified", reverse = True)
+    # lib.sort("date_modified", reverse = True)
 
     volume, curr_song = 100, lib.first_song()
     thread = None

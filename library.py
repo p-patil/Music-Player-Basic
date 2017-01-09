@@ -7,7 +7,7 @@ class Library:
     NOTE: This class and the Song class require the vlc module to be installed. On Unix systems, it can be installed with apt-get.
     """
 
-    def __init__(self, *directories, verbose = False):
+    def __init__(self, *directories, verbose = False, shuffle = False):
         """ Initializes a library by loading in music from the given directories.
 
         @param *directories: Tuple of str
@@ -19,6 +19,9 @@ class Library:
 
         for directory in directories:
             self._load_music(directory, recurse = True, verbose = verbose)
+
+        if shuffle:
+            random.shuffle(self.lib)
 
         self.history = list(self.lib) # List tracking currently playing song and entire song history
 
@@ -271,6 +274,7 @@ class Library:
     def get_directories(self):
         return self.directories
 
+    # TODO Fix this function - the order of the library is the same every time the program runs
     def shuffle(self):
         """ Shuffles the library.
         """
