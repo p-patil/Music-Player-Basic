@@ -137,6 +137,7 @@ def help_message():
     help_str += "\tdelete\n"
     help_str += "\tcontext\n"
     help_str += "\tsort\n"
+    help_str += "\tshuffle\n"
     help_str += "\tsearch\n"
     help_str += "\tdownload\n"
     help_str += "Type \"help <command>\" to get specific help information for a given command.\n"
@@ -148,8 +149,8 @@ help_dict = {
     "stop":     "\"stop\" command\n\tKills this script.",
     "help":     "\"help\" command\n\tDisplays the main help sequence.",
     "columns":  "\"columns\" command\n\tShows all columns tracked by the library.",
-    "skip":     "\"skip\" command\n\tSkips the current song.",
-    "back":     "\"back\" command\n\tPlays the previously played song.",
+    "skip":     "\"skip\" command\n\tSkips the current song. Shortcut: \"s\".",
+    "back":     "\"back\" command\n\tPlays the previously played song. Shortcut: \"b\".",
     "pause":    "\"pause\" command\n\tPauses the current song, \"unpause\" unpauses.",
     "unpause":  "\"unpause\" command\n\tResumes playing a paused song, \"pause\" to pause.",
     "delete":   "\"delete [-perm] <song>\" command\n\tRemoves song from library and optionally from disk.",

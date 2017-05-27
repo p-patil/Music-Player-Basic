@@ -20,10 +20,10 @@ class Library:
         for directory in directories:
             self._load_music(directory, recurse = True, verbose = verbose)
 
-        if shuffle:
-            random.shuffle(self.lib)
-
         self.history = list(self.lib) # List tracking currently playing song and entire song history
+
+        if shuffle:
+            self.shuffle()
 
     def is_running(self):
         """ Returns if the library is still running.
@@ -274,14 +274,16 @@ class Library:
     def get_directories(self):
         return self.directories
 
-    # TODO Fix this function - the order of the library is the same every time the program runs
     def shuffle(self):
         """ Shuffles the library.
         """
+        queue = self.get_queued_songs()
         random.shuffle(self.lib)
+        self.history = queue + list(self.lib)
+        self.current_index, self.queue_index = 0, len(queue) + 1 # Reset pointers
 
     def sort(self, column, reverse = False):
-        """ Sorts the library in alphabetical order by the given column, a song constant variable. Sorts in descending 
+        """ Sorts the library in lexicographic order by the given column, a song constant variable. Sorts in descending 
         order by default.
         """
         # Error checking

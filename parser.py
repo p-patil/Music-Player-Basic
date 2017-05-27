@@ -65,9 +65,9 @@ class Parser:
             return self._help(tokens)
         elif inp == "columns":
             return self._columns()
-        elif inp == "skip":
+        elif inp == "skip" or inp == "s": # Keyboard shortcut for skipping
             return self._skip()
-        elif inp == "back":
+        elif inp == "back" or inp == "b": # Keyboard shortcut for going back
             return self._back()
         elif tokens[0] == "delete":
             return self._delete(tokens)
@@ -93,6 +93,8 @@ class Parser:
             return self._context(tokens)
         elif tokens[0] == "sort":
             return self._sort(tokens)
+        elif tokens[0] == "shuffle":
+            return self._shuffle()
         elif tokens[0] == "search":
             return self._search(tokens)
         else:
@@ -408,6 +410,10 @@ class Parser:
                 return (None, "Sorted library by column \"%s\"" % tokens[2])
         else:
             return (None, "Couldn't parse argument")
+
+    def _shuffle(self):
+        self.library.shuffle()
+        return (None, "Randomly shuffled library")
 
     def _search(self, tokens, k = 5):
         if len(tokens) == 1:

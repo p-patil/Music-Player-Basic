@@ -1,0 +1,948 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+AudioCleanupCb	vlc.py	/^    AudioCleanupCb = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p)$/;"	v	class:CallbackDecorators
+AudioCleanupCb	vlc.py	/^class AudioCleanupCb(ctypes.c_void_p):$/;"	c
+AudioDrainCb	vlc.py	/^    AudioDrainCb = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p)$/;"	v	class:CallbackDecorators
+AudioDrainCb	vlc.py	/^class AudioDrainCb(ctypes.c_void_p):$/;"	c
+AudioFlushCb	vlc.py	/^    AudioFlushCb = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int64)$/;"	v	class:CallbackDecorators
+AudioFlushCb	vlc.py	/^class AudioFlushCb(ctypes.c_void_p):$/;"	c
+AudioOutput	vlc.py	/^class AudioOutput(_Cstruct):$/;"	c
+AudioOutputChannel	vlc.py	/^class AudioOutputChannel(_Enum):$/;"	c
+AudioOutputDevice	vlc.py	/^class AudioOutputDevice(_Cstruct):$/;"	c
+AudioOutputDeviceTypes	vlc.py	/^class AudioOutputDeviceTypes(_Enum):$/;"	c
+AudioPauseCb	vlc.py	/^    AudioPauseCb = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int64)$/;"	v	class:CallbackDecorators
+AudioPauseCb	vlc.py	/^class AudioPauseCb(ctypes.c_void_p):$/;"	c
+AudioPlayCb	vlc.py	/^    AudioPlayCb = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_uint, ctypes.c_int64)$/;"	v	class:CallbackDecorators
+AudioPlayCb	vlc.py	/^class AudioPlayCb(ctypes.c_void_p):$/;"	c
+AudioResumeCb	vlc.py	/^    AudioResumeCb = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int64)$/;"	v	class:CallbackDecorators
+AudioResumeCb	vlc.py	/^class AudioResumeCb(ctypes.c_void_p):$/;"	c
+AudioSetVolumeCb	vlc.py	/^    AudioSetVolumeCb = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_float, ctypes.c_bool)$/;"	v	class:CallbackDecorators
+AudioSetVolumeCb	vlc.py	/^class AudioSetVolumeCb(ctypes.c_void_p):$/;"	c
+AudioSetupCb	vlc.py	/^    AudioSetupCb = ctypes.CFUNCTYPE(ctypes.POINTER(ctypes.c_int), ListPOINTER(ctypes.c_void_p), ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint), ctypes.POINTER(ctypes.c_uint))$/;"	v	class:CallbackDecorators
+AudioSetupCb	vlc.py	/^class AudioSetupCb(ctypes.c_void_p):$/;"	c
+AudioTrack	vlc.py	/^class AudioTrack(_Cstruct):$/;"	c
+Bottom	vlc.py	/^    Bottom       = 8$/;"	v	class:Position
+BottomCenter	vlc.py	/^    BottomCenter = 8$/;"	v	class:Position
+BottomLeft	vlc.py	/^    BottomLeft   = 9$/;"	v	class:Position
+BottomRight	vlc.py	/^    BottomRight  = 10$/;"	v	class:Position
+Callback	vlc.py	/^    Callback = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)$/;"	v	class:CallbackDecorators
+Callback	vlc.py	/^class Callback(ctypes.c_void_p):$/;"	c
+CallbackDecorators	vlc.py	/^class CallbackDecorators(object):$/;"	c
+Center	vlc.py	/^    Center       = 0$/;"	v	class:Position
+CenterLeft	vlc.py	/^    CenterLeft   = 1$/;"	v	class:Position
+CenterRight	vlc.py	/^    CenterRight  = 2$/;"	v	class:Position
+ChapterDescription	vlc.py	/^class ChapterDescription(_Cstruct):$/;"	c
+DEFAULT_ENCODING	vlc.py	/^DEFAULT_ENCODING = 'utf-8'$/;"	v
+DialogQuestionType	vlc.py	/^class DialogQuestionType(_Enum):$/;"	c
+EasyID3	song.py	/^from mutagen.easyid3 import EasyID3$/;"	i
+Event	vlc.py	/^class Event(_Cstruct):$/;"	c
+EventManager	vlc.py	/^class EventManager(_Ctype):$/;"	c
+EventType	vlc.py	/^class EventType(_Enum):$/;"	c
+EventUnion	vlc.py	/^class EventUnion(ctypes.Union):$/;"	c
+FILE	vlc.py	/^class FILE(ctypes.Structure):$/;"	c
+FILE_ptr	vlc.py	/^FILE_ptr = ctypes.POINTER(FILE)$/;"	v
+ID3NoHeaderError	song.py	/^from mutagen.id3 import ID3NoHeaderError$/;"	i
+ID3_COLUMNS	song.py	/^    ID3_COLUMNS = ("title", "artist", "album", "genre", "year")$/;"	v	class:Song
+Instance	vlc.py	/^class Instance(_Ctype):$/;"	c
+Left	vlc.py	/^    Left         = 1$/;"	v	class:Position
+Library	library.py	/^class Library:$/;"	c
+LibraryException	library.py	/^from library_exception import LibraryException$/;"	i
+LibraryException	library_exception.py	/^class LibraryException(Exception):$/;"	c
+ListPOINTER	vlc.py	/^class ListPOINTER(object):$/;"	c
+Log	vlc.py	/^class Log(ctypes.Structure):$/;"	c
+LogCb	vlc.py	/^    LogCb = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int, Log_ptr, ctypes.c_char_p, ctypes.c_void_p)$/;"	v	class:CallbackDecorators
+LogCb	vlc.py	/^class LogCb(ctypes.c_void_p):$/;"	c
+LogLevel	vlc.py	/^class LogLevel(_Enum):$/;"	c
+LogMessage	vlc.py	/^class LogMessage(_Cstruct):$/;"	c
+Log_ptr	vlc.py	/^Log_ptr = ctypes.POINTER(Log)$/;"	v
+MP3	song.py	/^from mutagen.mp3 import MP3$/;"	i
+Media	vlc.py	/^class Media(_Ctype):$/;"	c
+MediaCloseCb	vlc.py	/^    MediaCloseCb = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p)$/;"	v	class:CallbackDecorators
+MediaCloseCb	vlc.py	/^class MediaCloseCb(ctypes.c_void_p):$/;"	c
+MediaDiscoverer	vlc.py	/^class MediaDiscoverer(_Ctype):$/;"	c
+MediaDiscovererCategory	vlc.py	/^class MediaDiscovererCategory(_Enum):$/;"	c
+MediaEvent	vlc.py	/^class MediaEvent(_Cstruct):$/;"	c
+MediaLibrary	vlc.py	/^class MediaLibrary(_Ctype):$/;"	c
+MediaList	vlc.py	/^class MediaList(_Ctype):$/;"	c
+MediaListPlayer	vlc.py	/^class MediaListPlayer(_Ctype):$/;"	c
+MediaOpenCb	vlc.py	/^    MediaOpenCb = ctypes.CFUNCTYPE(ctypes.POINTER(ctypes.c_int), ctypes.c_void_p, ListPOINTER(ctypes.c_void_p), ctypes.POINTER(ctypes.c_uint64))$/;"	v	class:CallbackDecorators
+MediaOpenCb	vlc.py	/^class MediaOpenCb(ctypes.c_void_p):$/;"	c
+MediaParseFlag	vlc.py	/^class MediaParseFlag(_Enum):$/;"	c
+MediaParsedStatus	vlc.py	/^class MediaParsedStatus(_Enum):$/;"	c
+MediaPlayer	song.py	/^from vlc import MediaPlayer$/;"	i
+MediaPlayer	vlc.py	/^class MediaPlayer(_Ctype):$/;"	c
+MediaPlayerRole	vlc.py	/^class MediaPlayerRole(_Enum):$/;"	c
+MediaReadCb	vlc.py	/^    MediaReadCb = ctypes.CFUNCTYPE(ctypes.POINTER(ctypes.c_ssize_t), ctypes.c_void_p, ctypes.c_char_p, ctypes.c_size_t)$/;"	v	class:CallbackDecorators
+MediaReadCb	vlc.py	/^class MediaReadCb(ctypes.c_void_p):$/;"	c
+MediaSeekCb	vlc.py	/^    MediaSeekCb = ctypes.CFUNCTYPE(ctypes.POINTER(ctypes.c_int), ctypes.c_void_p, ctypes.c_uint64)$/;"	v	class:CallbackDecorators
+MediaSeekCb	vlc.py	/^class MediaSeekCb(ctypes.c_void_p):$/;"	c
+MediaSlave	vlc.py	/^class MediaSlave(_Cstruct):$/;"	c
+MediaSlaveType	vlc.py	/^class MediaSlaveType(_Enum):$/;"	c
+MediaStats	vlc.py	/^class MediaStats(_Cstruct):$/;"	c
+MediaTrack	vlc.py	/^class MediaTrack(_Cstruct):$/;"	c
+MediaTrackInfo	vlc.py	/^class MediaTrackInfo(_Cstruct):$/;"	c
+MediaTrackTracks	vlc.py	/^class MediaTrackTracks(ctypes.Union):$/;"	c
+MediaType	vlc.py	/^class MediaType(_Enum):$/;"	c
+Meta	vlc.py	/^class Meta(_Enum):$/;"	c
+ModuleDescription	vlc.py	/^class ModuleDescription(_Cstruct):$/;"	c
+NON_ID3_COLUMNS	song.py	/^    NON_ID3_COLUMNS = ("length", "date_modified")$/;"	v	class:Song
+NavigateMode	vlc.py	/^class NavigateMode(_Enum):$/;"	c
+NullOutput	util.py	/^    class NullOutput(object):$/;"	c	function:suppress_output
+PLAY_STR	main.py	/^PLAY_STR = "Playing \\"%s\\""$/;"	v
+PLAY_STR	parser.py	/^PLAY_STR          = main.PLAY_STR$/;"	v
+POLL_INTERVAL	main.py	/^POLL_INTERVAL = 0.5$/;"	v
+POLL_INTERVAL	parser.py	/^POLL_INTERVAL     = main.POLL_INTERVAL$/;"	v
+PYTHON3	vlc.py	/^    PYTHON3 = False$/;"	v
+PYTHON3	vlc.py	/^    PYTHON3 = True$/;"	v
+Parser	parser.py	/^class Parser:$/;"	c
+PlaybackMode	vlc.py	/^class PlaybackMode(_Enum):$/;"	c
+PlaylistItem	vlc.py	/^class PlaylistItem(_Cstruct):$/;"	c
+Position	vlc.py	/^class Position(_Enum):$/;"	c
+Position	vlc.py	/^class Position(object):$/;"	c
+PyFile_AsFd	vlc.py	/^    PyFile_AsFd = ctypes.pythonapi.PyObject_AsFileDescriptor$/;"	v	class:FILE
+PyFile_AsFile	vlc.py	/^    PyFile_AsFile = ctypes.pythonapi.PyFile_AsFile$/;"	v
+PyFile_FromFd	vlc.py	/^    PyFile_FromFd = ctypes.pythonapi.PyFile_FromFd$/;"	v	class:FILE
+PyFile_FromFile	vlc.py	/^    PyFile_FromFile = ctypes.pythonapi.PyFile_FromFile$/;"	v
+Rectangle	vlc.py	/^class Rectangle(_Cstruct):$/;"	c
+Right	vlc.py	/^    Right        = 2$/;"	v	class:Position
+SUPPORTS_ANSI	main.py	/^    SUPPORTS_ANSI  = util.supports_ansi()$/;"	v
+SUPPORTS_ANSI	util.py	/^SUPPORTS_ANSI = supports_ansi()$/;"	v
+Song	library.py	/^from song import Song$/;"	i
+Song	parser.py	/^from song import Song$/;"	i
+Song	song.py	/^class Song:$/;"	c
+Song	util.py	/^from song import Song$/;"	i
+SongException	song.py	/^from song_exception import SongException$/;"	i
+SongException	song_exception.py	/^class SongException(Exception):$/;"	c
+State	vlc.py	/^class State(_Enum):$/;"	c
+SubtitleTrack	vlc.py	/^class SubtitleTrack(_Cstruct):$/;"	c
+Syncer	syncer.py	/^class Syncer:$/;"	c
+TitleDescription	vlc.py	/^class TitleDescription(_Cstruct):$/;"	c
+Top	vlc.py	/^    Top          = 4$/;"	v	class:Position
+TopCenter	vlc.py	/^    TopCenter    = 4$/;"	v	class:Position
+TopLeft	vlc.py	/^    TopLeft      = 5$/;"	v	class:Position
+TopRight	vlc.py	/^    TopRight     = 6$/;"	v	class:Position
+TrackDescription	vlc.py	/^class TrackDescription(_Cstruct):$/;"	c
+TrackType	vlc.py	/^class TrackType(_Enum):$/;"	c
+USER_INPUT_MARKER	main.py	/^USER_INPUT_MARKER = "> "$/;"	v
+USER_INPUT_MARKER	parser.py	/^USER_INPUT_MARKER = main.USER_INPUT_MARKER$/;"	v
+USER_INPUT_MARKER	util.py	/^USER_INPUT_MARKER = main.USER_INPUT_MARKER$/;"	v
+VLCException	vlc.py	/^class VLCException(Exception):$/;"	c
+VideoAdjustOption	vlc.py	/^class VideoAdjustOption(_Enum):$/;"	c
+VideoCleanupCb	vlc.py	/^    VideoCleanupCb = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p)$/;"	v	class:CallbackDecorators
+VideoCleanupCb	vlc.py	/^class VideoCleanupCb(ctypes.c_void_p):$/;"	c
+VideoDisplayCb	vlc.py	/^    VideoDisplayCb = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)$/;"	v	class:CallbackDecorators
+VideoDisplayCb	vlc.py	/^class VideoDisplayCb(ctypes.c_void_p):$/;"	c
+VideoFormatCb	vlc.py	/^    VideoFormatCb = ctypes.CFUNCTYPE(ctypes.POINTER(ctypes.c_uint), ListPOINTER(ctypes.c_void_p), ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint), ctypes.POINTER(ctypes.c_uint), ctypes.POINTER(ctypes.c_uint), ctypes.POINTER(ctypes.c_uint))$/;"	v	class:CallbackDecorators
+VideoFormatCb	vlc.py	/^class VideoFormatCb(ctypes.c_void_p):$/;"	c
+VideoLockCb	vlc.py	/^    VideoLockCb = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ListPOINTER(ctypes.c_void_p))$/;"	v	class:CallbackDecorators
+VideoLockCb	vlc.py	/^class VideoLockCb(ctypes.c_void_p):$/;"	c
+VideoLogoOption	vlc.py	/^class VideoLogoOption(_Enum):$/;"	c
+VideoMarqueeOption	vlc.py	/^class VideoMarqueeOption(_Enum):$/;"	c
+VideoTrack	vlc.py	/^class VideoTrack(_Cstruct):$/;"	c
+VideoUnlockCb	vlc.py	/^    VideoUnlockCb = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ListPOINTER(ctypes.c_void_p))$/;"	v	class:CallbackDecorators
+VideoUnlockCb	vlc.py	/^class VideoUnlockCb(ctypes.c_void_p):$/;"	c
+_Cfunction	vlc.py	/^def _Cfunction(name, flags, errcheck, *types):$/;"	f
+_Cfunctions	vlc.py	/^_Cfunctions = {}  # from LibVLC __version__$/;"	v
+_Cobject	vlc.py	/^def _Cobject(cls, ctype):$/;"	f
+_Constructor	vlc.py	/^def _Constructor(cls, ptr=_internal_guard):$/;"	f
+_Cstruct	vlc.py	/^class _Cstruct(ctypes.Structure):$/;"	c
+_Ctype	vlc.py	/^class _Ctype(object):$/;"	c
+_Enum	vlc.py	/^class _Enum(ctypes.c_uint):$/;"	c
+_Globals	vlc.py	/^_Globals = globals()  # sys.modules[__name__].__dict__$/;"	v
+_Ints	vlc.py	/^    _Ints =  int$/;"	v
+_Ints	vlc.py	/^    _Ints = (int, long)$/;"	v	class:VLCException
+_Seqs	vlc.py	/^_Seqs = (list, tuple)$/;"	v
+__call__	vlc.py	/^    def __call__(self, obj):$/;"	m	class:memoize_parameterless	file:
+__contains__	song.py	/^    def __contains__(self, item):$/;"	m	class:Song	file:
+__eq__	song.py	/^    def __eq__(self, other):$/;"	m	class:Song	file:
+__eq__	vlc.py	/^    def __eq__(self, other):$/;"	m	class:_Enum	file:
+__get__	vlc.py	/^    def __get__(self, obj, objtype):$/;"	m	class:memoize_parameterless	file:
+__getitem__	song.py	/^    def __getitem__(self, key):$/;"	m	class:Song	file:
+__getitem__	vlc.py	/^    def __getitem__(self, i):$/;"	m	class:MediaList	file:
+__getitem__	vlc.py	/^    def __getitem__(self, i):$/;"	m	class:MediaListPlayer	file:
+__hash__	vlc.py	/^    def __hash__(self):$/;"	m	class:_Enum	file:
+__init__	library.py	/^    def __init__(self, *directories, verbose = False, shuffle = False):$/;"	m	class:Library
+__init__	library_exception.py	/^    def __init__(self, err_msg):$/;"	m	class:LibraryException
+__init__	parser.py	/^    def __init__(self, lib):$/;"	m	class:Parser
+__init__	song.py	/^    def __init__(self, file_path, title = None, artist = None, album = None, genre = None, year = None, override_id3 = True):$/;"	m	class:Song
+__init__	song_exception.py	/^    def __init__(self, err_msg):$/;"	m	class:SongException
+__init__	vlc.py	/^    def __init__(self):$/;"	m	class:LogMessage
+__init__	vlc.py	/^    def __init__(self, *unused):$/;"	m	class:Position
+__init__	vlc.py	/^    def __init__(self, etype):$/;"	m	class:ListPOINTER
+__init__	vlc.py	/^    def __init__(self, func):$/;"	m	class:memoize_parameterless
+__iter__	vlc.py	/^    def __iter__(self):$/;"	m	class:MediaList	file:
+__iter__	vlc.py	/^    def __iter__(self):$/;"	m	class:MediaListPlayer	file:
+__len__	vlc.py	/^    def __len__(self):$/;"	m	class:MediaList	file:
+__ne__	vlc.py	/^    def __ne__(self, other):$/;"	m	class:_Enum	file:
+__new__	vlc.py	/^    def __new__(cls, *args):$/;"	m	class:Instance	file:
+__new__	vlc.py	/^    def __new__(cls, *args):$/;"	m	class:Media	file:
+__new__	vlc.py	/^    def __new__(cls, *args):$/;"	m	class:MediaList	file:
+__new__	vlc.py	/^    def __new__(cls, *args):$/;"	m	class:MediaPlayer	file:
+__new__	vlc.py	/^    def __new__(cls, arg=None):$/;"	m	class:MediaListPlayer	file:
+__new__	vlc.py	/^    def __new__(cls, ptr=_internal_guard):$/;"	m	class:EventManager	file:
+__new__	vlc.py	/^    def __new__(cls, ptr=_internal_guard):$/;"	m	class:MediaDiscoverer	file:
+__new__	vlc.py	/^    def __new__(cls, ptr=_internal_guard):$/;"	m	class:MediaLibrary	file:
+__repr__	vlc.py	/^    def __repr__(self):$/;"	m	class:_Cstruct	file:
+__repr__	vlc.py	/^    def __repr__(self):$/;"	m	class:_Enum	file:
+__repr__	vlc.py	/^    def __repr__(self):$/;"	m	class:memoize_parameterless	file:
+__setattr__	vlc.py	/^    def __setattr__(self, *unused):  #PYCHOK expected$/;"	m	class:Position	file:
+__str__	song.py	/^    def __str__(self):$/;"	m	class:Song	file:
+__str__	vlc.py	/^    def __str__(self):$/;"	m	class:AudioOutput	file:
+__str__	vlc.py	/^    def __str__(self):$/;"	m	class:AudioOutputDevice	file:
+__str__	vlc.py	/^    def __str__(self):$/;"	m	class:LogMessage	file:
+__str__	vlc.py	/^    def __str__(self):$/;"	m	class:ModuleDescription	file:
+__str__	vlc.py	/^    def __str__(self):$/;"	m	class:PlaylistItem	file:
+__str__	vlc.py	/^    def __str__(self):$/;"	m	class:TrackDescription	file:
+__str__	vlc.py	/^    def __str__(self):$/;"	m	class:_Cstruct	file:
+__str__	vlc.py	/^    def __str__(self):$/;"	m	class:_Enum	file:
+__version__	vlc.py	/^__version__ = "N\/A"$/;"	v
+_anonymous_	vlc.py	/^    _anonymous_ = ("u",)$/;"	v	class:MediaTrack
+_back	parser.py	/^    def _back(self):$/;"	m	class:Parser
+_callback_handler	vlc.py	/^            def _callback_handler(event, k):$/;"	f	function:EventManager.event_attach
+_callback_handler	vlc.py	/^    _callback_handler = None$/;"	v	class:EventManager
+_callbacks	vlc.py	/^    _callbacks = {}$/;"	v	class:EventManager
+_columns	parser.py	/^    def _columns(self):$/;"	m	class:Parser
+_context	parser.py	/^    def _context(self, tokens, k = 5):$/;"	m	class:Parser
+_default_instance	vlc.py	/^_default_instance = None$/;"	v
+_delete	parser.py	/^    def _delete(self, tokens):$/;"	m	class:Parser
+_dequeue	parser.py	/^    def _dequeue(self, tokens):$/;"	m	class:Parser
+_dot2int	vlc.py	/^def _dot2int(v):$/;"	f
+_download	parser.py	/^    def _download(self, main_str, curr_song, inp, tokens):$/;"	m	class:Parser
+_enum_names_	vlc.py	/^    _enum_names_ = {$/;"	v	class:AudioOutputChannel
+_enum_names_	vlc.py	/^    _enum_names_ = {$/;"	v	class:AudioOutputDeviceTypes
+_enum_names_	vlc.py	/^    _enum_names_ = {$/;"	v	class:DialogQuestionType
+_enum_names_	vlc.py	/^    _enum_names_ = {$/;"	v	class:EventType
+_enum_names_	vlc.py	/^    _enum_names_ = {$/;"	v	class:LogLevel
+_enum_names_	vlc.py	/^    _enum_names_ = {$/;"	v	class:MediaDiscovererCategory
+_enum_names_	vlc.py	/^    _enum_names_ = {$/;"	v	class:MediaParseFlag
+_enum_names_	vlc.py	/^    _enum_names_ = {$/;"	v	class:MediaParsedStatus
+_enum_names_	vlc.py	/^    _enum_names_ = {$/;"	v	class:MediaPlayerRole
+_enum_names_	vlc.py	/^    _enum_names_ = {$/;"	v	class:MediaSlaveType
+_enum_names_	vlc.py	/^    _enum_names_ = {$/;"	v	class:MediaType
+_enum_names_	vlc.py	/^    _enum_names_ = {$/;"	v	class:Meta
+_enum_names_	vlc.py	/^    _enum_names_ = {$/;"	v	class:NavigateMode
+_enum_names_	vlc.py	/^    _enum_names_ = {$/;"	v	class:PlaybackMode
+_enum_names_	vlc.py	/^    _enum_names_ = {$/;"	v	class:Position
+_enum_names_	vlc.py	/^    _enum_names_ = {$/;"	v	class:State
+_enum_names_	vlc.py	/^    _enum_names_ = {$/;"	v	class:TrackType
+_enum_names_	vlc.py	/^    _enum_names_ = {$/;"	v	class:VideoAdjustOption
+_enum_names_	vlc.py	/^    _enum_names_ = {$/;"	v	class:VideoLogoOption
+_enum_names_	vlc.py	/^    _enum_names_ = {$/;"	v	class:VideoMarqueeOption
+_enum_names_	vlc.py	/^    _enum_names_ = {}$/;"	v	class:_Enum
+_fields	vlc.py	/^    _fields = [$/;"	v	class:ChapterDescription
+_fields	vlc.py	/^    _fields = [$/;"	v	class:MediaSlave
+_fields	vlc.py	/^    _fields = [$/;"	v	class:TitleDescription
+_fields_	vlc.py	/^    _fields_ = [$/;"	v	class:AudioTrack
+_fields_	vlc.py	/^    _fields_ = [$/;"	v	class:Event
+_fields_	vlc.py	/^    _fields_ = [$/;"	v	class:EventUnion
+_fields_	vlc.py	/^    _fields_ = [$/;"	v	class:LogMessage
+_fields_	vlc.py	/^    _fields_ = [$/;"	v	class:MediaEvent
+_fields_	vlc.py	/^    _fields_ = [$/;"	v	class:MediaStats
+_fields_	vlc.py	/^    _fields_ = [$/;"	v	class:MediaTrack
+_fields_	vlc.py	/^    _fields_ = [$/;"	v	class:MediaTrackInfo
+_fields_	vlc.py	/^    _fields_ = [$/;"	v	class:MediaTrackTracks
+_fields_	vlc.py	/^    _fields_ = [$/;"	v	class:PlaylistItem
+_fields_	vlc.py	/^    _fields_ = [$/;"	v	class:Rectangle
+_fields_	vlc.py	/^    _fields_ = [$/;"	v	class:SubtitleTrack
+_fields_	vlc.py	/^    _fields_ = [$/;"	v	class:VideoTrack
+_fields_	vlc.py	/^    _fields_ = []  # list of 2-tuples ('name', ctyptes.<type>)$/;"	v	class:_Cstruct
+_get_ID3_tags	song.py	/^    def _get_ID3_tags(file_path):$/;"	m	class:Song
+_get_youtube_api_key	downloader.py	/^def _get_youtube_api_key(file_name = ".\/.api_key.txt"):$/;"	f
+_help	parser.py	/^    def _help(self, tokens):$/;"	m	class:Parser
+_info	parser.py	/^    def _info(self, curr_song):$/;"	m	class:Parser
+_internal_guard	vlc.py	/^_internal_guard = object()$/;"	v
+_jump	parser.py	/^    def _jump(self, tokens):$/;"	m	class:Parser
+_load_music	library.py	/^    def _load_music(self, directory, recurse = False, verbose = False):$/;"	m	class:Library
+_matches_str	parser.py	/^    def _matches_str(matched_songs, guessed_songs, on_success, k = 5):$/;"	m	class:Parser
+_next	parser.py	/^    def _next(self, tokens):$/;"	m	class:Parser
+_parse_all_args	parser.py	/^    def _parse_all_args(tokens, sanitize_quotes = False):$/;"	m	class:Parser
+_parse_args	parser.py	/^    def _parse_args(tokens):$/;"	m	class:Parser
+_parse_song	library.py	/^    def _parse_song(file_name):$/;"	m	class:Library
+_pause	parser.py	/^    def _pause(self, main_str, curr_song, inp):$/;"	m	class:Parser
+_queue	parser.py	/^    def _queue(self, tokens, k = 5):$/;"	m	class:Parser
+_repeat	parser.py	/^    def _repeat(self, curr_song):$/;"	m	class:Parser
+_restart	parser.py	/^    def _restart(self, curr_song):$/;"	m	class:Parser
+_search	parser.py	/^    def _search(self, tokens, k = 5):$/;"	m	class:Parser
+_shuffle	parser.py	/^    def _shuffle(self):$/;"	m	class:Parser
+_skip	parser.py	/^    def _skip(self):$/;"	m	class:Parser
+_sort	parser.py	/^    def _sort(self, tokens):$/;"	m	class:Parser
+_stop	parser.py	/^    def _stop(self, curr_song):$/;"	m	class:Parser
+_time	parser.py	/^    def _time(self, curr_song, tokens):$/;"	m	class:Parser
+_volume	parser.py	/^def _volume(inp, main_str, curr_song, volume):$/;"	f
+add_intf	vlc.py	/^    def add_intf(self, name):$/;"	m	class:Instance
+add_media	vlc.py	/^    def add_media(self, mrl):$/;"	m	class:MediaList
+add_option	vlc.py	/^    def add_option(self, psz_options):$/;"	m	class:Media
+add_option_flag	vlc.py	/^    def add_option_flag(self, psz_options, i_flags):$/;"	m	class:Media
+add_options	vlc.py	/^    def add_options(self, *options):$/;"	m	class:Media
+add_slave	vlc.py	/^    def add_slave(self, i_type, psz_uri, b_select):$/;"	m	class:MediaPlayer
+add_to_front_of_queue	library.py	/^    def add_to_front_of_queue(self, song):$/;"	m	class:Library
+add_to_queue	library.py	/^    def add_to_queue(self, song):$/;"	m	class:Library
+argparser	downloader.py	/^        from oauth2client.tools import argparser$/;"	i
+audio_filter_list_get	vlc.py	/^    def audio_filter_list_get(self):$/;"	m	class:Instance
+audio_get_channel	vlc.py	/^    def audio_get_channel(self):$/;"	m	class:MediaPlayer
+audio_get_delay	vlc.py	/^    def audio_get_delay(self):$/;"	m	class:MediaPlayer
+audio_get_mute	vlc.py	/^    def audio_get_mute(self):$/;"	m	class:MediaPlayer
+audio_get_track	vlc.py	/^    def audio_get_track(self):$/;"	m	class:MediaPlayer
+audio_get_track_count	vlc.py	/^    def audio_get_track_count(self):$/;"	m	class:MediaPlayer
+audio_get_track_description	vlc.py	/^    def audio_get_track_description(self):$/;"	m	class:MediaPlayer
+audio_get_volume	vlc.py	/^    def audio_get_volume(self):$/;"	m	class:MediaPlayer
+audio_output_device_enum	vlc.py	/^    def audio_output_device_enum(self):$/;"	m	class:MediaPlayer
+audio_output_device_get	vlc.py	/^    def audio_output_device_get(self):$/;"	m	class:MediaPlayer
+audio_output_device_list_get	vlc.py	/^    def audio_output_device_list_get(self, aout):$/;"	m	class:Instance
+audio_output_device_set	vlc.py	/^    def audio_output_device_set(self, module, device_id):$/;"	m	class:MediaPlayer
+audio_output_enumerate_devices	vlc.py	/^    def audio_output_enumerate_devices(self):$/;"	m	class:Instance
+audio_output_list_get	vlc.py	/^    def audio_output_list_get(self):$/;"	m	class:Instance
+audio_output_set	vlc.py	/^    def audio_output_set(self, psz_name):$/;"	m	class:MediaPlayer
+audio_set_callbacks	vlc.py	/^    def audio_set_callbacks(self, play, pause, resume, flush, drain, opaque):$/;"	m	class:MediaPlayer
+audio_set_channel	vlc.py	/^    def audio_set_channel(self, channel):$/;"	m	class:MediaPlayer
+audio_set_delay	vlc.py	/^    def audio_set_delay(self, i_delay):$/;"	m	class:MediaPlayer
+audio_set_format	vlc.py	/^    def audio_set_format(self, format, rate, channels):$/;"	m	class:MediaPlayer
+audio_set_format_callbacks	vlc.py	/^    def audio_set_format_callbacks(self, setup, cleanup):$/;"	m	class:MediaPlayer
+audio_set_mute	vlc.py	/^    def audio_set_mute(self, status):$/;"	m	class:MediaPlayer
+audio_set_track	vlc.py	/^    def audio_set_track(self, i_track):$/;"	m	class:MediaPlayer
+audio_set_volume	vlc.py	/^    def audio_set_volume(self, i_volume):$/;"	m	class:MediaPlayer
+audio_set_volume_callback	vlc.py	/^    def audio_set_volume_callback(self, set_volume):$/;"	m	class:MediaPlayer
+audio_toggle_mute	vlc.py	/^    def audio_toggle_mute(self):$/;"	m	class:MediaPlayer
+basestring	vlc.py	/^    basestring = (str, bytes)$/;"	v
+basestring	vlc.py	/^    basestring = basestring$/;"	v
+build	downloader.py	/^        from apiclient.discovery import build$/;"	i
+build_date	vlc.py	/^build_date  = "Tue Jul 19 12:42:59 2016"$/;"	v
+bytes	vlc.py	/^    bytes = bytes$/;"	v
+bytes	vlc.py	/^    bytes = str$/;"	v
+bytes_to_str	vlc.py	/^    def bytes_to_str(b):$/;"	f
+callbackmethod	vlc.py	/^def callbackmethod(callback):$/;"	f
+can_pause	vlc.py	/^    def can_pause(self):$/;"	m	class:MediaPlayer
+cb	vlc.py	/^cb = CallbackDecorators$/;"	v
+class_result	vlc.py	/^def class_result(classname):$/;"	f
+console_width	util.py	/^def console_width():$/;"	f
+count	vlc.py	/^    def count(self):$/;"	m	class:MediaList
+ctypes	vlc.py	/^import ctypes$/;"	i
+curr_song	main.py	/^            curr_song = lib.next_song()$/;"	v
+curr_song	main.py	/^            curr_song = next_song$/;"	v
+datetime	song.py	/^from datetime import datetime$/;"	i
+debug_callback	vlc.py	/^def debug_callback(event, *args, **kwds):$/;"	f
+delete	library.py	/^    def delete(self, song, from_disk = False):$/;"	m	class:Library
+delete_from_disk	song.py	/^    def delete_from_disk(self):$/;"	m	class:Song
+difflib	library.py	/^import os, random, time, difflib, heapq$/;"	i
+duplicate	vlc.py	/^    def duplicate(self):$/;"	m	class:Media
+echo_position	vlc.py	/^    echo_position = False$/;"	v
+end_callback	vlc.py	/^    def end_callback(event):$/;"	f
+event_attach	vlc.py	/^    def event_attach(self, eventtype, callback, *args, **kwds):$/;"	m	class:EventManager
+event_detach	vlc.py	/^    def event_detach(self, eventtype):$/;"	m	class:EventManager
+event_manager	vlc.py	/^    def event_manager(self):$/;"	m	class:Media
+event_manager	vlc.py	/^    def event_manager(self):$/;"	m	class:MediaList
+event_manager	vlc.py	/^    def event_manager(self):$/;"	m	class:MediaListPlayer
+event_manager	vlc.py	/^    def event_manager(self):$/;"	m	class:MediaPlayer
+find_lib	vlc.py	/^def find_lib():$/;"	f
+find_library	vlc.py	/^from ctypes.util import find_library$/;"	i
+first_song	library.py	/^    def first_song(self):$/;"	m	class:Library
+frame_backward	vlc.py	/^        def frame_backward():$/;"	f	function:.print_version
+frame_forward	vlc.py	/^        def frame_forward():$/;"	f	function:.print_version
+from_param	vlc.py	/^    def from_param(self, param):$/;"	m	class:ListPOINTER
+from_param	vlc.py	/^    def from_param(this):  # not self$/;"	m	class:_Ctype
+functools	vlc.py	/^import functools$/;"	i
+get_agl	vlc.py	/^    def get_agl(self):$/;"	m	class:MediaPlayer
+get_chapter	vlc.py	/^    def get_chapter(self):$/;"	m	class:MediaPlayer
+get_chapter_count	vlc.py	/^    def get_chapter_count(self):$/;"	m	class:MediaPlayer
+get_chapter_count_for_title	vlc.py	/^    def get_chapter_count_for_title(self, i_title):$/;"	m	class:MediaPlayer
+get_current_index	library.py	/^    def get_current_index(self):$/;"	m	class:Library
+get_current_time	library.py	/^    def get_current_time(self):$/;"	m	class:Library
+get_current_time	song.py	/^    def get_current_time(self):$/;"	m	class:Song
+get_date_modified	song.py	/^    def get_date_modified(file_path):$/;"	m	class:Song
+get_default_instance	vlc.py	/^def get_default_instance():$/;"	f
+get_directories	library.py	/^    def get_directories(self):$/;"	m	class:Library
+get_duration	vlc.py	/^    def get_duration(self):$/;"	m	class:Media
+get_fps	vlc.py	/^    def get_fps(self):$/;"	m	class:MediaPlayer
+get_full_chapter_descriptions	vlc.py	/^    def get_full_chapter_descriptions(self, i_chapters_of_title):$/;"	m	class:MediaPlayer
+get_full_title_descriptions	vlc.py	/^    def get_full_title_descriptions(self):$/;"	m	class:MediaPlayer
+get_fullscreen	vlc.py	/^    def get_fullscreen(self):$/;"	m	class:MediaPlayer
+get_hwnd	vlc.py	/^    def get_hwnd(self):$/;"	m	class:MediaPlayer
+get_instance	vlc.py	/^    def get_instance(self):$/;"	m	class:Media
+get_instance	vlc.py	/^    def get_instance(self):$/;"	m	class:MediaList
+get_instance	vlc.py	/^    def get_instance(self):$/;"	m	class:MediaListPlayer
+get_instance	vlc.py	/^    def get_instance(self):$/;"	m	class:MediaPlayer
+get_length	vlc.py	/^    def get_length(self):$/;"	m	class:MediaPlayer
+get_library	library.py	/^    def get_library(self):$/;"	m	class:Library
+get_media	vlc.py	/^    def get_media(self):$/;"	m	class:MediaPlayer
+get_media_player	vlc.py	/^    def get_media_player(self):$/;"	m	class:MediaListPlayer
+get_meta	vlc.py	/^    def get_meta(self, e_meta):$/;"	m	class:Media
+get_mrl	vlc.py	/^    def get_mrl(self):$/;"	m	class:Media
+get_next_library_songs	library.py	/^    def get_next_library_songs(self, n, song = None):$/;"	m	class:Library
+get_next_songs	library.py	/^    def get_next_songs(self, k):$/;"	m	class:Library
+get_nsobject	vlc.py	/^    def get_nsobject(self):$/;"	m	class:MediaPlayer
+get_parsed_status	vlc.py	/^    def get_parsed_status(self):$/;"	m	class:Media
+get_position	vlc.py	/^    def get_position(self):$/;"	m	class:MediaPlayer
+get_prev_library_songs	library.py	/^    def get_prev_library_songs(self, n, song = None):$/;"	m	class:Library
+get_queued_songs	library.py	/^    def get_queued_songs(self):$/;"	m	class:Library
+get_rate	vlc.py	/^    def get_rate(self):$/;"	m	class:MediaPlayer
+get_role	vlc.py	/^    def get_role(self):$/;"	m	class:MediaPlayer
+get_state	vlc.py	/^    def get_state(self):$/;"	m	class:Media
+get_state	vlc.py	/^    def get_state(self):$/;"	m	class:MediaListPlayer
+get_state	vlc.py	/^    def get_state(self):$/;"	m	class:MediaPlayer
+get_stats	vlc.py	/^    def get_stats(self, p_stats):$/;"	m	class:Media
+get_thread_str	main.py	/^    get_thread_str = util.get_thread_str$/;"	v
+get_thread_str	util.py	/^def get_thread_str(play_str, thread):$/;"	f
+get_time	vlc.py	/^    def get_time(self):$/;"	m	class:MediaPlayer
+get_title	vlc.py	/^    def get_title(self):$/;"	m	class:MediaPlayer
+get_title_count	vlc.py	/^    def get_title_count(self):$/;"	m	class:MediaPlayer
+get_type	vlc.py	/^    def get_type(self):$/;"	m	class:Media
+get_user_data	vlc.py	/^    def get_user_data(self):$/;"	m	class:Media
+get_volume	song.py	/^    def get_volume(self):$/;"	m	class:Song
+get_xwindow	vlc.py	/^    def get_xwindow(self):$/;"	m	class:MediaPlayer
+getargspec	vlc.py	/^from inspect import getargspec$/;"	i
+getch	vlc.py	/^        def getch():  # getchar(), getc(stdin)  #PYCHOK flake$/;"	f
+getch	vlc.py	/^        from msvcrt import getch$/;"	i
+has_vout	vlc.py	/^    def has_vout(self):$/;"	m	class:MediaPlayer
+heapq	library.py	/^import os, random, time, difflib, heapq$/;"	i
+help_dict	parser.py	/^help_dict         = util.help_dict$/;"	v
+help_dict	util.py	/^help_dict = {$/;"	v
+help_message	main.py	/^    help_message   = util.help_message$/;"	v
+help_message	parser.py	/^help_message      = util.help_message$/;"	v
+help_message	util.py	/^def help_message():$/;"	f
+helper	util.py	/^    def helper(i, j):$/;"	f	function:levenshtein_dist
+hex_version	vlc.py	/^def hex_version():$/;"	f
+index_of_item	vlc.py	/^    def index_of_item(self, p_md):$/;"	m	class:MediaList
+init	song.py	/^    def init(self):$/;"	m	class:Song
+inp	main.py	/^            inp = read_stdin(POLL_INTERVAL)$/;"	v
+insert_media	vlc.py	/^    def insert_media(self, p_md, i_pos):$/;"	m	class:MediaList
+is	main.py	/^                    else: # Parser class is meant for user commands that don't alter global state (like volume and pause do)$/;"	c
+is_playing	vlc.py	/^    def is_playing(self):$/;"	m	class:MediaListPlayer
+is_playing	vlc.py	/^    def is_playing(self):$/;"	m	class:MediaPlayer
+is_queue_empty	library.py	/^    def is_queue_empty(self):$/;"	m	class:Library
+is_readonly	vlc.py	/^    def is_readonly(self):$/;"	m	class:MediaList
+is_running	library.py	/^    def is_running(self):$/;"	m	class:Library
+is_running	vlc.py	/^    def is_running(self):$/;"	m	class:MediaDiscoverer
+is_seekable	vlc.py	/^    def is_seekable(self):$/;"	m	class:MediaPlayer
+item_at_index	vlc.py	/^    def item_at_index(self, i_pos):$/;"	m	class:MediaList
+jump_to_song	library.py	/^    def jump_to_song(self, song):$/;"	m	class:Library
+jump_to_time	library.py	/^    def jump_to_time(self, time, song = None):$/;"	m	class:Library
+last_occurrence_out_of_queue	library.py	/^        def last_occurrence_out_of_queue(lst, elem, queue_start, queue_end):$/;"	f	function:Library.jump_to_song
+last_song	library.py	/^    def last_song(self):$/;"	m	class:Library
+levenshtein_dist	util.py	/^def levenshtein_dist(s, t):$/;"	f
+lib	main.py	/^            lib = library.Library("\/home\/piyush\/music\/", verbose = True, shuffle = True)$/;"	v
+lib	main.py	/^            lib = library.Library(sys.argv[1], verbose = True, shuffle = True)$/;"	v
+lib	main.py	/^        lib = library.Library("\/home\/piyush\/music\/", verbose = True, shuffle = True)$/;"	v
+library	main.py	/^    import library, parser, util$/;"	i
+libvlc_add_intf	vlc.py	/^def libvlc_add_intf(p_instance, name):$/;"	f
+libvlc_audio_equalizer_get_amp_at_index	vlc.py	/^def libvlc_audio_equalizer_get_amp_at_index(p_equalizer, u_band):$/;"	f
+libvlc_audio_equalizer_get_band_count	vlc.py	/^def libvlc_audio_equalizer_get_band_count():$/;"	f
+libvlc_audio_equalizer_get_band_frequency	vlc.py	/^def libvlc_audio_equalizer_get_band_frequency(u_index):$/;"	f
+libvlc_audio_equalizer_get_preamp	vlc.py	/^def libvlc_audio_equalizer_get_preamp(p_equalizer):$/;"	f
+libvlc_audio_equalizer_get_preset_count	vlc.py	/^def libvlc_audio_equalizer_get_preset_count():$/;"	f
+libvlc_audio_equalizer_get_preset_name	vlc.py	/^def libvlc_audio_equalizer_get_preset_name(u_index):$/;"	f
+libvlc_audio_equalizer_new	vlc.py	/^def libvlc_audio_equalizer_new():$/;"	f
+libvlc_audio_equalizer_new_from_preset	vlc.py	/^def libvlc_audio_equalizer_new_from_preset(u_index):$/;"	f
+libvlc_audio_equalizer_release	vlc.py	/^def libvlc_audio_equalizer_release(p_equalizer):$/;"	f
+libvlc_audio_equalizer_set_amp_at_index	vlc.py	/^def libvlc_audio_equalizer_set_amp_at_index(p_equalizer, f_amp, u_band):$/;"	f
+libvlc_audio_equalizer_set_preamp	vlc.py	/^def libvlc_audio_equalizer_set_preamp(p_equalizer, f_preamp):$/;"	f
+libvlc_audio_filter_list_get	vlc.py	/^def libvlc_audio_filter_list_get(p_instance):$/;"	f
+libvlc_audio_get_channel	vlc.py	/^def libvlc_audio_get_channel(p_mi):$/;"	f
+libvlc_audio_get_delay	vlc.py	/^def libvlc_audio_get_delay(p_mi):$/;"	f
+libvlc_audio_get_mute	vlc.py	/^def libvlc_audio_get_mute(p_mi):$/;"	f
+libvlc_audio_get_track	vlc.py	/^def libvlc_audio_get_track(p_mi):$/;"	f
+libvlc_audio_get_track_count	vlc.py	/^def libvlc_audio_get_track_count(p_mi):$/;"	f
+libvlc_audio_get_track_description	vlc.py	/^def libvlc_audio_get_track_description(p_mi):$/;"	f
+libvlc_audio_get_volume	vlc.py	/^def libvlc_audio_get_volume(p_mi):$/;"	f
+libvlc_audio_output_device_enum	vlc.py	/^def libvlc_audio_output_device_enum(mp):$/;"	f
+libvlc_audio_output_device_get	vlc.py	/^def libvlc_audio_output_device_get(mp):$/;"	f
+libvlc_audio_output_device_list_get	vlc.py	/^def libvlc_audio_output_device_list_get(p_instance, aout):$/;"	f
+libvlc_audio_output_device_list_release	vlc.py	/^def libvlc_audio_output_device_list_release(p_list):$/;"	f
+libvlc_audio_output_device_set	vlc.py	/^def libvlc_audio_output_device_set(mp, module, device_id):$/;"	f
+libvlc_audio_output_list_get	vlc.py	/^def libvlc_audio_output_list_get(p_instance):$/;"	f
+libvlc_audio_output_list_release	vlc.py	/^def libvlc_audio_output_list_release(p_list):$/;"	f
+libvlc_audio_output_set	vlc.py	/^def libvlc_audio_output_set(p_mi, psz_name):$/;"	f
+libvlc_audio_set_callbacks	vlc.py	/^def libvlc_audio_set_callbacks(mp, play, pause, resume, flush, drain, opaque):$/;"	f
+libvlc_audio_set_channel	vlc.py	/^def libvlc_audio_set_channel(p_mi, channel):$/;"	f
+libvlc_audio_set_delay	vlc.py	/^def libvlc_audio_set_delay(p_mi, i_delay):$/;"	f
+libvlc_audio_set_format	vlc.py	/^def libvlc_audio_set_format(mp, format, rate, channels):$/;"	f
+libvlc_audio_set_format_callbacks	vlc.py	/^def libvlc_audio_set_format_callbacks(mp, setup, cleanup):$/;"	f
+libvlc_audio_set_mute	vlc.py	/^def libvlc_audio_set_mute(p_mi, status):$/;"	f
+libvlc_audio_set_track	vlc.py	/^def libvlc_audio_set_track(p_mi, i_track):$/;"	f
+libvlc_audio_set_volume	vlc.py	/^def libvlc_audio_set_volume(p_mi, i_volume):$/;"	f
+libvlc_audio_set_volume_callback	vlc.py	/^def libvlc_audio_set_volume_callback(mp, set_volume):$/;"	f
+libvlc_audio_toggle_mute	vlc.py	/^def libvlc_audio_toggle_mute(p_mi):$/;"	f
+libvlc_chapter_descriptions_release	vlc.py	/^def libvlc_chapter_descriptions_release(p_chapters, i_count):$/;"	f
+libvlc_clearerr	vlc.py	/^def libvlc_clearerr():$/;"	f
+libvlc_clock	vlc.py	/^def libvlc_clock():$/;"	f
+libvlc_dialog_dismiss	vlc.py	/^def libvlc_dialog_dismiss(p_id):$/;"	f
+libvlc_dialog_get_context	vlc.py	/^def libvlc_dialog_get_context(p_id):$/;"	f
+libvlc_dialog_post_action	vlc.py	/^def libvlc_dialog_post_action(p_id, i_action):$/;"	f
+libvlc_dialog_post_login	vlc.py	/^def libvlc_dialog_post_login(p_id, psz_username, psz_password, b_store):$/;"	f
+libvlc_dialog_set_context	vlc.py	/^def libvlc_dialog_set_context(p_id, p_context):$/;"	f
+libvlc_errmsg	vlc.py	/^def libvlc_errmsg():$/;"	f
+libvlc_event_attach	vlc.py	/^def libvlc_event_attach(p_event_manager, i_event_type, f_callback, user_data):$/;"	f
+libvlc_event_detach	vlc.py	/^def libvlc_event_detach(p_event_manager, i_event_type, f_callback, p_user_data):$/;"	f
+libvlc_event_type_name	vlc.py	/^def libvlc_event_type_name(event_type):$/;"	f
+libvlc_free	vlc.py	/^        def libvlc_free(p):$/;"	f	function:callbackmethod
+libvlc_free	vlc.py	/^def libvlc_free(ptr):$/;"	f
+libvlc_get_changeset	vlc.py	/^def libvlc_get_changeset():$/;"	f
+libvlc_get_compiler	vlc.py	/^def libvlc_get_compiler():$/;"	f
+libvlc_get_fullscreen	vlc.py	/^def libvlc_get_fullscreen(p_mi):$/;"	f
+libvlc_get_version	vlc.py	/^def libvlc_get_version():$/;"	f
+libvlc_hex_version	vlc.py	/^def libvlc_hex_version():$/;"	f
+libvlc_log_get_context	vlc.py	/^def libvlc_log_get_context(ctx):$/;"	f
+libvlc_log_get_object	vlc.py	/^def libvlc_log_get_object(ctx, id):$/;"	f
+libvlc_log_set	vlc.py	/^def libvlc_log_set(cb, data, p_instance):$/;"	f
+libvlc_log_set_file	vlc.py	/^def libvlc_log_set_file(p_instance, stream):$/;"	f
+libvlc_log_unset	vlc.py	/^def libvlc_log_unset(p_instance):$/;"	f
+libvlc_media_add_option	vlc.py	/^def libvlc_media_add_option(p_md, psz_options):$/;"	f
+libvlc_media_add_option_flag	vlc.py	/^def libvlc_media_add_option_flag(p_md, psz_options, i_flags):$/;"	f
+libvlc_media_discoverer_is_running	vlc.py	/^def libvlc_media_discoverer_is_running(p_mdis):$/;"	f
+libvlc_media_discoverer_list_get	vlc.py	/^def libvlc_media_discoverer_list_get(p_inst, i_cat, ppp_services):$/;"	f
+libvlc_media_discoverer_list_release	vlc.py	/^def libvlc_media_discoverer_list_release(pp_services, i_count):$/;"	f
+libvlc_media_discoverer_media_list	vlc.py	/^def libvlc_media_discoverer_media_list(p_mdis):$/;"	f
+libvlc_media_discoverer_new	vlc.py	/^def libvlc_media_discoverer_new(p_inst, psz_name):$/;"	f
+libvlc_media_discoverer_release	vlc.py	/^def libvlc_media_discoverer_release(p_mdis):$/;"	f
+libvlc_media_discoverer_start	vlc.py	/^def libvlc_media_discoverer_start(p_mdis):$/;"	f
+libvlc_media_discoverer_stop	vlc.py	/^def libvlc_media_discoverer_stop(p_mdis):$/;"	f
+libvlc_media_duplicate	vlc.py	/^def libvlc_media_duplicate(p_md):$/;"	f
+libvlc_media_event_manager	vlc.py	/^def libvlc_media_event_manager(p_md):$/;"	f
+libvlc_media_get_codec_description	vlc.py	/^def libvlc_media_get_codec_description(i_type, i_codec):$/;"	f
+libvlc_media_get_duration	vlc.py	/^def libvlc_media_get_duration(p_md):$/;"	f
+libvlc_media_get_meta	vlc.py	/^def libvlc_media_get_meta(p_md, e_meta):$/;"	f
+libvlc_media_get_mrl	vlc.py	/^def libvlc_media_get_mrl(p_md):$/;"	f
+libvlc_media_get_parsed_status	vlc.py	/^def libvlc_media_get_parsed_status(p_md):$/;"	f
+libvlc_media_get_state	vlc.py	/^def libvlc_media_get_state(p_md):$/;"	f
+libvlc_media_get_stats	vlc.py	/^def libvlc_media_get_stats(p_md, p_stats):$/;"	f
+libvlc_media_get_type	vlc.py	/^def libvlc_media_get_type(p_md):$/;"	f
+libvlc_media_get_user_data	vlc.py	/^def libvlc_media_get_user_data(p_md):$/;"	f
+libvlc_media_library_load	vlc.py	/^def libvlc_media_library_load(p_mlib):$/;"	f
+libvlc_media_library_media_list	vlc.py	/^def libvlc_media_library_media_list(p_mlib):$/;"	f
+libvlc_media_library_new	vlc.py	/^def libvlc_media_library_new(p_instance):$/;"	f
+libvlc_media_library_release	vlc.py	/^def libvlc_media_library_release(p_mlib):$/;"	f
+libvlc_media_library_retain	vlc.py	/^def libvlc_media_library_retain(p_mlib):$/;"	f
+libvlc_media_list_add_media	vlc.py	/^def libvlc_media_list_add_media(p_ml, p_md):$/;"	f
+libvlc_media_list_count	vlc.py	/^def libvlc_media_list_count(p_ml):$/;"	f
+libvlc_media_list_event_manager	vlc.py	/^def libvlc_media_list_event_manager(p_ml):$/;"	f
+libvlc_media_list_index_of_item	vlc.py	/^def libvlc_media_list_index_of_item(p_ml, p_md):$/;"	f
+libvlc_media_list_insert_media	vlc.py	/^def libvlc_media_list_insert_media(p_ml, p_md, i_pos):$/;"	f
+libvlc_media_list_is_readonly	vlc.py	/^def libvlc_media_list_is_readonly(p_ml):$/;"	f
+libvlc_media_list_item_at_index	vlc.py	/^def libvlc_media_list_item_at_index(p_ml, i_pos):$/;"	f
+libvlc_media_list_lock	vlc.py	/^def libvlc_media_list_lock(p_ml):$/;"	f
+libvlc_media_list_media	vlc.py	/^def libvlc_media_list_media(p_ml):$/;"	f
+libvlc_media_list_new	vlc.py	/^def libvlc_media_list_new(p_instance):$/;"	f
+libvlc_media_list_player_event_manager	vlc.py	/^def libvlc_media_list_player_event_manager(p_mlp):$/;"	f
+libvlc_media_list_player_get_media_player	vlc.py	/^def libvlc_media_list_player_get_media_player(p_mlp):$/;"	f
+libvlc_media_list_player_get_state	vlc.py	/^def libvlc_media_list_player_get_state(p_mlp):$/;"	f
+libvlc_media_list_player_is_playing	vlc.py	/^def libvlc_media_list_player_is_playing(p_mlp):$/;"	f
+libvlc_media_list_player_new	vlc.py	/^def libvlc_media_list_player_new(p_instance):$/;"	f
+libvlc_media_list_player_next	vlc.py	/^def libvlc_media_list_player_next(p_mlp):$/;"	f
+libvlc_media_list_player_pause	vlc.py	/^def libvlc_media_list_player_pause(p_mlp):$/;"	f
+libvlc_media_list_player_play	vlc.py	/^def libvlc_media_list_player_play(p_mlp):$/;"	f
+libvlc_media_list_player_play_item	vlc.py	/^def libvlc_media_list_player_play_item(p_mlp, p_md):$/;"	f
+libvlc_media_list_player_play_item_at_index	vlc.py	/^def libvlc_media_list_player_play_item_at_index(p_mlp, i_index):$/;"	f
+libvlc_media_list_player_previous	vlc.py	/^def libvlc_media_list_player_previous(p_mlp):$/;"	f
+libvlc_media_list_player_release	vlc.py	/^def libvlc_media_list_player_release(p_mlp):$/;"	f
+libvlc_media_list_player_retain	vlc.py	/^def libvlc_media_list_player_retain(p_mlp):$/;"	f
+libvlc_media_list_player_set_media_list	vlc.py	/^def libvlc_media_list_player_set_media_list(p_mlp, p_mlist):$/;"	f
+libvlc_media_list_player_set_media_player	vlc.py	/^def libvlc_media_list_player_set_media_player(p_mlp, p_mi):$/;"	f
+libvlc_media_list_player_set_playback_mode	vlc.py	/^def libvlc_media_list_player_set_playback_mode(p_mlp, e_mode):$/;"	f
+libvlc_media_list_player_stop	vlc.py	/^def libvlc_media_list_player_stop(p_mlp):$/;"	f
+libvlc_media_list_release	vlc.py	/^def libvlc_media_list_release(p_ml):$/;"	f
+libvlc_media_list_remove_index	vlc.py	/^def libvlc_media_list_remove_index(p_ml, i_pos):$/;"	f
+libvlc_media_list_retain	vlc.py	/^def libvlc_media_list_retain(p_ml):$/;"	f
+libvlc_media_list_set_media	vlc.py	/^def libvlc_media_list_set_media(p_ml, p_md):$/;"	f
+libvlc_media_list_unlock	vlc.py	/^def libvlc_media_list_unlock(p_ml):$/;"	f
+libvlc_media_new_as_node	vlc.py	/^def libvlc_media_new_as_node(p_instance, psz_name):$/;"	f
+libvlc_media_new_callbacks	vlc.py	/^def libvlc_media_new_callbacks(instance, open_cb, read_cb, seek_cb, close_cb, opaque):$/;"	f
+libvlc_media_new_fd	vlc.py	/^def libvlc_media_new_fd(p_instance, fd):$/;"	f
+libvlc_media_new_location	vlc.py	/^def libvlc_media_new_location(p_instance, psz_mrl):$/;"	f
+libvlc_media_new_path	vlc.py	/^def libvlc_media_new_path(p_instance, path):$/;"	f
+libvlc_media_parse	vlc.py	/^def libvlc_media_parse(p_md):$/;"	f
+libvlc_media_parse_with_options	vlc.py	/^def libvlc_media_parse_with_options(p_md, parse_flag, timeout):$/;"	f
+libvlc_media_player_add_slave	vlc.py	/^def libvlc_media_player_add_slave(p_mi, i_type, psz_uri, b_select):$/;"	f
+libvlc_media_player_can_pause	vlc.py	/^def libvlc_media_player_can_pause(p_mi):$/;"	f
+libvlc_media_player_event_manager	vlc.py	/^def libvlc_media_player_event_manager(p_mi):$/;"	f
+libvlc_media_player_get_agl	vlc.py	/^def libvlc_media_player_get_agl(p_mi):$/;"	f
+libvlc_media_player_get_chapter	vlc.py	/^def libvlc_media_player_get_chapter(p_mi):$/;"	f
+libvlc_media_player_get_chapter_count	vlc.py	/^def libvlc_media_player_get_chapter_count(p_mi):$/;"	f
+libvlc_media_player_get_chapter_count_for_title	vlc.py	/^def libvlc_media_player_get_chapter_count_for_title(p_mi, i_title):$/;"	f
+libvlc_media_player_get_fps	vlc.py	/^def libvlc_media_player_get_fps(p_mi):$/;"	f
+libvlc_media_player_get_full_chapter_descriptions	vlc.py	/^def libvlc_media_player_get_full_chapter_descriptions(p_mi, i_chapters_of_title, pp_chapters):$/;"	f
+libvlc_media_player_get_full_title_descriptions	vlc.py	/^def libvlc_media_player_get_full_title_descriptions(p_mi, titles):$/;"	f
+libvlc_media_player_get_hwnd	vlc.py	/^def libvlc_media_player_get_hwnd(p_mi):$/;"	f
+libvlc_media_player_get_length	vlc.py	/^def libvlc_media_player_get_length(p_mi):$/;"	f
+libvlc_media_player_get_media	vlc.py	/^def libvlc_media_player_get_media(p_mi):$/;"	f
+libvlc_media_player_get_nsobject	vlc.py	/^def libvlc_media_player_get_nsobject(p_mi):$/;"	f
+libvlc_media_player_get_position	vlc.py	/^def libvlc_media_player_get_position(p_mi):$/;"	f
+libvlc_media_player_get_rate	vlc.py	/^def libvlc_media_player_get_rate(p_mi):$/;"	f
+libvlc_media_player_get_role	vlc.py	/^def libvlc_media_player_get_role(p_mi):$/;"	f
+libvlc_media_player_get_state	vlc.py	/^def libvlc_media_player_get_state(p_mi):$/;"	f
+libvlc_media_player_get_time	vlc.py	/^def libvlc_media_player_get_time(p_mi):$/;"	f
+libvlc_media_player_get_title	vlc.py	/^def libvlc_media_player_get_title(p_mi):$/;"	f
+libvlc_media_player_get_title_count	vlc.py	/^def libvlc_media_player_get_title_count(p_mi):$/;"	f
+libvlc_media_player_get_xwindow	vlc.py	/^def libvlc_media_player_get_xwindow(p_mi):$/;"	f
+libvlc_media_player_has_vout	vlc.py	/^def libvlc_media_player_has_vout(p_mi):$/;"	f
+libvlc_media_player_is_playing	vlc.py	/^def libvlc_media_player_is_playing(p_mi):$/;"	f
+libvlc_media_player_is_seekable	vlc.py	/^def libvlc_media_player_is_seekable(p_mi):$/;"	f
+libvlc_media_player_navigate	vlc.py	/^def libvlc_media_player_navigate(p_mi, navigate):$/;"	f
+libvlc_media_player_new	vlc.py	/^def libvlc_media_player_new(p_libvlc_instance):$/;"	f
+libvlc_media_player_new_from_media	vlc.py	/^def libvlc_media_player_new_from_media(p_md):$/;"	f
+libvlc_media_player_next_chapter	vlc.py	/^def libvlc_media_player_next_chapter(p_mi):$/;"	f
+libvlc_media_player_next_frame	vlc.py	/^def libvlc_media_player_next_frame(p_mi):$/;"	f
+libvlc_media_player_pause	vlc.py	/^def libvlc_media_player_pause(p_mi):$/;"	f
+libvlc_media_player_play	vlc.py	/^def libvlc_media_player_play(p_mi):$/;"	f
+libvlc_media_player_previous_chapter	vlc.py	/^def libvlc_media_player_previous_chapter(p_mi):$/;"	f
+libvlc_media_player_program_scrambled	vlc.py	/^def libvlc_media_player_program_scrambled(p_mi):$/;"	f
+libvlc_media_player_release	vlc.py	/^def libvlc_media_player_release(p_mi):$/;"	f
+libvlc_media_player_retain	vlc.py	/^def libvlc_media_player_retain(p_mi):$/;"	f
+libvlc_media_player_set_agl	vlc.py	/^def libvlc_media_player_set_agl(p_mi, drawable):$/;"	f
+libvlc_media_player_set_android_context	vlc.py	/^def libvlc_media_player_set_android_context(p_mi, p_awindow_handler):$/;"	f
+libvlc_media_player_set_chapter	vlc.py	/^def libvlc_media_player_set_chapter(p_mi, i_chapter):$/;"	f
+libvlc_media_player_set_equalizer	vlc.py	/^def libvlc_media_player_set_equalizer(p_mi, p_equalizer):$/;"	f
+libvlc_media_player_set_evas_object	vlc.py	/^def libvlc_media_player_set_evas_object(p_mi, p_evas_object):$/;"	f
+libvlc_media_player_set_hwnd	vlc.py	/^def libvlc_media_player_set_hwnd(p_mi, drawable):$/;"	f
+libvlc_media_player_set_media	vlc.py	/^def libvlc_media_player_set_media(p_mi, p_md):$/;"	f
+libvlc_media_player_set_nsobject	vlc.py	/^def libvlc_media_player_set_nsobject(p_mi, drawable):$/;"	f
+libvlc_media_player_set_pause	vlc.py	/^def libvlc_media_player_set_pause(mp, do_pause):$/;"	f
+libvlc_media_player_set_position	vlc.py	/^def libvlc_media_player_set_position(p_mi, f_pos):$/;"	f
+libvlc_media_player_set_rate	vlc.py	/^def libvlc_media_player_set_rate(p_mi, rate):$/;"	f
+libvlc_media_player_set_role	vlc.py	/^def libvlc_media_player_set_role(p_mi, role):$/;"	f
+libvlc_media_player_set_time	vlc.py	/^def libvlc_media_player_set_time(p_mi, i_time):$/;"	f
+libvlc_media_player_set_title	vlc.py	/^def libvlc_media_player_set_title(p_mi, i_title):$/;"	f
+libvlc_media_player_set_video_title_display	vlc.py	/^def libvlc_media_player_set_video_title_display(p_mi, position, timeout):$/;"	f
+libvlc_media_player_set_xwindow	vlc.py	/^def libvlc_media_player_set_xwindow(p_mi, drawable):$/;"	f
+libvlc_media_player_stop	vlc.py	/^def libvlc_media_player_stop(p_mi):$/;"	f
+libvlc_media_player_will_play	vlc.py	/^def libvlc_media_player_will_play(p_mi):$/;"	f
+libvlc_media_release	vlc.py	/^def libvlc_media_release(p_md):$/;"	f
+libvlc_media_retain	vlc.py	/^def libvlc_media_retain(p_md):$/;"	f
+libvlc_media_save_meta	vlc.py	/^def libvlc_media_save_meta(p_md):$/;"	f
+libvlc_media_set_meta	vlc.py	/^def libvlc_media_set_meta(p_md, e_meta, psz_value):$/;"	f
+libvlc_media_set_user_data	vlc.py	/^def libvlc_media_set_user_data(p_md, p_new_user_data):$/;"	f
+libvlc_media_slaves_add	vlc.py	/^def libvlc_media_slaves_add(p_md, i_type, i_priority, psz_uri):$/;"	f
+libvlc_media_slaves_clear	vlc.py	/^def libvlc_media_slaves_clear(p_md):$/;"	f
+libvlc_media_slaves_get	vlc.py	/^def libvlc_media_slaves_get(p_md, ppp_slaves):$/;"	f
+libvlc_media_slaves_release	vlc.py	/^def libvlc_media_slaves_release(pp_slaves, i_count):$/;"	f
+libvlc_media_subitems	vlc.py	/^def libvlc_media_subitems(p_md):$/;"	f
+libvlc_media_tracks_get	vlc.py	/^def libvlc_media_tracks_get(p_md, tracks):$/;"	f
+libvlc_media_tracks_release	vlc.py	/^def libvlc_media_tracks_release(p_tracks, i_count):$/;"	f
+libvlc_module_description_list_release	vlc.py	/^def libvlc_module_description_list_release(p_list):$/;"	f
+libvlc_new	vlc.py	/^def libvlc_new(argc, argv):$/;"	f
+libvlc_release	vlc.py	/^def libvlc_release(p_instance):$/;"	f
+libvlc_retain	vlc.py	/^def libvlc_retain(p_instance):$/;"	f
+libvlc_set_app_id	vlc.py	/^def libvlc_set_app_id(p_instance, id, version, icon):$/;"	f
+libvlc_set_fullscreen	vlc.py	/^def libvlc_set_fullscreen(p_mi, b_fullscreen):$/;"	f
+libvlc_set_user_agent	vlc.py	/^def libvlc_set_user_agent(p_instance, name, http):$/;"	f
+libvlc_title_descriptions_release	vlc.py	/^def libvlc_title_descriptions_release(p_titles, i_count):$/;"	f
+libvlc_toggle_fullscreen	vlc.py	/^def libvlc_toggle_fullscreen(p_mi):$/;"	f
+libvlc_toggle_teletext	vlc.py	/^def libvlc_toggle_teletext(p_mi):$/;"	f
+libvlc_track_description_list_release	vlc.py	/^def libvlc_track_description_list_release(p_track_description):$/;"	f
+libvlc_video_filter_list_get	vlc.py	/^def libvlc_video_filter_list_get(p_instance):$/;"	f
+libvlc_video_get_adjust_float	vlc.py	/^def libvlc_video_get_adjust_float(p_mi, option):$/;"	f
+libvlc_video_get_adjust_int	vlc.py	/^def libvlc_video_get_adjust_int(p_mi, option):$/;"	f
+libvlc_video_get_aspect_ratio	vlc.py	/^def libvlc_video_get_aspect_ratio(p_mi):$/;"	f
+libvlc_video_get_crop_geometry	vlc.py	/^def libvlc_video_get_crop_geometry(p_mi):$/;"	f
+libvlc_video_get_cursor	vlc.py	/^def libvlc_video_get_cursor(p_mi, num):$/;"	f
+libvlc_video_get_logo_int	vlc.py	/^def libvlc_video_get_logo_int(p_mi, option):$/;"	f
+libvlc_video_get_marquee_int	vlc.py	/^def libvlc_video_get_marquee_int(p_mi, option):$/;"	f
+libvlc_video_get_marquee_string	vlc.py	/^def libvlc_video_get_marquee_string(p_mi, option):$/;"	f
+libvlc_video_get_scale	vlc.py	/^def libvlc_video_get_scale(p_mi):$/;"	f
+libvlc_video_get_size	vlc.py	/^def libvlc_video_get_size(p_mi, num):$/;"	f
+libvlc_video_get_spu	vlc.py	/^def libvlc_video_get_spu(p_mi):$/;"	f
+libvlc_video_get_spu_count	vlc.py	/^def libvlc_video_get_spu_count(p_mi):$/;"	f
+libvlc_video_get_spu_delay	vlc.py	/^def libvlc_video_get_spu_delay(p_mi):$/;"	f
+libvlc_video_get_spu_description	vlc.py	/^def libvlc_video_get_spu_description(p_mi):$/;"	f
+libvlc_video_get_teletext	vlc.py	/^def libvlc_video_get_teletext(p_mi):$/;"	f
+libvlc_video_get_track	vlc.py	/^def libvlc_video_get_track(p_mi):$/;"	f
+libvlc_video_get_track_count	vlc.py	/^def libvlc_video_get_track_count(p_mi):$/;"	f
+libvlc_video_get_track_description	vlc.py	/^def libvlc_video_get_track_description(p_mi):$/;"	f
+libvlc_video_set_adjust_float	vlc.py	/^def libvlc_video_set_adjust_float(p_mi, option, value):$/;"	f
+libvlc_video_set_adjust_int	vlc.py	/^def libvlc_video_set_adjust_int(p_mi, option, value):$/;"	f
+libvlc_video_set_aspect_ratio	vlc.py	/^def libvlc_video_set_aspect_ratio(p_mi, psz_aspect):$/;"	f
+libvlc_video_set_callbacks	vlc.py	/^def libvlc_video_set_callbacks(mp, lock, unlock, display, opaque):$/;"	f
+libvlc_video_set_crop_geometry	vlc.py	/^def libvlc_video_set_crop_geometry(p_mi, psz_geometry):$/;"	f
+libvlc_video_set_deinterlace	vlc.py	/^def libvlc_video_set_deinterlace(p_mi, psz_mode):$/;"	f
+libvlc_video_set_format	vlc.py	/^def libvlc_video_set_format(mp, chroma, width, height, pitch):$/;"	f
+libvlc_video_set_format_callbacks	vlc.py	/^def libvlc_video_set_format_callbacks(mp, setup, cleanup):$/;"	f
+libvlc_video_set_key_input	vlc.py	/^def libvlc_video_set_key_input(p_mi, on):$/;"	f
+libvlc_video_set_logo_int	vlc.py	/^def libvlc_video_set_logo_int(p_mi, option, value):$/;"	f
+libvlc_video_set_logo_string	vlc.py	/^def libvlc_video_set_logo_string(p_mi, option, psz_value):$/;"	f
+libvlc_video_set_marquee_int	vlc.py	/^def libvlc_video_set_marquee_int(p_mi, option, i_val):$/;"	f
+libvlc_video_set_marquee_string	vlc.py	/^def libvlc_video_set_marquee_string(p_mi, option, psz_text):$/;"	f
+libvlc_video_set_mouse_input	vlc.py	/^def libvlc_video_set_mouse_input(p_mi, on):$/;"	f
+libvlc_video_set_scale	vlc.py	/^def libvlc_video_set_scale(p_mi, f_factor):$/;"	f
+libvlc_video_set_spu	vlc.py	/^def libvlc_video_set_spu(p_mi, i_spu):$/;"	f
+libvlc_video_set_spu_delay	vlc.py	/^def libvlc_video_set_spu_delay(p_mi, i_delay):$/;"	f
+libvlc_video_set_teletext	vlc.py	/^def libvlc_video_set_teletext(p_mi, i_page):$/;"	f
+libvlc_video_set_track	vlc.py	/^def libvlc_video_set_track(p_mi, i_track):$/;"	f
+libvlc_video_take_snapshot	vlc.py	/^def libvlc_video_take_snapshot(p_mi, num, psz_filepath, i_width, i_height):$/;"	f
+libvlc_vlm_add_broadcast	vlc.py	/^def libvlc_vlm_add_broadcast(p_instance, psz_name, psz_input, psz_output, i_options, ppsz_options, b_enabled, b_loop):$/;"	f
+libvlc_vlm_add_input	vlc.py	/^def libvlc_vlm_add_input(p_instance, psz_name, psz_input):$/;"	f
+libvlc_vlm_add_vod	vlc.py	/^def libvlc_vlm_add_vod(p_instance, psz_name, psz_input, i_options, ppsz_options, b_enabled, psz_mux):$/;"	f
+libvlc_vlm_change_media	vlc.py	/^def libvlc_vlm_change_media(p_instance, psz_name, psz_input, psz_output, i_options, ppsz_options, b_enabled, b_loop):$/;"	f
+libvlc_vlm_del_media	vlc.py	/^def libvlc_vlm_del_media(p_instance, psz_name):$/;"	f
+libvlc_vlm_get_event_manager	vlc.py	/^def libvlc_vlm_get_event_manager(p_instance):$/;"	f
+libvlc_vlm_get_media_instance_chapter	vlc.py	/^def libvlc_vlm_get_media_instance_chapter(p_instance, psz_name, i_instance):$/;"	f
+libvlc_vlm_get_media_instance_length	vlc.py	/^def libvlc_vlm_get_media_instance_length(p_instance, psz_name, i_instance):$/;"	f
+libvlc_vlm_get_media_instance_position	vlc.py	/^def libvlc_vlm_get_media_instance_position(p_instance, psz_name, i_instance):$/;"	f
+libvlc_vlm_get_media_instance_rate	vlc.py	/^def libvlc_vlm_get_media_instance_rate(p_instance, psz_name, i_instance):$/;"	f
+libvlc_vlm_get_media_instance_seekable	vlc.py	/^def libvlc_vlm_get_media_instance_seekable(p_instance, psz_name, i_instance):$/;"	f
+libvlc_vlm_get_media_instance_time	vlc.py	/^def libvlc_vlm_get_media_instance_time(p_instance, psz_name, i_instance):$/;"	f
+libvlc_vlm_get_media_instance_title	vlc.py	/^def libvlc_vlm_get_media_instance_title(p_instance, psz_name, i_instance):$/;"	f
+libvlc_vlm_pause_media	vlc.py	/^def libvlc_vlm_pause_media(p_instance, psz_name):$/;"	f
+libvlc_vlm_play_media	vlc.py	/^def libvlc_vlm_play_media(p_instance, psz_name):$/;"	f
+libvlc_vlm_release	vlc.py	/^def libvlc_vlm_release(p_instance):$/;"	f
+libvlc_vlm_seek_media	vlc.py	/^def libvlc_vlm_seek_media(p_instance, psz_name, f_percentage):$/;"	f
+libvlc_vlm_set_enabled	vlc.py	/^def libvlc_vlm_set_enabled(p_instance, psz_name, b_enabled):$/;"	f
+libvlc_vlm_set_input	vlc.py	/^def libvlc_vlm_set_input(p_instance, psz_name, psz_input):$/;"	f
+libvlc_vlm_set_loop	vlc.py	/^def libvlc_vlm_set_loop(p_instance, psz_name, b_loop):$/;"	f
+libvlc_vlm_set_mux	vlc.py	/^def libvlc_vlm_set_mux(p_instance, psz_name, psz_mux):$/;"	f
+libvlc_vlm_set_output	vlc.py	/^def libvlc_vlm_set_output(p_instance, psz_name, psz_output):$/;"	f
+libvlc_vlm_show_media	vlc.py	/^def libvlc_vlm_show_media(p_instance, psz_name):$/;"	f
+libvlc_vlm_stop_media	vlc.py	/^def libvlc_vlm_stop_media(p_instance, psz_name):$/;"	f
+libvlc_vprinterr	vlc.py	/^def libvlc_vprinterr(fmt, ap):$/;"	f
+load	vlc.py	/^    def load(self):$/;"	m	class:MediaLibrary
+lock	vlc.py	/^    def lock(self):$/;"	m	class:MediaList
+log_set	vlc.py	/^    def log_set(self, data, p_instance):$/;"	m	class:Instance
+log_set_file	vlc.py	/^    def log_set_file(self, stream):$/;"	m	class:Instance
+log_unset	vlc.py	/^    def log_unset(self):$/;"	m	class:Instance
+main	parser.py	/^import main, util$/;"	i
+main	util.py	/^import main$/;"	i
+main_str	main.py	/^                    main_str = get_thread_str(PLAY_STR, thread)$/;"	v
+main_str	main.py	/^    main_str = PLAY_STR$/;"	v
+media	vlc.py	/^    def media(self):$/;"	m	class:MediaList
+media_discoverer_list_get	vlc.py	/^    def media_discoverer_list_get(self, i_cat, ppp_services):$/;"	m	class:Instance
+media_discoverer_new	vlc.py	/^    def media_discoverer_new(self, psz_name):$/;"	m	class:Instance
+media_library_new	vlc.py	/^    def media_library_new(self):$/;"	m	class:Instance
+media_list	vlc.py	/^    def media_list(self):$/;"	m	class:MediaDiscoverer
+media_list	vlc.py	/^    def media_list(self):$/;"	m	class:MediaLibrary
+media_list_new	vlc.py	/^    def media_list_new(self, mrls=None):$/;"	m	class:Instance
+media_list_player_new	vlc.py	/^    def media_list_player_new(self):$/;"	m	class:Instance
+media_new	vlc.py	/^    def media_new(self, mrl, *options):$/;"	m	class:Instance
+media_new_as_node	vlc.py	/^    def media_new_as_node(self, psz_name):$/;"	m	class:Instance
+media_new_callbacks	vlc.py	/^    def media_new_callbacks(self, open_cb, read_cb, seek_cb, close_cb, opaque):$/;"	m	class:Instance
+media_new_fd	vlc.py	/^    def media_new_fd(self, fd):$/;"	m	class:Instance
+media_new_location	vlc.py	/^    def media_new_location(self, psz_mrl):$/;"	m	class:Instance
+media_new_path	vlc.py	/^    def media_new_path(self, path):$/;"	m	class:Instance
+media_player_new	vlc.py	/^    def media_player_new(self, uri=None):$/;"	m	class:Instance
+memoize_parameterless	vlc.py	/^class memoize_parameterless(object):$/;"	c
+module_description_list	vlc.py	/^def module_description_list(head):$/;"	f
+mspf	vlc.py	/^        def mspf():$/;"	f	function:.print_version
+mute	song.py	/^    def mute(self):$/;"	m	class:Song
+navigate	vlc.py	/^    def navigate(self, navigate):$/;"	m	class:MediaPlayer
+next	vlc.py	/^    def next(self):$/;"	m	class:MediaListPlayer
+next_chapter	vlc.py	/^    def next_chapter(self):$/;"	m	class:MediaPlayer
+next_frame	vlc.py	/^    def next_frame(self):$/;"	m	class:MediaPlayer
+next_song	library.py	/^    def next_song(self):$/;"	m	class:Library
+on_success	parser.py	/^                def on_success(song):$/;"	f	function:Parser._delete
+on_success	parser.py	/^                def on_success(song):$/;"	f	function:Parser._dequeue
+on_success	parser.py	/^            def on_success(song):$/;"	f	function:Parser._delete
+on_success	parser.py	/^            def on_success(song):$/;"	f	function:Parser._queue
+on_success	parser.py	/^            def on_success(song):$/;"	f	function:Parser._search
+on_success	parser.py	/^        def on_success(song):$/;"	f	function:Parser._jump
+on_success	parser.py	/^        def on_success(song):$/;"	f	function:Parser._next
+os	downloader.py	/^import sys, urllib.request, os, subprocess, shutil$/;"	i
+os	library.py	/^import os, random, time, difflib, heapq$/;"	i
+os	main.py	/^import sys, os$/;"	i
+os	parser.py	/^import sys, threading, os$/;"	i
+os	song.py	/^import os, time$/;"	i
+os	util.py	/^import select, sys, os, signal$/;"	i
+os	vlc.py	/^import os$/;"	i
+p	main.py	/^    p = parser.Parser(lib)$/;"	v
+pafy	downloader.py	/^        import pafy$/;"	i
+parse	vlc.py	/^    def parse(self):$/;"	m	class:Media
+parse_user_input	parser.py	/^    def parse_user_input(self, curr_song, inp):$/;"	m	class:Parser
+parse_with_options	vlc.py	/^    def parse_with_options(self, parse_flag, timeout):$/;"	m	class:Media
+parser	main.py	/^    import library, parser, util$/;"	i
+pause	song.py	/^    def pause(self):$/;"	m	class:Song
+pause	vlc.py	/^    def pause(self):$/;"	m	class:MediaListPlayer
+pause	vlc.py	/^    def pause(self):$/;"	m	class:MediaPlayer
+play	song.py	/^    def play(self, sleep_interval = 0.1):$/;"	m	class:Song
+play	vlc.py	/^    def play(self):$/;"	m	class:MediaListPlayer
+play	vlc.py	/^    def play(self):$/;"	m	class:MediaPlayer
+play_item	vlc.py	/^    def play_item(self, p_md):$/;"	m	class:MediaListPlayer
+play_item_at_index	vlc.py	/^    def play_item_at_index(self, i_index):$/;"	m	class:MediaListPlayer
+player_new_from_media	vlc.py	/^    def player_new_from_media(self):$/;"	m	class:Media
+playing	song.py	/^    def playing(self):$/;"	m	class:Song
+pos_callback	vlc.py	/^    def pos_callback(event, player):$/;"	f
+previous	vlc.py	/^    def previous(self):$/;"	m	class:MediaListPlayer
+previous_chapter	vlc.py	/^    def previous_chapter(self):$/;"	m	class:MediaPlayer
+print_help	vlc.py	/^        def print_help():$/;"	f	function:.print_version
+print_info	vlc.py	/^        def print_info():$/;"	f	function:.print_version
+print_main	main.py	/^    print_main     = util.print_main$/;"	v
+print_main	parser.py	/^print_main        = util.print_main$/;"	v
+print_main	util.py	/^def print_main(s, inp = None, output_message = None):$/;"	f
+print_version	vlc.py	/^    def print_version():$/;"	f
+program_scrambled	vlc.py	/^    def program_scrambled(self):$/;"	m	class:MediaPlayer
+quit_app	vlc.py	/^        def quit_app():$/;"	f	function:.print_version
+random	library.py	/^import os, random, time, difflib, heapq$/;"	i
+read_stdin	main.py	/^    read_stdin     = util.read_stdin$/;"	v
+read_stdin	parser.py	/^read_stdin        = util.read_stdin$/;"	v
+read_stdin	util.py	/^def read_stdin(timeout):$/;"	f
+release	vlc.py	/^    def release(self):$/;"	m	class:Instance
+release	vlc.py	/^    def release(self):$/;"	m	class:Media
+release	vlc.py	/^    def release(self):$/;"	m	class:MediaDiscoverer
+release	vlc.py	/^    def release(self):$/;"	m	class:MediaLibrary
+release	vlc.py	/^    def release(self):$/;"	m	class:MediaList
+release	vlc.py	/^    def release(self):$/;"	m	class:MediaListPlayer
+release	vlc.py	/^    def release(self):$/;"	m	class:MediaPlayer
+remove_from_queue	library.py	/^    def remove_from_queue(self, song, remove_all = False):$/;"	m	class:Library
+remove_index	vlc.py	/^    def remove_index(self, i_pos):$/;"	m	class:MediaList
+request	downloader.py	/^import sys, urllib.request, os, subprocess, shutil$/;"	i
+reset	song.py	/^    def reset(self):$/;"	m	class:Song
+resume_output	util.py	/^def resume_output():$/;"	f
+retain	vlc.py	/^    def retain(self):$/;"	m	class:Instance
+retain	vlc.py	/^    def retain(self):$/;"	m	class:Media
+retain	vlc.py	/^    def retain(self):$/;"	m	class:MediaLibrary
+retain	vlc.py	/^    def retain(self):$/;"	m	class:MediaList
+retain	vlc.py	/^    def retain(self):$/;"	m	class:MediaListPlayer
+retain	vlc.py	/^    def retain(self):$/;"	m	class:MediaPlayer
+save_meta	vlc.py	/^    def save_meta(self):$/;"	m	class:Media
+search	library.py	/^    def search(self, query, k = 5):$/;"	m	class:Library
+sec_backward	vlc.py	/^        def sec_backward():$/;"	f	function:.print_version
+sec_forward	vlc.py	/^        def sec_forward():$/;"	f	function:.print_version
+select	util.py	/^import select, sys, os, signal$/;"	i
+set_ID3_tag	song.py	/^    def set_ID3_tag(tag, value):$/;"	m	class:Song
+set_agl	vlc.py	/^    def set_agl(self, drawable):$/;"	m	class:MediaPlayer
+set_android_context	vlc.py	/^    def set_android_context(self, p_awindow_handler):$/;"	m	class:MediaPlayer
+set_app_id	vlc.py	/^    def set_app_id(self, id, version, icon):$/;"	m	class:Instance
+set_chapter	vlc.py	/^    def set_chapter(self, i_chapter):$/;"	m	class:MediaPlayer
+set_date_modified	song.py	/^    def set_date_modified(file_path, date):$/;"	m	class:Song
+set_equalizer	vlc.py	/^    def set_equalizer(self, p_equalizer):$/;"	m	class:MediaPlayer
+set_evas_object	vlc.py	/^    def set_evas_object(self, p_evas_object):$/;"	m	class:MediaPlayer
+set_fullscreen	vlc.py	/^    def set_fullscreen(self, b_fullscreen):$/;"	m	class:MediaPlayer
+set_hwnd	vlc.py	/^    def set_hwnd(self, drawable):$/;"	m	class:MediaPlayer
+set_media	vlc.py	/^    def set_media(self, p_md):$/;"	m	class:MediaList
+set_media	vlc.py	/^    def set_media(self, p_md):$/;"	m	class:MediaPlayer
+set_media_list	vlc.py	/^    def set_media_list(self, p_mlist):$/;"	m	class:MediaListPlayer
+set_media_player	vlc.py	/^    def set_media_player(self, p_mi):$/;"	m	class:MediaListPlayer
+set_meta	vlc.py	/^    def set_meta(self, e_meta, psz_value):$/;"	m	class:Media
+set_mrl	vlc.py	/^    def set_mrl(self, mrl, *options):$/;"	m	class:MediaPlayer
+set_nsobject	vlc.py	/^    def set_nsobject(self, drawable):$/;"	m	class:MediaPlayer
+set_pause	vlc.py	/^    def set_pause(self, do_pause):$/;"	m	class:MediaPlayer
+set_playback_mode	vlc.py	/^    def set_playback_mode(self, e_mode):$/;"	m	class:MediaListPlayer
+set_position	vlc.py	/^    def set_position(self, f_pos):$/;"	m	class:MediaPlayer
+set_rate	vlc.py	/^    def set_rate(self, rate):$/;"	m	class:MediaPlayer
+set_role	vlc.py	/^    def set_role(self, role):$/;"	m	class:MediaPlayer
+set_time	song.py	/^    def set_time(self, time):$/;"	m	class:Song
+set_time	vlc.py	/^    def set_time(self, i_time):$/;"	m	class:MediaPlayer
+set_title	vlc.py	/^    def set_title(self, i_title):$/;"	m	class:MediaPlayer
+set_user_agent	vlc.py	/^    def set_user_agent(self, name, http):$/;"	m	class:Instance
+set_user_data	vlc.py	/^    def set_user_data(self, p_new_user_data):$/;"	m	class:Media
+set_video_title_display	vlc.py	/^    def set_video_title_display(self, position, timeout):$/;"	m	class:MediaPlayer
+set_volume	song.py	/^    def set_volume(self, percentage):$/;"	m	class:Song
+set_xwindow	vlc.py	/^    def set_xwindow(self, drawable):$/;"	m	class:MediaPlayer
+shuffle	library.py	/^    def shuffle(self):$/;"	m	class:Library
+shutil	downloader.py	/^import sys, urllib.request, os, subprocess, shutil$/;"	i
+signal	util.py	/^import select, sys, os, signal$/;"	i
+slaves_add	vlc.py	/^    def slaves_add(self, i_type, i_priority, psz_uri):$/;"	m	class:Media
+slaves_clear	vlc.py	/^    def slaves_clear(self):$/;"	m	class:Media
+slaves_get	vlc.py	/^    def slaves_get(self, ppp_slaves):$/;"	m	class:Media
+sort	library.py	/^    def sort(self, column, reverse = False):$/;"	m	class:Library
+start	vlc.py	/^    def start(self):$/;"	m	class:MediaDiscoverer
+stop	song.py	/^    def stop(self):$/;"	m	class:Song
+stop	vlc.py	/^    def stop(self):$/;"	m	class:MediaDiscoverer
+stop	vlc.py	/^    def stop(self):$/;"	m	class:MediaListPlayer
+stop	vlc.py	/^    def stop(self):$/;"	m	class:MediaPlayer
+str	vlc.py	/^    str = str$/;"	v
+str_to_bytes	vlc.py	/^    def str_to_bytes(s):$/;"	f
+string_result	vlc.py	/^def string_result(result, func, arguments):$/;"	f
+subitems	vlc.py	/^    def subitems(self):$/;"	m	class:Media
+subprocess	downloader.py	/^import sys, urllib.request, os, subprocess, shutil$/;"	i
+supports_ansi	util.py	/^def supports_ansi():$/;"	f
+suppress_output	util.py	/^def suppress_output():$/;"	f
+sys	downloader.py	/^import sys, urllib.request, os, subprocess, shutil$/;"	i
+sys	main.py	/^import sys, os$/;"	i
+sys	parser.py	/^import sys, threading, os$/;"	i
+sys	util.py	/^import select, sys, os, signal$/;"	i
+sys	vlc.py	/^import sys$/;"	i
+termios	vlc.py	/^        import termios$/;"	i
+thread	main.py	/^    thread = None$/;"	v
+threading	parser.py	/^import sys, threading, os$/;"	i
+time	library.py	/^import os, random, time, difflib, heapq$/;"	i
+time	song.py	/^import os, time$/;"	i
+toggle_echo_position	vlc.py	/^        def toggle_echo_position():$/;"	f	function:.print_version
+toggle_fullscreen	vlc.py	/^    def toggle_fullscreen(self):$/;"	m	class:MediaPlayer
+toggle_teletext	vlc.py	/^    def toggle_teletext(self):$/;"	m	class:MediaPlayer
+track_description_list	vlc.py	/^def track_description_list(head):$/;"	f
+tracks_get	vlc.py	/^    def tracks_get(self):$/;"	m	class:Media
+tty	vlc.py	/^        import tty$/;"	i
+unicode	vlc.py	/^    unicode = str$/;"	v
+unicode	vlc.py	/^    unicode = unicode$/;"	v
+unlock	vlc.py	/^    def unlock(self):$/;"	m	class:MediaList
+unmute	song.py	/^    def unmute(self):$/;"	m	class:Song
+urllib	downloader.py	/^import sys, urllib.request, os, subprocess, shutil$/;"	i
+util	main.py	/^    import library, parser, util$/;"	i
+util	parser.py	/^import main, util$/;"	i
+video_filter_list_get	vlc.py	/^    def video_filter_list_get(self):$/;"	m	class:Instance
+video_get_adjust_float	vlc.py	/^    def video_get_adjust_float(self, option):$/;"	m	class:MediaPlayer
+video_get_adjust_int	vlc.py	/^    def video_get_adjust_int(self, option):$/;"	m	class:MediaPlayer
+video_get_aspect_ratio	vlc.py	/^    def video_get_aspect_ratio(self):$/;"	m	class:MediaPlayer
+video_get_chapter_description	vlc.py	/^    def video_get_chapter_description(self, title):$/;"	m	class:MediaPlayer
+video_get_crop_geometry	vlc.py	/^    def video_get_crop_geometry(self):$/;"	m	class:MediaPlayer
+video_get_cursor	vlc.py	/^    def video_get_cursor(self, num=0):$/;"	m	class:MediaPlayer
+video_get_height	vlc.py	/^    def video_get_height(self, num=0):$/;"	m	class:MediaPlayer
+video_get_logo_int	vlc.py	/^    def video_get_logo_int(self, option):$/;"	m	class:MediaPlayer
+video_get_marquee_int	vlc.py	/^    def video_get_marquee_int(self, option):$/;"	m	class:MediaPlayer
+video_get_marquee_string	vlc.py	/^    def video_get_marquee_string(self, option):$/;"	m	class:MediaPlayer
+video_get_scale	vlc.py	/^    def video_get_scale(self):$/;"	m	class:MediaPlayer
+video_get_size	vlc.py	/^    def video_get_size(self, num=0):$/;"	m	class:MediaPlayer
+video_get_spu	vlc.py	/^    def video_get_spu(self):$/;"	m	class:MediaPlayer
+video_get_spu_count	vlc.py	/^    def video_get_spu_count(self):$/;"	m	class:MediaPlayer
+video_get_spu_delay	vlc.py	/^    def video_get_spu_delay(self):$/;"	m	class:MediaPlayer
+video_get_spu_description	vlc.py	/^    def video_get_spu_description(self):$/;"	m	class:MediaPlayer
+video_get_teletext	vlc.py	/^    def video_get_teletext(self):$/;"	m	class:MediaPlayer
+video_get_title_description	vlc.py	/^    def video_get_title_description(self):$/;"	m	class:MediaPlayer
+video_get_track	vlc.py	/^    def video_get_track(self):$/;"	m	class:MediaPlayer
+video_get_track_count	vlc.py	/^    def video_get_track_count(self):$/;"	m	class:MediaPlayer
+video_get_track_description	vlc.py	/^    def video_get_track_description(self):$/;"	m	class:MediaPlayer
+video_get_width	vlc.py	/^    def video_get_width(self, num=0):$/;"	m	class:MediaPlayer
+video_set_adjust_float	vlc.py	/^    def video_set_adjust_float(self, option, value):$/;"	m	class:MediaPlayer
+video_set_adjust_int	vlc.py	/^    def video_set_adjust_int(self, option, value):$/;"	m	class:MediaPlayer
+video_set_aspect_ratio	vlc.py	/^    def video_set_aspect_ratio(self, psz_aspect):$/;"	m	class:MediaPlayer
+video_set_callbacks	vlc.py	/^    def video_set_callbacks(self, lock, unlock, display, opaque):$/;"	m	class:MediaPlayer
+video_set_crop_geometry	vlc.py	/^    def video_set_crop_geometry(self, psz_geometry):$/;"	m	class:MediaPlayer
+video_set_deinterlace	vlc.py	/^    def video_set_deinterlace(self, psz_mode):$/;"	m	class:MediaPlayer
+video_set_format	vlc.py	/^    def video_set_format(self, chroma, width, height, pitch):$/;"	m	class:MediaPlayer
+video_set_format_callbacks	vlc.py	/^    def video_set_format_callbacks(self, setup, cleanup):$/;"	m	class:MediaPlayer
+video_set_key_input	vlc.py	/^    def video_set_key_input(self, on):$/;"	m	class:MediaPlayer
+video_set_logo_int	vlc.py	/^    def video_set_logo_int(self, option, value):$/;"	m	class:MediaPlayer
+video_set_logo_string	vlc.py	/^    def video_set_logo_string(self, option, psz_value):$/;"	m	class:MediaPlayer
+video_set_marquee_int	vlc.py	/^    def video_set_marquee_int(self, option, i_val):$/;"	m	class:MediaPlayer
+video_set_marquee_string	vlc.py	/^    def video_set_marquee_string(self, option, psz_text):$/;"	m	class:MediaPlayer
+video_set_mouse_input	vlc.py	/^    def video_set_mouse_input(self, on):$/;"	m	class:MediaPlayer
+video_set_scale	vlc.py	/^    def video_set_scale(self, f_factor):$/;"	m	class:MediaPlayer
+video_set_spu	vlc.py	/^    def video_set_spu(self, i_spu):$/;"	m	class:MediaPlayer
+video_set_spu_delay	vlc.py	/^    def video_set_spu_delay(self, i_delay):$/;"	m	class:MediaPlayer
+video_set_teletext	vlc.py	/^    def video_set_teletext(self, i_page):$/;"	m	class:MediaPlayer
+video_set_track	vlc.py	/^    def video_set_track(self, i_track):$/;"	m	class:MediaPlayer
+video_take_snapshot	vlc.py	/^    def video_take_snapshot(self, num, psz_filepath, i_width, i_height):$/;"	m	class:MediaPlayer
+vlc_installed	util.py	/^def vlc_installed():$/;"	f
+vlm_add_broadcast	vlc.py	/^    def vlm_add_broadcast(self, psz_name, psz_input, psz_output, i_options, ppsz_options, b_enabled, b_loop):$/;"	m	class:Instance
+vlm_add_input	vlc.py	/^    def vlm_add_input(self, psz_name, psz_input):$/;"	m	class:Instance
+vlm_add_vod	vlc.py	/^    def vlm_add_vod(self, psz_name, psz_input, i_options, ppsz_options, b_enabled, psz_mux):$/;"	m	class:Instance
+vlm_change_media	vlc.py	/^    def vlm_change_media(self, psz_name, psz_input, psz_output, i_options, ppsz_options, b_enabled, b_loop):$/;"	m	class:Instance
+vlm_del_media	vlc.py	/^    def vlm_del_media(self, psz_name):$/;"	m	class:Instance
+vlm_get_event_manager	vlc.py	/^    def vlm_get_event_manager(self):$/;"	m	class:Instance
+vlm_get_media_instance_chapter	vlc.py	/^    def vlm_get_media_instance_chapter(self, psz_name, i_instance):$/;"	m	class:Instance
+vlm_get_media_instance_length	vlc.py	/^    def vlm_get_media_instance_length(self, psz_name, i_instance):$/;"	m	class:Instance
+vlm_get_media_instance_position	vlc.py	/^    def vlm_get_media_instance_position(self, psz_name, i_instance):$/;"	m	class:Instance
+vlm_get_media_instance_rate	vlc.py	/^    def vlm_get_media_instance_rate(self, psz_name, i_instance):$/;"	m	class:Instance
+vlm_get_media_instance_seekable	vlc.py	/^    def vlm_get_media_instance_seekable(self, psz_name, i_instance):$/;"	m	class:Instance
+vlm_get_media_instance_time	vlc.py	/^    def vlm_get_media_instance_time(self, psz_name, i_instance):$/;"	m	class:Instance
+vlm_get_media_instance_title	vlc.py	/^    def vlm_get_media_instance_title(self, psz_name, i_instance):$/;"	m	class:Instance
+vlm_pause_media	vlc.py	/^    def vlm_pause_media(self, psz_name):$/;"	m	class:Instance
+vlm_play_media	vlc.py	/^    def vlm_play_media(self, psz_name):$/;"	m	class:Instance
+vlm_release	vlc.py	/^    def vlm_release(self):$/;"	m	class:Instance
+vlm_seek_media	vlc.py	/^    def vlm_seek_media(self, psz_name, f_percentage):$/;"	m	class:Instance
+vlm_set_enabled	vlc.py	/^    def vlm_set_enabled(self, psz_name, b_enabled):$/;"	m	class:Instance
+vlm_set_input	vlc.py	/^    def vlm_set_input(self, psz_name, psz_input):$/;"	m	class:Instance
+vlm_set_loop	vlc.py	/^    def vlm_set_loop(self, psz_name, b_loop):$/;"	m	class:Instance
+vlm_set_mux	vlc.py	/^    def vlm_set_mux(self, psz_name, psz_mux):$/;"	m	class:Instance
+vlm_set_output	vlc.py	/^    def vlm_set_output(self, psz_name, psz_output):$/;"	m	class:Instance
+vlm_show_media	vlc.py	/^    def vlm_show_media(self, psz_name):$/;"	m	class:Instance
+vlm_stop_media	vlc.py	/^    def vlm_stop_media(self, psz_name):$/;"	m	class:Instance
+volume	main.py	/^                    volume = parser._volume(inp, main_str, curr_song, volume)$/;"	v
+w	vlc.py	/^                    import _winreg as w$/;"	i
+w	vlc.py	/^                    import winreg as w$/;"	i
+will_play	vlc.py	/^    def will_play(self):$/;"	m	class:MediaPlayer
+wrap_errcheck	vlc.py	/^    def wrap_errcheck(result, func, arguments):$/;"	f	function:class_result
+write	util.py	/^        def write(self, x):$/;"	m	class:suppress_output.NullOutput
+youtube_download_audio	downloader.py	/^def youtube_download_audio(video_url, file_path, file_name):$/;"	f
+youtube_download_audio	parser.py	/^from downloader import youtube_search, youtube_download_audio$/;"	i
+youtube_search	downloader.py	/^def youtube_search(query, max_results = 25):$/;"	f
+youtube_search	parser.py	/^from downloader import youtube_search, youtube_download_audio$/;"	i
