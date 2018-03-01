@@ -3,7 +3,7 @@ import main, util
 from song import Song
 from downloader import youtube_search, youtube_download_audio
 
-# Can't do from main import _ due to circular import problems
+# Can't do "from main import _" due to circular import problems
 USER_INPUT_MARKER = main.USER_INPUT_MARKER
 POLL_INTERVAL     = main.POLL_INTERVAL
 PLAY_STR          = main.PLAY_STR
@@ -35,7 +35,7 @@ def _volume(inp, main_str, curr_song, volume):
     return new_volume
 
 class Parser:
-    """ Class used to parse user input and perform the appropriate library manipulation or provide 
+    """ Class used to parse user input and perform the appropriate library manipulation or provide
     the appropriate information.
     """
 
@@ -43,7 +43,7 @@ class Parser:
         self.library = lib
 
     def parse_user_input(self, curr_song, inp):
-        """ Given user input, parses the input and executes the appropriate command in the 
+        """ Given user input, parses the input and executes the appropriate command in the
         library, returning both a song to play, if the command specified a song to be played
         next (returns None otherwise), as well as any output information to print (if there
         is any; returns None otherwise).
@@ -168,7 +168,7 @@ class Parser:
 
         def on_success(song):
             return "Jumped to \"%s\"" % str(song)
-        
+
         query = Parser._parse_args(tokens[1 :])
         if query is None:
             return (None, "Couldn't parse argument")
@@ -202,7 +202,7 @@ class Parser:
                 if time < 0:
                     return (None, "Can't jump to negative timestamp")
                 elif time > curr_song["length"]:
-                    return (None, "Can't jump to length %i in song \"%s\" - out of bounds" % (time, song))
+                    return (None, "Can't jump to length %i in song \"%s\" - out of bounds" % (time, curr_song))
                 else:
                     self.library.jump_to_time(time)
                     return (None, None)
@@ -534,7 +534,8 @@ class Parser:
             inp = read_stdin(POLL_INTERVAL)
 
             if inp is not None:
-                if inp.lower().strip() == "unpause":
+                inp = inp.lower().strip()
+                if inp == "unpause" or inp == "up": # Keyboard shortcut
                     curr_song.play()
 
                     print_main(main_str % str(curr_song["title"]), USER_INPUT_MARKER + inp, None)

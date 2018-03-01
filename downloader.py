@@ -26,7 +26,7 @@ def youtube_search(query, max_results = 25):
 
     youtube_service = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey = API_KEY)
     search_result = youtube_service.search().list(q = query, part = "id, snippet", maxResults = max_results).execute()
-    
+
     videos = []
     for result in search_result.get("items", []):
         if result["id"]["kind"] == "youtube#video":

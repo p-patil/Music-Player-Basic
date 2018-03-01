@@ -6,7 +6,9 @@ POLL_INTERVAL = 0.5
 PLAY_STR = "Playing \"%s\""
 USER_INPUT_MARKER = "> "
 
-# TODO Add functionality to sync songs with another device (in background) through SSH
+# TODO add functionaltiy for up arrow and down arrow cycling through command history
+# TODO convert backend to pulseaudio instead of vlc
+# TODO check why shuffling plays songs in same order
 # TODO Implement a better search function
 # TODO Comment functions
 # TODO Finish testing downloader
@@ -31,12 +33,13 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         # TODO remove
         if sys.argv[1] == "--t":
-            lib = library.Library("/home/piyush/music/", verbose = True, shuffle = True)
+            lib = library.Library("/home/piyush/media/music/", verbose = True, shuffle = True)
             lib.sort("date_modified", reverse = True)
         else:
             lib = library.Library(sys.argv[1], verbose = True, shuffle = True)
     else:
-        lib = library.Library("/home/piyush/music/", verbose = True, shuffle = True)
+        lib = library.Library("/home/piyush/media/music/", verbose = True, shuffle = True)
+
     os.system("clear")
     p = parser.Parser(lib)
     print(help_message())
@@ -50,7 +53,13 @@ if __name__ == "__main__":
         curr_song.play()
         curr_song.set_volume(volume)
 
-        print_main(main_str % str(curr_song["title"])) 
+        # TODO fix this weird bug where some songs get randomly skipped
+        while not curr_song.playing():
+            import time
+            time.sleep(0.1)
+            curr_song.play()
+
+        print_main(main_str % str(curr_song["title"]))
 
         # Parse user input
         inp, next_song, output_message = "", None, None
@@ -58,11 +67,12 @@ if __name__ == "__main__":
             inp = read_stdin(POLL_INTERVAL)
 
             if inp is not None:
-                if inp.lower().startswith("volume"):
+                inp = inp.lower().strip()
+                if inp.startswith("volume"):
                     volume = parser._volume(inp, main_str, curr_song, volume)
                     next_song, output_message = None, None
                 else:
-                    if inp.lower().strip() == "pause":
+                    if inp == "pause" or inp == "p": # Keyboard shortcut
                         next_song, inp, output_message = p._pause(main_str, curr_song, inp)
                     elif inp.lower().startswith("download"):
                         thread, output_message = p._download(main_str, curr_song, inp, inp.strip().split())

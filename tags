@@ -407,6 +407,7 @@ helper	util.py	/^    def helper(i, j):$/;"	f	function:levenshtein_dist
 hex_version	vlc.py	/^def hex_version():$/;"	f
 index_of_item	vlc.py	/^    def index_of_item(self, p_md):$/;"	m	class:MediaList
 init	song.py	/^    def init(self):$/;"	m	class:Song
+inp	main.py	/^                inp = inp.lower().strip()$/;"	v
 inp	main.py	/^            inp = read_stdin(POLL_INTERVAL)$/;"	v
 insert_media	vlc.py	/^    def insert_media(self, p_md, i_pos):$/;"	m	class:MediaList
 is	main.py	/^                    else: # Parser class is meant for user commands that don't alter global state (like volume and pause do)$/;"	c
@@ -854,6 +855,7 @@ termios	vlc.py	/^        import termios$/;"	i
 thread	main.py	/^    thread = None$/;"	v
 threading	parser.py	/^import sys, threading, os$/;"	i
 time	library.py	/^import os, random, time, difflib, heapq$/;"	i
+time	main.py	/^            import time$/;"	i
 time	song.py	/^import os, time$/;"	i
 toggle_echo_position	vlc.py	/^        def toggle_echo_position():$/;"	f	function:.print_version
 toggle_fullscreen	vlc.py	/^    def toggle_fullscreen(self):$/;"	m	class:MediaPlayer
