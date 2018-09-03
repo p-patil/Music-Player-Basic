@@ -61,7 +61,7 @@ def read_stdin(timeout):
     if len(inp) == 0:
         return None
     else:
-        return sys.stdin.readline() 
+        return sys.stdin.readline()
 
 def print_main(s, inp = None, output_message = None):
     """ Displays the given string by printing it in the middle of the console and overwriting the last displayed
@@ -169,7 +169,8 @@ help_dict = {
     "context":  "\"context [-prev | -next] <n>\" command\n\tDisplays the n (5 by default) previous or next (both by default) songs " + \
                 "in the library.\n\"context -until <query>\" command\n\tDisplays all songs in the library up to the song matched by " + \
                 "the given search query.",
-    "sort":     "\"sort [-reverse] <column>\" command\n\tSorts the library by the given column, optionally in descending order.",
+    "sort":     "\"sort [-reverse] <column>\" command\n\tSorts the library by the given column, optionally in descending order. " + \
+                "Available columns: {0}".format(", ".join(Song.ID3_COLUMNS + Song.NON_ID3_COLUMNS)),
     "search":   "\"search <query>\" command\n\tSearches for a song in the library.\n\tSearch format: -[column1] \"arg1\" <...> " + \
                 "-[columnN] \"argN\"\n\tOtherwise, search in raw format \"<title> - <artist>\" or \"<title>\".",
     "download": "\"download <query>\" command\n\tTries to download the song given by the query, from multiple sources " + \

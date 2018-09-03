@@ -229,7 +229,7 @@ class Parser:
 
             for song in songs:
                 queue_str += "\t" + str(song) + "\n"
-            
+
             queue_str = queue_str[: -1] # Trim last newline
             return (None, queue_str)
         else:
@@ -318,7 +318,7 @@ class Parser:
                 until_flag = True
             else:
                 return (None, "Couldn't parse argument")
-            
+
             if not until_flag:
                 try:
                     n = int(tokens[2])
@@ -367,7 +367,7 @@ class Parser:
 
                     songs_str += "Next:\n"
                     for song in lib[curr_index : index]:
-                        songs_str += "\t" + str(song) + "\n"               
+                        songs_str += "\t" + str(song) + "\n"
         else:
             if prev_flag:
                 songs = self.library.get_prev_library_songs(n)
@@ -397,7 +397,7 @@ class Parser:
         elif len(tokens) == 2:
             if tokens[1] not in Song.ID3_COLUMNS + Song.NON_ID3_COLUMNS:
                 return (None, "Argument is not a valid column")
-            else:            
+            else:
                 self.library.sort(tokens[1])
                 return (None, "Sorted library by column \"%s\"" % tokens[1])
         elif len(tokens) == 3:

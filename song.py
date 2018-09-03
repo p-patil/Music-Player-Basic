@@ -29,7 +29,7 @@ class Song:
         self._file_path = file_path
         self._mp = None
         self._time = None # What time, in seconds, of the song playback to play at
-        
+
         # Fill in column values, first by parsing ID3 tags and then manually
         self._columns = {}
         for tag_name, tag in zip(Song.ID3_COLUMNS, Song._get_ID3_tags(file_path)):

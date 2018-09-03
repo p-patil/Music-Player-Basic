@@ -6,6 +6,7 @@ POLL_INTERVAL = 0.5
 PLAY_STR = "Playing \"%s\""
 USER_INPUT_MARKER = "> "
 
+# TODO find a way to not poll when paused (as this consumes CPU cycles) but instead go to sleep or something, and treat text input as an interrupt or something
 # TODO add functionaltiy for up arrow and down arrow cycling through command history
 # TODO convert backend to pulseaudio instead of vlc
 # TODO check why shuffling plays songs in same order
@@ -31,14 +32,13 @@ if __name__ == "__main__":
     get_thread_str = util.get_thread_str
 
     if len(sys.argv) > 1:
-        # TODO remove
-        if sys.argv[1] == "--t":
-            lib = library.Library("/home/piyush/media/music/", verbose = True, shuffle = True)
-            lib.sort("date_modified", reverse = True)
-        else:
-            lib = library.Library(sys.argv[1], verbose = True, shuffle = True)
+        path = sys.argv[1 : ]
+        if not os.path.exists(path) or not os.path.isdir(path):
+            print("Path \"{0}\" doesn't exist or isn't a directory.".format(path))
+            sys.exit(1)
+        lib = library.Library(sys.argv[1], verbose=True, shuffle=True)
     else:
-        lib = library.Library("/home/piyush/media/music/", verbose = True, shuffle = True)
+        lib = library.Library("/home/piyush/media/music/", verbose=True, shuffle=True)
 
     os.system("clear")
     p = parser.Parser(lib)
