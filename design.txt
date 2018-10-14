@@ -1,0 +1,44 @@
+# Design Doc
+
+## API
+TODO: Add what functionality we want to support here.
+
+## Architecture
+TODO: Define the relevant abstractions and how they relate to each other. Keep it high-level.
+
+We will define the following classes:
+- `LibraryServer`: Represents a server that runs semi-independently from the user interface and keeps track of all the songs in the library, library state (such as current position, song history, queue, etc.), and actually plays/pauses/etc. songs. In particular, the library will keep track of a song list, which represents the order of songs, and a position `pos` within it. This makes it possible to see which songs are up next (just look at `song_list[pos + 1 : max(len(song_list), pos + k)]`), to see previously played songs (`song_list[min(0, pos - k) : pos]`), and to shuffle songs (`random.shuffle(song_list[pos + 1 : max(len(song_list), pos + k)])`). It also makes implementing queueing functionality simple, as we can also keep track of a `queue_pos`, which can never be less than `pos` and represents the end of the current queue, i.e. queue := `song_list[pos + 1 : queue_pos]`. Adding to queue means simply inserting into `song_list` at `queue_pos` and incrementing `queue_pos`.
+    - Can probably be implemented by just renaming the existing `Library` class and making a few modifications.
+    - The main loop, in the program will iterate over the `song_list` and for each song, initialize it, play it, and stop it when it's finished. This loop can actually be moved out of main.py and put into `LibraryServer`. It will need to be modified so that after initializing `curr_song` and then playing it, the server blocks until the song is no longer playing. Currently, the main loop (which is in main.py, which represents our front end) polls until the song is done playing. Blocking until the song is finished doesn't waste CPU cycles. However, blocking has a major disadvantage - the server is unable to react to requests made by the front end until the song is over and we are no longer blocked. This is unacceptable, so perhaps it's a good idea to implement server requests as being interrupts that wake us up from being blocked. Blocking would then be implemented as a loop of the following form: 
+                     ```
+                     ... # Initialize curr_song, and maybe other necessary stuff.
+                     while self.pos < len(self.library): # Main loop
+                         curr_song.play()
+                         ... # Might be additional code here, but probably not.
+                         state_change = False
+                         self.block_until_song_done(curr_song) # This function will not return until either (1) curr_song.playing() == False, or (2) a server request interrupts it
+                         # If this line is reached, it means we're unblocked. Check if this is because the client (i.e. front end) made a request.
+                         if self.client_request is not None: # In the constructor, self.client_request will be initialized to None. When the client makes a request, it will set self.client_request to it before unblocking self.block_until_song_done().
+                             # This function will react appropriately to the request, and then reset self.client_request to None. Note that the handling may involve setting self.next_song (initialized in constuctor to be None) to not be None. Note also that there
+                             # is a special case: if self.client_request represents a pause request, this function will (1) set self.paused = True (it is False by default and is initialized in the constructor), (2) call self.block_until_unpaused(), which will
+                             # only unblock when a new client request interrupts it. If self.paused == True and self.client_request is not an unpause request, after handling the request this function will be called again; only when self.client_request is an unpause 
+                             # request will it not be called, and execution will continue from here.
+                             state_change = self.handle_request(self.client_request)
+                         # Now that the client request (if there was one) has been handled, check if the current song is over. Whether or not that's what caused us to unblock doesn't matter; now we simply move on to the next song. Note that if a state change occurred,
+                         # (which can only happen inside self.handle_request()), self.next_song and other necessary data will have been prepared so that self.play_next_song() will play the correct song, e.g. if the client request was the jump, it will play that song.
+                         # So, if a state change occurred, then regardless of whether the current song is playing we want to switch songs.
+                         if state_change or not curr_song.playing():
+                             curr_song.stop()
+                             curr_song = self.play_next_song() # Returns the next song to play and sets the position trackers appropriately. If self.next_song is not None, seeks to that song's position in the library instead of simply incrementing.
+                             self.next_song = None
+                         ... # If necessary, alert front end about a state change. This alert will also need to be implemented as some kind of interrupt.
+                    ...
+                    ```
+      As indicated by a comment, the above loop could in fact serve as the main loop.
+- `FrontEnd`: This class will handle drawing the user interface on the command line, reading user input, and executing the appropriate action.
+    - Drawing the UI: In the general case, this will consist of re-printing a `main_string`, which is currently "Playing \"<SONG NAME\"" and is centered, followed by a newline and user input marker. The `main_string` may require modifications depending on `play_state`, which is something the `FrontEnd` class should keep track of (e.g. being in a paused or downloading state). Note that re-printing will involve first clearing any previously printed `main_string`. Further, re-printing should not occur in a "polling" sort of way, e.g. on a set time interval, but only when it needs to, i.e. upon changes to `play_state`. Because we only re-print the `main_string`, all previously displayed information, such as old user commands and outputted information, will persist as desired, to depict to the user a consistent command history.
+        - In the non-general case, we will need to print out additional information before re-printing the `main_string`. Most commonly, this will be when the user input is a query command that requires us to print out information. This can be implemented by simply printing the information directly before the re-printing functionality (for `main_string`) kicks in. Other, more uncommon, cases include printing new information as necessary when a `play_state` change occurs (e.g. a download running in the background finishes, and we print "Download complete" or something).
+    - Reading input: After drawing the UI, the we will block until one of the following conditions is met: (1) user input is given, (2) There is a state change in either `LibraryServer` or `BackgroundScheduler`. In the former case, we parse the user input. In the latter case, we extract relevant information from the backend state change.
+    - Executing actions: If user input was parsed, build a request and send it to the server. Otherwise, if an internal state change occurred in the backend, use the extracted information to build an appropriate `main_string` so that when re-printing occurs in the next iteration of this loop, it will print updated information as required.
+- `Parser`: Class which is passed in raw user input (by the front end) and gives back the appropriate request (perhaps format this as returning which function and what arguments to call in `LibraryServer`?) to send to the server, which the front end will then do.
+- `BackgroundScheduler`: Class that handles scheduling and managing any threads that need to run asynchronously in the background, e.g. for downloading music.

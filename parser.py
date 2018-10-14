@@ -528,7 +528,7 @@ class Parser:
         curr_song.pause()
         pause_main_str = main_str + " [paused]"
         print_main(pause_main_str % str(curr_song["title"]), USER_INPUT_MARKER + inp, None)
-        
+
         thread = None
         while True:
             inp = read_stdin(POLL_INTERVAL)

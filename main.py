@@ -6,7 +6,22 @@ POLL_INTERVAL = 0.5
 PLAY_STR = "Playing \"%s\""
 USER_INPUT_MARKER = "> "
 
-# TODO find a way to not poll when paused (as this consumes CPU cycles) but instead go to sleep or something, and treat text input as an interrupt or something
+# TODO refactor the entire design - use a client/server model. Things like pausing or volume
+# should be considered "player state" changes, downloading should be considered a "background
+# state" change, and other commands "server state" changes. Client and server should run relatively
+# independently; not necessarily fully asynchronous (since the server typically doesn't need to do
+# anything until the client asks it, there's no need for an asynchronous implementation). Ideally,
+# this would also eliminate the need for polling for user input, as opposed to simply blocking
+# until stdin is ready for reading. Currently, polling is necessary because if the main loop were
+# to wait on user input and the currently playing song finished, the next one wouldn't start
+# playing; the front-end has to tell the next one to play. To solve this, perhaps move the code
+# that plays the songs in a loop to happen in the server; note, however, that this would either
+# require a truly asynchronous implementation of the client and server, or would require some kind
+# of interrupt functionality to automatically wake the server (in which the main loop lives) when
+# a song finishes so the server can stop the song and tell the next one to play. Come to think of
+# it, the second approach would work even with the current serial implementation with the main loop
+# in the front-end, if we send the song-finished-interrupt to the front-end. Make this whole design
+# concrete and put it in a design doc (in this directory).
 # TODO add functionaltiy for up arrow and down arrow cycling through command history
 # TODO convert backend to pulseaudio instead of vlc
 # TODO check why shuffling plays songs in same order
@@ -54,10 +69,10 @@ if __name__ == "__main__":
         curr_song.set_volume(volume)
 
         # TODO fix this weird bug where some songs get randomly skipped
-        while not curr_song.playing():
-            import time
-            time.sleep(0.1)
-            curr_song.play()
+        # while not curr_song.playing():
+            # import time
+            # time.sleep(0.1)
+            # curr_song.play()
 
         print_main(main_str % str(curr_song["title"]))
 
